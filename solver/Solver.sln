@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27128.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Solver", "Solver.fsproj", "{477DF90D-4775-4786-914B-FBA02089B873}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{477DF90D-4775-4786-914B-FBA02089B873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{477DF90D-4775-4786-914B-FBA02089B873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{477DF90D-4775-4786-914B-FBA02089B873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{477DF90D-4775-4786-914B-FBA02089B873}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50EF4728-1391-4BD2-AAE3-67B5308FD696}
+	EndGlobalSection
+EndGlobal
