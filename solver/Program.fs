@@ -25,17 +25,28 @@ let solved =
 let renderWithHighlights highlights cube =
     let renderFace f x y =
         let renderSticker s =
-            let toConsoleColor = function
-                | Color.R -> ConsoleColor.Red
-                | Color.O -> ConsoleColor.DarkYellow
-                | Color.W -> ConsoleColor.White
-                | Color.Y -> ConsoleColor.Yellow
-                | Color.B -> ConsoleColor.Blue
-                | Color.G -> ConsoleColor.Green
-            if List.length highlights = 0 || List.contains (f, s) highlights
-            then Console.BackgroundColor <- cube |> Map.find f |> Map.find s |> toConsoleColor
-            else Console.BackgroundColor <- ConsoleColor.DarkGray
-            Console.Write("  ");
+            let setColorForWindows () =
+                let toConsoleColor hilited = function
+                    | Color.R -> if hilited then ConsoleColor.Red else ConsoleColor.DarkRed
+                    | Color.O -> if hilited then ConsoleColor.Magenta else ConsoleColor.DarkMagenta
+                    | Color.W -> if hilited then ConsoleColor.White else ConsoleColor.Gray
+                    | Color.Y -> if hilited then ConsoleColor.Yellow else ConsoleColor.DarkYellow
+                    | Color.B -> if hilited then ConsoleColor.Blue else ConsoleColor.DarkBlue
+                    | Color.G -> if hilited then ConsoleColor.Green else ConsoleColor.DarkGreen
+                let hilited = List.length highlights = 0 || List.contains (f, s) highlights
+                Console.BackgroundColor <- cube |> Map.find f |> Map.find s |> toConsoleColor hilited
+            let setColorForLinuxAndMac () =
+                let toConsoleColor hilited = function
+                    | Color.R -> if hilited then 9   else 52
+                    | Color.O -> if hilited then 208 else 94
+                    | Color.W -> if hilited then 15  else 240
+                    | Color.Y -> if hilited then 220 else 100
+                    | Color.B -> if hilited then 21  else 17
+                    | Color.G -> if hilited then 10  else 22
+                let hilited = List.length highlights = 0 || List.contains (f, s) highlights
+                printf "\u001b[48;5;%im" (cube |> Map.find f |> Map.find s |> toConsoleColor hilited)
+            setColorForLinuxAndMac ()
+            printf "  "
         Console.CursorLeft <- x
         Console.CursorTop <- y
         renderSticker Sticker.UL
@@ -51,6 +62,7 @@ let renderWithHighlights highlights cube =
         renderSticker Sticker.DL
         renderSticker Sticker.D
         renderSticker Sticker.DR
+    Console.Clear()
     renderFace Face.B 8 1
     renderFace Face.U 8 4
     renderFace Face.L 2 7
@@ -58,6 +70,7 @@ let renderWithHighlights highlights cube =
     renderFace Face.R 14 7
     renderFace Face.D 8 10
     Console.BackgroundColor <- ConsoleColor.Black
+    printfn ""
 
 let render = renderWithHighlights []
 
@@ -342,6 +355,14 @@ let step = function
     | Rotate r -> rotate r
     | Move   m -> move m
 
+let executeRotation cube r = rotate r cube
+let executeMove     cube m = move   m cube
+let executeStep     cube s = step   s cube
+
+let executeRotations rs cube = Seq.fold executeRotation cube rs
+let executeMoves     ms cube = Seq.fold executeMove cube ms
+let executeSteps     ss cube = Seq.fold executeStep cube ss
+
 let rotationToString = function
     | X   -> "x"
     | X'  -> "x'"
@@ -413,6 +434,14 @@ let stepToString = function
     | Move   m -> moveToString m
 let stepsToString steps = String.Join(' ', Seq.map stepToString steps)
 
+let colorToString = function
+    | Color.R -> "Red"
+    | Color.O -> "Orange"
+    | Color.W -> "White"
+    | Color.Y -> "Yellow"
+    | Color.B -> "Blue"
+    | Color.G -> "Green"
+
 let scramble n =
     let moves = [U; U'; U2; D; D'; D2; L; L'; L2; R; R'; R2; F; F'; F2; B; B'; B2] @ [M; M'; M2] // @ [S; S'; S2; E; E'; E2]
     let rand = Random()
@@ -432,21 +461,161 @@ let scramble n =
             else scramble' cube' (m :: sequence) (cube' :: history) (n - 1)
     scramble' solved [] [solved] n
 
+let look face sticker cube = cube |> Map.find face |> Map.find sticker
+
+type Center = U | D | L | R | F | B
+type Edge = UL | UR | UF | UB | DL | DR | DF | DB | FL | FR | BL | BR
+type Corner = ULF | ULB | URF | URB | DLF | DLB | DRF | DRB
+type Piece = Center of Center | Edge of Edge | Corner of Corner
+
+let centerToFaceSticker = function
+    | Center.U -> Face.U, Sticker.C
+    | Center.D -> Face.D, Sticker.C
+    | Center.L -> Face.L, Sticker.C
+    | Center.R -> Face.R, Sticker.C
+    | Center.F -> Face.F, Sticker.C
+    | Center.B -> Face.B, Sticker.C
+
+let edgeToFaceStickers = function
+    | Edge.UL -> [Face.U, Sticker.L; Face.L, Sticker.U]
+    | Edge.UR -> [Face.U, Sticker.R; Face.R, Sticker.U]
+    | Edge.UF -> [Face.U, Sticker.D; Face.F, Sticker.U]
+    | Edge.UB -> [Face.U, Sticker.U; Face.B, Sticker.D]
+    | Edge.DL -> [Face.D, Sticker.L; Face.L, Sticker.D]
+    | Edge.DR -> [Face.D, Sticker.R; Face.R, Sticker.D]
+    | Edge.DF -> [Face.D, Sticker.U; Face.F, Sticker.D]
+    | Edge.DB -> [Face.D, Sticker.D; Face.B, Sticker.U]
+    | Edge.FL -> [Face.F, Sticker.L; Face.L, Sticker.R]
+    | Edge.FR -> [Face.F, Sticker.R; Face.R, Sticker.L]
+    | Edge.BL -> [Face.B, Sticker.L; Face.L, Sticker.L]
+    | Edge.BR -> [Face.B, Sticker.R; Face.R, Sticker.R]
+
+let cornerToFaceStickers = function
+    | Corner.ULF -> [Face.U, Sticker.DL; Face.L, Sticker.UR; Face.F, Sticker.UL]
+    | Corner.ULB -> [Face.U, Sticker.UL; Face.L, Sticker.UL; Face.B, Sticker.DL]
+    | Corner.URF -> [Face.U, Sticker.DR; Face.R, Sticker.UL; Face.F, Sticker.UR]
+    | Corner.URB -> [Face.U, Sticker.UR; Face.R, Sticker.UR; Face.B, Sticker.DR]
+    | Corner.DLF -> [Face.D, Sticker.UL; Face.L, Sticker.DR; Face.F, Sticker.DL]
+    | Corner.DLB -> [Face.D, Sticker.DL; Face.L, Sticker.DL; Face.B, Sticker.UL]
+    | Corner.DRF -> [Face.D, Sticker.UR; Face.R, Sticker.DL; Face.F, Sticker.DR]
+    | Corner.DRB -> [Face.D, Sticker.DR; Face.R, Sticker.DR; Face.B, Sticker.UR]
+
+let searchCenters centers color cube =
+    let find c =
+        let f, s = centerToFaceSticker c
+        look f s cube = color
+    Seq.find find centers
+let findCenter = searchCenters [Center.U; Center.D; Center.L; Center.R; Center.F; Center.B]
+
+type EdgeOrientation = Oriented | Flipped
+
+let searchEdges edges color0 color1 cube =
+    let rec find = function
+        | e :: t ->
+            match edgeToFaceStickers e with
+            | [f0, s0; f1, s1] ->
+                let l0 = look f0 s0 cube
+                let l1 = look f1 s1 cube
+                if l0 = color0 && l1 = color1 then e, Oriented
+                elif l1 = color0 && l0 = color1 then e, Flipped
+                else find t
+            | _ -> failwith "Expected exactly two edge stickers"
+        | _ -> failwith "Edge not found"
+    find edges
+let findEdge = searchEdges [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR]
+
+let pause () =
+    printfn "Press Enter to continue..."
+    Console.ReadLine() |> ignore
+
+let execute steps message cube =
+    let cube' = executeSteps steps cube
+    render cube'
+    steps |> stepsToString |> printfn "%s: %s" message
+    pause ()
+    cube'
+
+let roux cube =
+    let rotateCenterToLeftSide color cube =
+        let c = findCenter color cube
+        renderWithHighlights [centerToFaceSticker c] cube
+        printfn "Found %s center" (colorToString color)
+        pause ()
+        let cube' =
+            let task = "Rotate it to left side"
+            match c with
+            | Center.U -> execute [Rotate Z'] task cube
+            | Center.D -> execute [Rotate Z] task cube
+            | Center.L -> execute [] "Already in place" cube
+            | Center.R -> execute [Rotate Z2] task cube // or Z2', Y2, Y2'
+            | Center.F -> execute [Rotate Y] task cube
+            | Center.B -> execute [Rotate Y'] task cube
+        cube'
+    let placeDLEdge colorD colorL cube =
+        let e, o = findEdge colorD colorL cube
+        renderWithHighlights (edgeToFaceStickers e) cube
+        printfn "Found %s/%s edge (%A)" (colorToString colorL) (colorToString colorD) o
+        pause ()
+        cube
+    let cube = rotateCenterToLeftSide Color.B cube // TODO: color neutral
+    let cube = placeDLEdge Color.W Color.B cube // TODO: color neutral
+    cube
+
 Console.BackgroundColor <- ConsoleColor.Black
 Console.ForegroundColor <- ConsoleColor.Gray
 Console.Clear()
 
-let c, s = scramble 20
-render c
-printf "Scramble: %s                  " (movesToString s)
-Console.ReadLine() |> ignore
+//(* highlight pieces
+for c in [Center.U; D; L; R; F; B] do
+    let stickers = centerToFaceSticker c
+    renderWithHighlights [stickers] solved
+    printfn "Center: %A" c
+    pause ()
+
+for e in [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR] do
+    let stickers = edgeToFaceStickers e
+    renderWithHighlights stickers solved
+    printfn "Edge: %A" e
+    pause ()
+
+for c in [ULF; ULB; URF; URB; DLF; DLB; DRF; DRB] do
+    let stickers = cornerToFaceStickers c
+    renderWithHighlights stickers solved
+    printfn "Corner: %A" c
+    pause ()
+// *)
+
+let testRoux () =
+    let c, s = scramble 20
+    render c
+    printfn "Scramble: %s                  " (movesToString s)
+    pause ()
+    roux c |> ignore
+    ignore
+
+while true do testRoux () |> ignore
 
 render solved
-Console.ReadLine () |> ignore
+pause ()
 
 let test = solved |> moveM' |> moveD' |> moveU' |> moveL2 |> moveLW
 render test
-Console.ReadLine () |> ignore
+pause ()
 
 renderWithHighlights [Face.U, Sticker.C; Face.U, Sticker.L; Face.U, Sticker.R] test
-Console.ReadLine () |> ignore
+pause ()
+
+(*
+
+TODO:
+- Formalize edge and corner orientations in search
+- Search centers/corners/edges by "ease" (T/F then L/R then D then B
+- Gather metrics (moves, rotations, turns [half/quarter], looks [batch and individual stickers])
+    - By phase (inspections rotations, cross/LR blocks, PLL, ...)
+- Algorithm search
+- Rank algorithms by "ease" (R, L, U, F, D, B, ... combinations, finger tricks, ...)
+    - Maybe with user input or video analysis
+
+Long term:
+- Video analysis
+*)
