@@ -587,9 +587,32 @@ let roux cube =
             | Center.F -> execute [Move UW] task cube
             | Center.B -> execute [Move UW'] task cube
         cube'
-    let down, left = Color.W, Color.B // TODO: color neutral
+    let solveFLPair colorF colorL colorD cube =
+        let moveFLEdgeToDF cube =
+            let e, (c0, c1) = findEdge colorF colorL cube // TODO: No need to search DL
+            renderWithHighlights (edgeToFaceStickers e) cube
+            printfn "Found %s/%s edge" (colorToString c0) (colorToString c1)
+            let task = "Move it to DF position"
+            match e, c0, c1 with // NOTE: not worrying about orientation
+            | UL, _, _ -> execute [Move U'; Move RW'] task cube // RW' easier M
+            | UR, _, _ -> execute [Move Move.U; Move RW'] task cube
+            | UF, _, _ -> execute [Move RW'] task cube
+            | UB, _, _ -> execute [Move RW2] task cube
+            | DL, _, _ -> failwith "Unexpected edge position (DL)"
+            | DR, _, _ -> execute [Move L'; Move D'; Move Move.L] task cube // tricky: maybe better than R2 U M
+            | DF, _, _ -> execute [] "Already in place!" cube
+            | DB, _, _ -> execute [Move RW] task cube // or L D L'
+            | FL, _, _ -> execute [Move F'] task cube
+            | FR, _, _ -> execute [Move Move.F] task cube
+            | BL, _, _ -> execute [Move Move.B; Move RW] task cube
+            | BR, _, _ -> execute [Move Move.B'; Move RW] task cube
+            | _ -> failwith "Unexpected edge position"
+        let cube = moveFLEdgeToDF cube
+        cube
+    let down, left, front = Color.W, Color.B, Color.R // TODO: color neutral (and defined by DL edge)
     let cube = rotateDLEdgeIntoPosition down left cube
-    let cube = moveCenterToLeftSide Color.B cube // TODO: color neutral
+    let cube = moveCenterToLeftSide left cube
+    let cube = solveFLPair front left down cube
     cube
 
 Console.BackgroundColor <- ConsoleColor.Black
@@ -619,9 +642,12 @@ let testRoux () =
     printfn "Scramble: %s                  " (movesToString s)
     pause ()
     let c = roux c
-    if look Face.L Sticker.C c <> Color.B then failwith "Not solved LC"
+    if look Face.L Sticker.C c <> Color.B then failwith "Not solved CL"
     if look Face.L Sticker.D c <> Color.B then failwith "Not solved DL"
     if look Face.D Sticker.L c <> Color.W then failwith "Not solved DL"
+    let du = look Face.D Sticker.U c
+    let fd = look Face.F Sticker.D c
+    if not ((du = Color.R && fd = Color.B) || (du = Color.B && fd = Color.R)) then failwith "Not solved DF"
     ignore
 
 while true do testRoux () |> ignore
@@ -649,4 +675,5 @@ TODO:
 
 Long term:
 - Video analysis
+- Program synthesis for block-building steps
 *)
