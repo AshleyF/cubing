@@ -104,4 +104,3 @@ let solve includeRotations includeMoves includeWideMoves includeSliceMoves depth
         yield! solutions
         if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
     iterativeDeepening 0
-

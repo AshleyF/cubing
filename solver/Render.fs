@@ -3,7 +3,7 @@
 open System
 open Cube
 
-let interactive = false
+let interactive = true
 
 let renderWithHighlights highlights cube =
     let renderFace f x y slice =

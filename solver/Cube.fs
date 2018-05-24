@@ -349,4 +349,3 @@ let searchEdges edges color0 color1 cube =
         | _ -> failwith "Edge not found"
     find edges
 let findEdge color0 color1 cube = searchEdges [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR] color0 color1 cube
-

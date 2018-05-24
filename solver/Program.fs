@@ -3,7 +3,70 @@ open Cube
 open Solver
 open Render
 
-let interactive = true // affects pause
+let down, left, front = Color.W, Color.B, Color.R // TODO: color neutral (and defined by DL edge)
+
+let genDLCases colorD colorL =
+    let gen case =
+        let rec gen' () =
+            let cube, steps = scramble 20
+            if case cube then cube, steps else gen' () // TODO: max iterations ("case never happens")
+        gen' ()
+    let genSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth caseIn caseOut name =
+        let c, s = gen caseIn
+        s |> movesToString |> printfn "%s: %s" name
+        let solutions = solve includeRotations includeMoves includeWideMoves includeSliceMoves depth caseOut c
+        for s in solutions do s |> stepsToString |> printfn "  Solution: %s"
+    let caseULD c = look Face.U Sticker.L c = colorD && look Face.L Sticker.U c = colorL
+    let caseULL c = look Face.U Sticker.L c = colorL && look Face.L Sticker.U c = colorD
+    let caseURD c = look Face.U Sticker.R c = colorD && look Face.R Sticker.U c = colorL
+    let caseURL c = look Face.U Sticker.R c = colorL && look Face.R Sticker.U c = colorD
+    let caseUFD c = look Face.U Sticker.D c = colorD && look Face.F Sticker.U c = colorL
+    let caseUFL c = look Face.U Sticker.D c = colorL && look Face.F Sticker.U c = colorD
+    let caseUBD c = look Face.U Sticker.U c = colorD && look Face.B Sticker.D c = colorL
+    let caseUBL c = look Face.U Sticker.U c = colorL && look Face.B Sticker.D c = colorD
+    let caseDLD c = look Face.D Sticker.L c = colorD && look Face.L Sticker.D c = colorL
+    let caseDLL c = look Face.D Sticker.L c = colorL && look Face.L Sticker.D c = colorD
+    let caseDRD c = look Face.D Sticker.R c = colorD && look Face.R Sticker.D c = colorL
+    let caseDRL c = look Face.D Sticker.R c = colorL && look Face.R Sticker.D c = colorD
+    let caseDFD c = look Face.D Sticker.U c = colorD && look Face.F Sticker.D c = colorL
+    let caseDFL c = look Face.D Sticker.U c = colorL && look Face.F Sticker.D c = colorD
+    let caseDBD c = look Face.D Sticker.D c = colorD && look Face.B Sticker.U c = colorL
+    let caseDBL c = look Face.D Sticker.D c = colorL && look Face.B Sticker.U c = colorD
+    let caseFLD c = look Face.F Sticker.L c = colorD && look Face.L Sticker.R c = colorL
+    let caseFLL c = look Face.F Sticker.L c = colorL && look Face.L Sticker.R c = colorD
+    let caseFRD c = look Face.F Sticker.R c = colorD && look Face.R Sticker.L c = colorL
+    let caseFRL c = look Face.F Sticker.R c = colorL && look Face.R Sticker.L c = colorD
+    let caseBLD c = look Face.B Sticker.L c = colorD && look Face.L Sticker.L c = colorL
+    let caseBLL c = look Face.B Sticker.L c = colorL && look Face.L Sticker.L c = colorD
+    let caseBRD c = look Face.B Sticker.R c = colorD && look Face.R Sticker.R c = colorL
+    let caseBRL c = look Face.B Sticker.R c = colorL && look Face.R Sticker.R c = colorD
+    genSolutions true false false false 10 caseULD caseDLD "UL-D"
+    genSolutions true false false false 10 caseULL caseDLD "UL-L"
+    genSolutions true false false false 10 caseURD caseDLD "UR-D"
+    genSolutions true false false false 10 caseURL caseDLD "UR-L"
+    genSolutions true false false false 10 caseUFD caseDLD "UF-D"
+    genSolutions true false false false 10 caseUFL caseDLD "UF-L"
+    genSolutions true false false false 10 caseUBD caseDLD "UB-D"
+    genSolutions true false false false 10 caseUBL caseDLD "UB-L"
+    genSolutions true false false false 10 caseDLD caseDLD "DL-D"
+    genSolutions true false false false 10 caseDLL caseDLD "DL-L"
+    genSolutions true false false false 10 caseDRD caseDLD "DR-D"
+    genSolutions true false false false 10 caseDRL caseDLD "DR-L"
+    genSolutions true false false false 10 caseDFD caseDLD "DF-D"
+    genSolutions true false false false 10 caseDFL caseDLD "DF-L"
+    genSolutions true false false false 10 caseDBD caseDLD "DB-D"
+    genSolutions true false false false 10 caseDBL caseDLD "DB-L"
+    genSolutions true false false false 10 caseFLD caseDLD "FL-D"
+    genSolutions true false false false 10 caseFLL caseDLD "FL-L"
+    genSolutions true false false false 10 caseFRD caseDLD "FR-D"
+    genSolutions true false false false 10 caseFRL caseDLD "FR-L"
+    genSolutions true false false false 10 caseBLD caseDLD "BL-D"
+    genSolutions true false false false 10 caseBLL caseDLD "BL-L"
+    genSolutions true false false false 10 caseBRD caseDLD "BR-D"
+    genSolutions true false false false 10 caseBRL caseDLD "BR-L"
+
+genDLCases down left
+pause ()
 
 let roux cube =
     let rotateDLEdgeIntoPosition colorD colorL cube =
@@ -77,7 +140,6 @@ let roux cube =
             | _ -> failwith "Unexpected edge position"
         let cube = moveFLEdgeToDF cube
         cube
-    let down, left, front = Color.W, Color.B, Color.R // TODO: color neutral (and defined by DL edge)
     let cube = rotateDLEdgeIntoPosition down left cube
     let cube = moveCenterToLeftSide left cube
     let cube = solveFLPair front left down cube
