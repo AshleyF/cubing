@@ -77,6 +77,72 @@ let renderWithHighlights highlights cube =
 
 let render = renderWithHighlights []
 
+let colorToString = function
+    | Color.R -> "R"
+    | Color.O -> "O"
+    | Color.W -> "W"
+    | Color.Y -> "Y"
+    | Color.B -> "B"
+    | Color.G -> "G"
+
+let cubeToString (cube: Map<Face, Map<Sticker, Color>>) =
+    let str = seq {
+        yield look Face.B Sticker.UL cube |> colorToString
+        yield look Face.B Sticker.U  cube |> colorToString
+        yield look Face.B Sticker.UR cube |> colorToString
+        yield look Face.B Sticker.L  cube |> colorToString
+        yield look Face.B Sticker.C  cube |> colorToString
+        yield look Face.B Sticker.R  cube |> colorToString
+        yield look Face.B Sticker.DL cube |> colorToString
+        yield look Face.B Sticker.D  cube |> colorToString
+        yield look Face.B Sticker.DR cube |> colorToString
+        yield look Face.U Sticker.UL cube |> colorToString
+        yield look Face.U Sticker.U  cube |> colorToString
+        yield look Face.U Sticker.UR cube |> colorToString
+        yield look Face.U Sticker.L  cube |> colorToString
+        yield look Face.U Sticker.C  cube |> colorToString
+        yield look Face.U Sticker.R  cube |> colorToString
+        yield look Face.U Sticker.DL cube |> colorToString
+        yield look Face.U Sticker.D  cube |> colorToString
+        yield look Face.U Sticker.DR cube |> colorToString
+        yield look Face.L Sticker.UL cube |> colorToString
+        yield look Face.L Sticker.U  cube |> colorToString
+        yield look Face.L Sticker.UR cube |> colorToString
+        yield look Face.F Sticker.UL cube |> colorToString
+        yield look Face.F Sticker.U  cube |> colorToString
+        yield look Face.F Sticker.UR cube |> colorToString
+        yield look Face.R Sticker.UL cube |> colorToString
+        yield look Face.R Sticker.U  cube |> colorToString
+        yield look Face.R Sticker.UR cube |> colorToString
+        yield look Face.L Sticker.L  cube |> colorToString
+        yield look Face.L Sticker.C  cube |> colorToString
+        yield look Face.L Sticker.R  cube |> colorToString
+        yield look Face.F Sticker.L  cube |> colorToString
+        yield look Face.F Sticker.L  cube |> colorToString
+        yield look Face.F Sticker.C  cube |> colorToString
+        yield look Face.R Sticker.R  cube |> colorToString
+        yield look Face.R Sticker.C  cube |> colorToString
+        yield look Face.R Sticker.R  cube |> colorToString
+        yield look Face.L Sticker.DL cube |> colorToString
+        yield look Face.L Sticker.D  cube |> colorToString
+        yield look Face.L Sticker.DR cube |> colorToString
+        yield look Face.F Sticker.DL cube |> colorToString
+        yield look Face.F Sticker.DL cube |> colorToString
+        yield look Face.F Sticker.D  cube |> colorToString
+        yield look Face.R Sticker.DR cube |> colorToString
+        yield look Face.R Sticker.D  cube |> colorToString
+        yield look Face.R Sticker.DR cube |> colorToString
+        yield look Face.D Sticker.UL cube |> colorToString
+        yield look Face.D Sticker.U  cube |> colorToString
+        yield look Face.D Sticker.UR cube |> colorToString
+        yield look Face.D Sticker.L  cube |> colorToString
+        yield look Face.D Sticker.C  cube |> colorToString
+        yield look Face.D Sticker.R  cube |> colorToString
+        yield look Face.D Sticker.DL cube |> colorToString
+        yield look Face.D Sticker.D  cube |> colorToString
+        yield look Face.D Sticker.DR cube |> colorToString }
+    String.Concat(str)
+
 let rotationToString = function
     | X   -> "x"
     | X'  -> "x'"
@@ -141,14 +207,6 @@ let stepToString = function
     | Rotate r -> rotationToString r
     | Move   m -> moveToString m
 let stepsToString steps = String.Join(' ', Seq.map stepToString steps)
-
-let colorToString = function
-    | Color.R -> "Red"
-    | Color.O -> "Orange"
-    | Color.W -> "White"
-    | Color.Y -> "Yellow"
-    | Color.B -> "Blue"
-    | Color.G -> "Green"
 
 let pause () =
     if interactive then 

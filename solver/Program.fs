@@ -64,9 +64,61 @@ let genDLCases colorD colorL =
     genSolutions true false false false 10 caseBLL caseDLD "BL-L"
     genSolutions true false false false 10 caseBRD caseDLD "BR-D"
     genSolutions true false false false 10 caseBRL caseDLD "BR-L"
+// genDLCases down left
 
-genDLCases down left
-pause ()
+let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth cubes goal =
+    let rec gen cases = function
+        | cube :: remaining ->
+            let solutions = solve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal cube
+            let algs = String.Join(" | ", Seq.map stepsToString solutions)
+            // printfn "Algs: %s" algs
+            let skip = Seq.length solutions = 0
+            let key = if skip then "skip" else solutions |> Seq.map stepsToString |> Seq.sort |> Seq.head
+            // printfn "Key: %s" key
+            match Map.tryFind key cases with
+            | Some case ->
+                gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) remaining
+            | None ->
+                printfn "New case: %s (%s)" algs (cubeToString cube)
+                gen (Map.add key [cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube] cases) remaining
+        | _ -> cases
+    gen Map.empty cubes
+
+let distinctCases solutions =
+    let common (cubes: string list) =
+        let commonNth n =
+            let distinct = cubes |> Seq.map (fun c -> c.[n]) |> Seq.distinct
+            if Seq.length distinct = 1 then Seq.head distinct else '.'
+        String.Concat(Seq.init (9 * 6) commonNth)
+    let cases = solutions |> Map.toList |> List.map snd |> List.map (List.map (fun (c, _, _) -> cubeToString c)) |> List.map common
+    let algs = solutions |> Map.toList |> List.map fst
+    printfn "CASES: %A" (List.zip cases algs)
+
+let genRoux () =
+    let numCubes = 500
+    printfn "Scrambling %i cubes" numCubes
+    let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
+    printfn ""
+
+    printfn "Solving DL edge (during inspection)"
+    let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
+    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD
+    let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Solving L center"
+    let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
+    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC
+    let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Placing FL edge in DF"
+    let caseFLtoDF c = caseLC c && ((look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.O) || (look Face.D Sticker.U c = Color.O && look Face.F Sticker.D c = Color.B))
+    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDF
+    let solvedFTtoDF = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+    pause ()
+genRoux ()
 
 let roux cube =
     let rotateDLEdgeIntoPosition colorD colorL cube =

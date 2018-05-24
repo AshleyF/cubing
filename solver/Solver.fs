@@ -13,7 +13,7 @@ let solved =
     cubeOfFaces u d l r f b
 
 let scramble n =
-    let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] // @ [S; S'; S2; E; E'; E2]
+    let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
     let rand = Random()
     let rec scramble' cube sequence history n =
         let isRepeat c = List.contains c history
