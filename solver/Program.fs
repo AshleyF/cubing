@@ -3,73 +3,50 @@ open Cube
 open Solver
 open Render
 
+let numCubes = 1000
 let down, left, front = Color.W, Color.B, Color.R // TODO: color neutral (and defined by DL edge)
 
-let genDLCases colorD colorL =
-    let gen case =
-        let rec gen' () =
-            let cube, steps = scramble 20
-            if case cube then cube, steps else gen' () // TODO: max iterations ("case never happens")
-        gen' ()
-    let genSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth caseIn caseOut name =
-        let c, s = gen caseIn
-        s |> movesToString |> printfn "%s: %s" name
-        let solutions = solve includeRotations includeMoves includeWideMoves includeSliceMoves depth caseOut c
-        for s in solutions do s |> stepsToString |> printfn "  Solution: %s"
-    let caseULD c = look Face.U Sticker.L c = colorD && look Face.L Sticker.U c = colorL
-    let caseULL c = look Face.U Sticker.L c = colorL && look Face.L Sticker.U c = colorD
-    let caseURD c = look Face.U Sticker.R c = colorD && look Face.R Sticker.U c = colorL
-    let caseURL c = look Face.U Sticker.R c = colorL && look Face.R Sticker.U c = colorD
-    let caseUFD c = look Face.U Sticker.D c = colorD && look Face.F Sticker.U c = colorL
-    let caseUFL c = look Face.U Sticker.D c = colorL && look Face.F Sticker.U c = colorD
-    let caseUBD c = look Face.U Sticker.U c = colorD && look Face.B Sticker.D c = colorL
-    let caseUBL c = look Face.U Sticker.U c = colorL && look Face.B Sticker.D c = colorD
-    let caseDLD c = look Face.D Sticker.L c = colorD && look Face.L Sticker.D c = colorL
-    let caseDLL c = look Face.D Sticker.L c = colorL && look Face.L Sticker.D c = colorD
-    let caseDRD c = look Face.D Sticker.R c = colorD && look Face.R Sticker.D c = colorL
-    let caseDRL c = look Face.D Sticker.R c = colorL && look Face.R Sticker.D c = colorD
-    let caseDFD c = look Face.D Sticker.U c = colorD && look Face.F Sticker.D c = colorL
-    let caseDFL c = look Face.D Sticker.U c = colorL && look Face.F Sticker.D c = colorD
-    let caseDBD c = look Face.D Sticker.D c = colorD && look Face.B Sticker.U c = colorL
-    let caseDBL c = look Face.D Sticker.D c = colorL && look Face.B Sticker.U c = colorD
-    let caseFLD c = look Face.F Sticker.L c = colorD && look Face.L Sticker.R c = colorL
-    let caseFLL c = look Face.F Sticker.L c = colorL && look Face.L Sticker.R c = colorD
-    let caseFRD c = look Face.F Sticker.R c = colorD && look Face.R Sticker.L c = colorL
-    let caseFRL c = look Face.F Sticker.R c = colorL && look Face.R Sticker.L c = colorD
-    let caseBLD c = look Face.B Sticker.L c = colorD && look Face.L Sticker.L c = colorL
-    let caseBLL c = look Face.B Sticker.L c = colorL && look Face.L Sticker.L c = colorD
-    let caseBRD c = look Face.B Sticker.R c = colorD && look Face.R Sticker.R c = colorL
-    let caseBRL c = look Face.B Sticker.R c = colorL && look Face.R Sticker.R c = colorD
-    genSolutions true false false false 10 caseULD caseDLD "UL-D"
-    genSolutions true false false false 10 caseULL caseDLD "UL-L"
-    genSolutions true false false false 10 caseURD caseDLD "UR-D"
-    genSolutions true false false false 10 caseURL caseDLD "UR-L"
-    genSolutions true false false false 10 caseUFD caseDLD "UF-D"
-    genSolutions true false false false 10 caseUFL caseDLD "UF-L"
-    genSolutions true false false false 10 caseUBD caseDLD "UB-D"
-    genSolutions true false false false 10 caseUBL caseDLD "UB-L"
-    genSolutions true false false false 10 caseDLD caseDLD "DL-D"
-    genSolutions true false false false 10 caseDLL caseDLD "DL-L"
-    genSolutions true false false false 10 caseDRD caseDLD "DR-D"
-    genSolutions true false false false 10 caseDRL caseDLD "DR-L"
-    genSolutions true false false false 10 caseDFD caseDLD "DF-D"
-    genSolutions true false false false 10 caseDFL caseDLD "DF-L"
-    genSolutions true false false false 10 caseDBD caseDLD "DB-D"
-    genSolutions true false false false 10 caseDBL caseDLD "DB-L"
-    genSolutions true false false false 10 caseFLD caseDLD "FL-D"
-    genSolutions true false false false 10 caseFLL caseDLD "FL-L"
-    genSolutions true false false false 10 caseFRD caseDLD "FR-D"
-    genSolutions true false false false 10 caseFRL caseDLD "FR-L"
-    genSolutions true false false false 10 caseBLD caseDLD "BL-D"
-    genSolutions true false false false 10 caseBLL caseDLD "BL-L"
-    genSolutions true false false false 10 caseBRD caseDLD "BR-D"
-    genSolutions true false false false 10 caseBRL caseDLD "BR-L"
-// genDLCases down left
+let patterns = [
+    // Solving DL edge (during inspection)
+    "DLEdge", ".....................................B..........W.....", [] // skip
+    "DLEdge", "...W.......................B..........................", ["x"]
+    "DLEdge", ".W..................................................B.", ["x y"; "y z"; "z x"]
+    "DLEdge", ".......W..B...........................................", ["x y'"; "y' z'"; "z' x"]
+    "DLEdge", ".....W.............................B..................", ["x y2"; "x' z2"; "y2 x'"; "z2 x"]
+    "DLEdge", ".....B.............................W..................", ["x z"; "y' x"; "z y'"]
+    "DLEdge", ".............................WB.......................", ["x z'"; "y x"; "z' y"]
+    "DLEdge", "................................WB....................", ["x z2"; "x' y2"; "y2 x"; "z2 x'"]
+    "DLEdge", ".............................BW.......................", ["x'"]
+    "DLEdge", "................B.....W...............................", ["x' y"; "y z'"; "z' x'"]
+    "DLEdge", "........................................W.....B.......", ["x' y'"; "y' z"; "z x'"]
+    "DLEdge", "................................BW....................", ["x' z"; "y x'"; "z y"]
+    "DLEdge", "...B.......................W..........................", ["x' z'"; "y' x'"; "z' y'"]
+    "DLEdge", "............W......B..................................", ["x2"]
+    "DLEdge", ".......B..W...........................................", ["x2 y"; "y z2"; "y' x2"; "z2 y'"]
+    "DLEdge", "................W.....B...............................", ["x2 y'"; "y x2"; "y' z2"; "z2 y"]
+    "DLEdge", "..............B..........W............................", ["x2 z"; "y2 z'"; "z y2"; "z' x2"]
+    "DLEdge", ".....................................W..........B.....", ["x2 z'"; "y2 z"; "z x2"; "z' y2"]
+    "DLEdge", "........................................B.....W.......", ["y"]
+    "DLEdge", ".B..................................................W.", ["y'"]
+    "DLEdge", "...........................................B......W...", ["y2"]
+    "DLEdge", "...........................................W......B...", ["z"]
+    "DLEdge", "............B......W..................................", ["z'"]
+    "DLEdge", "..............W..........B............................", ["z2"]
+    ]
 
-let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth cubes goal =
+let hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube =
+    let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c) p c
+    match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
+    | Some (_, _, algs) ->
+        match algs with
+        | a :: _ -> [a.Split(' ') |> Seq.map stringToStep] |> Seq.ofList
+        | [] -> Seq.empty // skip
+    | None -> solve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal cube
+
+let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth cubes goal stage =
     let rec gen cases = function
         | cube :: remaining ->
-            let solutions = solve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal cube
+            let solutions = hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube
             let algs = String.Join(" | ", Seq.map stepsToString solutions)
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
@@ -77,8 +54,10 @@ let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeS
             // printfn "Key: %s" key
             match Map.tryFind key cases with
             | Some case ->
+                printf "."
                 gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) remaining
             | None ->
+                printfn ""
                 printfn "New case: %s (%s)" algs (cubeToString cube)
                 gen (Map.add key [cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube] cases) remaining
         | _ -> cases
@@ -92,116 +71,75 @@ let distinctCases solutions =
         String.Concat(Seq.init (9 * 6) commonNth)
     let cases = solutions |> Map.toList |> List.map snd |> List.map (List.map (fun (c, _, _) -> cubeToString c)) |> List.map common
     let algs = solutions |> Map.toList |> List.map fst
-    printfn "CASES: %A" (List.zip cases algs)
+    List.zip cases algs |> Seq.iter (fun (c, a) -> c |> stringToCube |> render; printfn "Algs: %s" a; printfn "Cube: %s" c)
 
 let genRoux () =
-    let numCubes = 500
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
 
     printfn "Solving DL edge (during inspection)"
     let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
-    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD
+    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD "DLEdge"
     let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Solving L center"
     let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
-    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC
+    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC "LCenter"
     let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
-    printfn "Placing FL edge in DF"
-    let caseFLtoDF c = caseLC c && ((look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.O) || (look Face.D Sticker.U c = Color.O && look Face.F Sticker.D c = Color.B))
-    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDF
-    let solvedFTtoDF = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    // THIS TAKES TOO LONG!
+    // printfn "Pairing R/B edge and corner in upper layer"
+    // let caseBRPaired c = caseLC c && (look Face.U Sticker.D c = Color.R && look Face.U Sticker.DR c = Color.R && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.U c = Color.B && look Face.F Sticker.UR c = Color.B)
+    // let solutions = genCasesAndSolutions false true true true 10 solvedLC caseBRPaired "R/BEdgeAndCorner"
+    // let solvedBRPaired = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    // distinctCases solutions
+
+    printfn "Placing FL edge in DF (R facing)"
+    let caseFLtoDFR c = caseLC c && (look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.R)
+    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDFR "FLEdgeInDF-R"
+    let solvedFTtoDFR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
+
+    printfn "Placing FL edge in DF (B facing)"
+    let caseFLtoDFB c = caseLC c && (look Face.D Sticker.U c = Color.R && look Face.F Sticker.D c = Color.B)
+    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDFB "FLEdgeInDF-B"
+    let solvedFTtoDFB = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Placing FL edge in DB (R facing)"
+    let caseFLtoDBR c = caseLC c && (look Face.D Sticker.D c = Color.B && look Face.B Sticker.U c = Color.R)
+    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDBR "FLEdgeInDB-R"
+    let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Placing FL edge in DB (B facing)"
+    let caseFLtoDBB c = caseLC c && (look Face.D Sticker.D c = Color.R && look Face.B Sticker.U c = Color.B)
+    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDBB "FLEdgeInDB-B"
+    let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    // printfn "Moving DLF corner to top with R/B up"
+    // let caseNoWUp c0 c1 c2 = (c0 = Color.B && c1 = Color.R && c2 = Color.W) || (c0 = Color.R && c1 = Color.W && c2 = Color.B)
+    // let caseDLFtoULF c = caseNoWUp (look Face.U Sticker.DL c) (look Face.F Sticker.UL c) (look Face.L Sticker.UR c)
+    // let caseDLFtoURF c = caseNoWUp (look Face.U Sticker.DR c) (look Face.R Sticker.UL c) (look Face.F Sticker.UR c)
+    // let caseDLFtoULB c = caseNoWUp (look Face.U Sticker.UL c) (look Face.L Sticker.UL c) (look Face.B Sticker.DL c)
+    // let caseDLFtoURB c = caseNoWUp (look Face.U Sticker.UR c) (look Face.B Sticker.DR c) (look Face.R Sticker.UR c)
+    // let caseDLFTopWithRBUp c = caseFLtoDF c && (caseDLFtoULF c || caseDLFtoURF c || caseDLFtoULB c ||caseDLFtoURB c)
+    // let solutions = genCasesAndSolutions false true true true 10 solvedFTtoDF caseDLFTopWithRBUp "DLFToTopWithR/BUp"
+    // let solvedDLFTOpWithRBUp = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    // distinctCases solutions
+
     pause ()
 genRoux ()
-
-let roux cube =
-    let rotateDLEdgeIntoPosition colorD colorL cube =
-        let e, (c0, c1) = findEdge colorD colorL cube
-        renderWithHighlights (edgeToFaceStickers e) cube
-        printfn "Found %s/%s edge (%s/%s)" (colorToString colorL) (colorToString colorD) (colorToString c0) (colorToString c1)
-        pause ()
-        let cube' =
-            let task = "Rotate it to DL position"
-            match e, c0, c1 with
-            | UL, u, _ when u = colorD -> execute [Rotate X2] task cube
-            | UL, u, _ when u = colorL -> execute [Rotate Z'] task cube
-            | UR, u, _ when u = colorD -> execute [Rotate Z2] task cube
-            | UR, u, _ when u = colorL -> execute [Rotate X2; Rotate Z] task cube
-            | UF, u, _ when u = colorD -> execute [Rotate Z2; Rotate Y] task cube
-            | UF, u, _ when u = colorL -> execute [Rotate X'; Rotate Y] task cube
-            | UB, u, _ when u = colorD -> execute [Rotate X2; Rotate Y] task cube
-            | UB, u, _ when u = colorL -> execute [Rotate X; Rotate Y'] task cube
-            | DL, d, _ when d = colorD -> execute [] "Already in place!" cube
-            | DL, d, _ when d = colorL -> execute [Rotate X2; Rotate Z'] task cube
-            | DR, d, _ when d = colorD -> execute [Rotate Y2] task cube
-            | DR, d, _ when d = colorL -> execute [Rotate Z] task cube
-            | DF, d, _ when d = colorD -> execute [Rotate Y] task cube
-            | DF, d, _ when d = colorL -> execute [Rotate X2; Rotate Y'; Rotate Z'] task cube
-            | DB, d, _ when d = colorD -> execute [Rotate Y'] task cube
-            | DB, d, _ when d = colorL -> execute [Rotate X; Rotate Y] task cube
-            | FL, f, _ when f = colorD -> execute [Rotate X'] task cube
-            | FL, f, _ when f = colorL -> execute [Rotate Z'; Rotate Y] task cube
-            | FR, f, _ when f = colorD -> execute [Rotate X'; Rotate Y2] task cube
-            | FR, f, _ when f = colorL -> execute [Rotate Z; Rotate Y] task cube
-            | BL, b, _ when b = colorD -> execute [Rotate X] task cube
-            | BL, b, _ when b = colorL -> execute [Rotate X'; Rotate Z'] task cube
-            | BR, b, _ when b = colorD -> execute [Rotate X; Rotate Y2] task cube
-            | BR, b, _ when b = colorL -> execute [Rotate X; Rotate Z] task cube
-            | _ -> failwith "Unexpected edge position"
-        cube'
-    let moveCenterToLeftSide color cube =
-        let c = findCenter color cube
-        renderWithHighlights [centerToFaceSticker c] cube
-        printfn "Found %s center" (colorToString color)
-        pause ()
-        let cube' =
-            let task = "Rotate it to left side"
-            match c with
-            | Center.U -> execute [Move RW'; Move UW] task cube
-            | Center.D -> execute [Move RW; Move UW] task cube
-            | Center.L -> execute [] "Already in place!" cube
-            | Center.R -> execute [Move UW2] task cube // or Y2
-            | Center.F -> execute [Move UW] task cube
-            | Center.B -> execute [Move UW'] task cube
-        cube'
-    let solveFLPair colorF colorL colorD cube =
-        let moveFLEdgeToDF cube =
-            let e, (c0, c1) = findEdge colorF colorL cube // TODO: No need to search DL
-            renderWithHighlights (edgeToFaceStickers e) cube
-            printfn "Found %s/%s edge" (colorToString c0) (colorToString c1)
-            let task = "Move it to DF position"
-            match e, c0, c1 with // NOTE: not worrying about orientation
-            | UL, _, _ -> execute [Move U'; Move RW'] task cube // RW' easier M
-            | UR, _, _ -> execute [Move Move.U; Move RW'] task cube
-            | UF, _, _ -> execute [Move RW'] task cube
-            | UB, _, _ -> execute [Move RW2] task cube
-            | DL, _, _ -> failwith "Unexpected edge position (DL)"
-            | DR, _, _ -> execute [Move L'; Move D'; Move Move.L] task cube // tricky: maybe better than R2 U M
-            | DF, _, _ -> execute [] "Already in place!" cube
-            | DB, _, _ -> execute [Move RW] task cube // or L D L'
-            | FL, _, _ -> execute [Move F'] task cube
-            | FR, _, _ -> execute [Move Move.F] task cube
-            | BL, _, _ -> execute [Move Move.B; Move RW] task cube
-            | BR, _, _ -> execute [Move Move.B'; Move RW] task cube
-            | _ -> failwith "Unexpected edge position"
-        let cube = moveFLEdgeToDF cube
-        cube
-    let cube = rotateDLEdgeIntoPosition down left cube
-    let cube = moveCenterToLeftSide left cube
-    let cube = solveFLPair front left down cube
-    cube
 
 Console.BackgroundColor <- ConsoleColor.Black
 Console.ForegroundColor <- ConsoleColor.Gray
 Console.Clear()
 
-let hiligePieces () =
+let hilitePieces () =
     for c in [Center.U; D; L; R; F; B] do
         let stickers = centerToFaceSticker c
         renderWithHighlights [stickers] solved
@@ -217,20 +155,6 @@ let hiligePieces () =
         renderWithHighlights stickers solved
         printfn "Corner: %A" c
         pause ()
-
-let testRoux () =
-    let c, s = scramble 20
-    render c
-    printfn "Scramble: %s                  " (movesToString s)
-    pause ()
-    let c = roux c
-    if look Face.L Sticker.C c <> Color.B then failwith "Not solved CL"
-    if look Face.L Sticker.D c <> Color.B then failwith "Not solved DL"
-    if look Face.D Sticker.L c <> Color.W then failwith "Not solved DL"
-    let du = look Face.D Sticker.U c
-    let fd = look Face.F Sticker.D c
-    if not ((du = Color.R && fd = Color.B) || (du = Color.B && fd = Color.R)) then failwith "Not solved DF"
-    ignore
 
 let testSolver () =
     let checkDLEdge cube = look Face.L Sticker.D cube = Color.B && look Face.D Sticker.L cube = Color.W
@@ -254,9 +178,7 @@ let testSolver () =
             printfn "Solution (LC): %s" (stepsToString s)
             pause ()
 
-while true do testSolver ()
-
-while true do testRoux () |> ignore
+// while true do testSolver ()
 
 render solved
 pause ()
@@ -279,6 +201,7 @@ TODO:
 - Rank algorithms by "ease" (R, L, U, F, D, B, ... combinations, finger tricks, ...)
     - Maybe with user input or video analysis
 - Better scramble algorithm (reducing "useless" moves)
+- Idea: Sub-steps defined by steps to completed state (skip all sub-steps if complete)
 
 Long term:
 - Video analysis

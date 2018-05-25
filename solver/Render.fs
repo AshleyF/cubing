@@ -3,7 +3,7 @@
 open System
 open Cube
 
-let interactive = true
+let interactive = false
 
 let renderWithHighlights highlights cube =
     let renderFace f x y slice =
@@ -16,6 +16,7 @@ let renderWithHighlights highlights cube =
                     | Color.Y -> if hilited then ConsoleColor.Yellow else ConsoleColor.DarkGray // ConsoleColor.DarkYellow
                     | Color.B -> if hilited then ConsoleColor.Blue else ConsoleColor.DarkGray // ConsoleColor.DarkBlue
                     | Color.G -> if hilited then ConsoleColor.Green else ConsoleColor.DarkGray // ConsoleColor.DarkGreen
+                    | Color.A -> ConsoleColor.DarkGray
                 let hilited = List.length highlights = 0 || List.contains (f, s) highlights
                 Console.BackgroundColor <- cube |> Map.find f |> Map.find s |> toConsoleColor hilited
             let setColorForLinuxAndMac () =
@@ -26,6 +27,7 @@ let renderWithHighlights highlights cube =
                     | Color.Y -> if hilited then 220 else 100
                     | Color.B -> if hilited then 21  else 17
                     | Color.G -> if hilited then 10  else 22
+                    | Color.A -> 238
                 let hilited = List.length highlights = 0 || List.contains (f, s) highlights
                 printf "\u001b[48;5;%im" (cube |> Map.find f |> Map.find s |> toConsoleColor hilited)
             // setColorForLinuxAndMac ()
@@ -84,6 +86,17 @@ let colorToString = function
     | Color.Y -> "Y"
     | Color.B -> "B"
     | Color.G -> "G"
+    | Color.A -> "."
+
+let charToColor = function
+    | 'R' -> Color.R
+    | 'O' -> Color.O
+    | 'W' -> Color.W
+    | 'Y' -> Color.Y
+    | 'B' -> Color.B
+    | 'G' -> Color.G
+    | '.' -> Color.A
+    | _ -> failwith "Invalid color character"
 
 let cubeToString (cube: Map<Face, Map<Sticker, Color>>) =
     let str = seq {
@@ -118,18 +131,18 @@ let cubeToString (cube: Map<Face, Map<Sticker, Color>>) =
         yield look Face.L Sticker.C  cube |> colorToString
         yield look Face.L Sticker.R  cube |> colorToString
         yield look Face.F Sticker.L  cube |> colorToString
-        yield look Face.F Sticker.L  cube |> colorToString
         yield look Face.F Sticker.C  cube |> colorToString
-        yield look Face.R Sticker.R  cube |> colorToString
+        yield look Face.F Sticker.R  cube |> colorToString
+        yield look Face.R Sticker.L  cube |> colorToString
         yield look Face.R Sticker.C  cube |> colorToString
         yield look Face.R Sticker.R  cube |> colorToString
         yield look Face.L Sticker.DL cube |> colorToString
         yield look Face.L Sticker.D  cube |> colorToString
         yield look Face.L Sticker.DR cube |> colorToString
         yield look Face.F Sticker.DL cube |> colorToString
-        yield look Face.F Sticker.DL cube |> colorToString
         yield look Face.F Sticker.D  cube |> colorToString
-        yield look Face.R Sticker.DR cube |> colorToString
+        yield look Face.F Sticker.DR cube |> colorToString
+        yield look Face.R Sticker.DL cube |> colorToString
         yield look Face.R Sticker.D  cube |> colorToString
         yield look Face.R Sticker.DR cube |> colorToString
         yield look Face.D Sticker.UL cube |> colorToString
@@ -142,6 +155,16 @@ let cubeToString (cube: Map<Face, Map<Sticker, Color>>) =
         yield look Face.D Sticker.D  cube |> colorToString
         yield look Face.D Sticker.DR cube |> colorToString }
     String.Concat(str)
+
+let stringToCube (s: string) =
+    let c i = charToColor s.[i]
+    let b = faceOfStickers (c  0) (c  1) (c  2) (c  3) (c  4) (c  5) (c  6) (c  7) (c  8)
+    let u = faceOfStickers (c  9) (c 10) (c 11) (c 12) (c 13) (c 14) (c 15) (c 16) (c 17)
+    let l = faceOfStickers (c 18) (c 19) (c 20) (c 27) (c 28) (c 29) (c 36) (c 37) (c 38)
+    let f = faceOfStickers (c 21) (c 22) (c 23) (c 30) (c 31) (c 32) (c 39) (c 40) (c 41)
+    let r = faceOfStickers (c 24) (c 25) (c 26) (c 33) (c 34) (c 35) (c 42) (c 43) (c 44)
+    let d = faceOfStickers (c 45) (c 46) (c 47) (c 48) (c 49) (c 50) (c 51) (c 52) (c 53)
+    cubeOfFaces u d l r f b
 
 let rotationToString = function
     | X   -> "x"
@@ -202,6 +225,63 @@ let moveToString = function
     | E'  -> "E'"
     | E2  -> "E2"
 let movesToString moves = String.Join(' ', Seq.map moveToString moves)
+
+let stringToStep = function
+    | "x"  -> Rotate X
+    | "x'" -> Rotate X'
+    | "x2" -> Rotate X2
+    | "y"  -> Rotate Y
+    | "y'" -> Rotate Y'
+    | "y2" -> Rotate Y2
+    | "z"  -> Rotate Z
+    | "z'" -> Rotate Z'
+    | "z2" -> Rotate Z2
+    | "U"  -> Move Move.U
+    | "U'" -> Move U'
+    | "U2" -> Move U2
+    | "u"  -> Move UW
+    | "u'" -> Move UW'
+    | "u2" -> Move UW2
+    | "D"  -> Move Move.D
+    | "D'" -> Move D'
+    | "D2" -> Move D2
+    | "d"  -> Move DW
+    | "d'" -> Move DW'
+    | "d2" -> Move DW2
+    | "L"  -> Move Move.L
+    | "L'" -> Move L'
+    | "L2" -> Move L2
+    | "l"  -> Move LW
+    | "l'" -> Move LW'
+    | "l2" -> Move LW2
+    | "R"  -> Move Move.R
+    | "R'" -> Move R'
+    | "R2" -> Move R2
+    | "r"  -> Move RW
+    | "r'" -> Move RW'
+    | "r2" -> Move RW2
+    | "F"  -> Move Move.F
+    | "F'" -> Move F'
+    | "F2" -> Move F2
+    | "f"  -> Move FW
+    | "f'" -> Move FW'
+    | "f2" -> Move FW2
+    | "B"  -> Move Move.B
+    | "B'" -> Move B'
+    | "B2" -> Move B2
+    | "b"  -> Move BW
+    | "b'" -> Move BW'
+    | "bw" -> Move BW2
+    | "M"  -> Move M
+    | "M'" -> Move M'
+    | "M2" -> Move M2
+    | "S"  -> Move S
+    | "S'" -> Move S'
+    | "S2" -> Move S2
+    | "E"  -> Move E
+    | "E'" -> Move E'
+    | "E2" -> Move E2
+    | _ -> failwith "Unknown step notation"
 
 let stepToString = function
     | Rotate r -> rotationToString r

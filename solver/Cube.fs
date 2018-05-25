@@ -1,6 +1,6 @@
 ﻿module Cube
 
-type Color = R | O | W | Y | B | G
+type Color = R | O | W | Y | B | G | A
 type Face = U | D | L | R | F | B
 type Sticker = UL | U | UR | L | C | R | DL | D | DR
 type Slice = U | D | L | R | F | B | M | S | E
