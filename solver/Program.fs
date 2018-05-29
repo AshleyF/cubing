@@ -121,6 +121,13 @@ let genRoux () =
     let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
+    // // TOO SLOW! try full slotting!
+    // printfn "Full slotting FL"
+    // let caseFullFL c = caseLC c && (look Face.F Sticker.L c = Color.R && look Face.F Sticker.DL c = Color.R && look Face.L Sticker.R c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W)
+    // let solutions = genCasesAndSolutions false true true true 20 solvedLC caseFullFL "FullFL"
+    // let solvedFullFL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    // distinctCases solutions
+
     // printfn "Moving DLF corner to top with R/B up"
     // let caseNoWUp c0 c1 c2 = (c0 = Color.B && c1 = Color.R && c2 = Color.W) || (c0 = Color.R && c1 = Color.W && c2 = Color.B)
     // let caseDLFtoULF c = caseNoWUp (look Face.U Sticker.DL c) (look Face.F Sticker.UL c) (look Face.L Sticker.UR c)
@@ -133,8 +140,27 @@ let genRoux () =
     // distinctCases solutions
 
     pause ()
-genRoux ()
+// genRoux ()
 
+let genPaired () =
+    printfn "Scrambling %i cubes" numCubes
+    let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
+    printfn ""
+
+    printfn "Solving DL edge (during inspection)"
+    let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
+    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD "DLEdge"
+    let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Pairing BWR"
+    let casePairedBWR c = (look Face.F Sticker.DL c = Color.R && look Face.L Sticker.D c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W && look Face.D Sticker.L c = Color.W)
+    let solutions = genCasesAndSolutions false true true true 10 solvedDL casePairedBWR "PairBWR"
+    let solvedPairedBWR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+genPaired ()
+
+(*
 Console.BackgroundColor <- ConsoleColor.Black
 Console.ForegroundColor <- ConsoleColor.Gray
 Console.Clear()
@@ -189,6 +215,7 @@ pause ()
 
 renderWithHighlights [Face.U, Sticker.C; Face.U, Sticker.L; Face.U, Sticker.R] test
 pause ()
+*)
 
 (*
 
@@ -202,8 +229,12 @@ TODO:
     - Maybe with user input or video analysis
 - Better scramble algorithm (reducing "useless" moves)
 - Idea: Sub-steps defined by steps to completed state (skip all sub-steps if complete)
+- Function to rotate/mirror algorithms (also relative to fixed points? e.g. pair edge with corner vs. corner with edge)
 
 Long term:
 - Video analysis
 - Program synthesis for block-building steps
 *)
+
+printfn "DONE!"
+Console.ReadLine() |> ignore
