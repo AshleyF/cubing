@@ -70,6 +70,29 @@ function playToNextMarksAuto() {
     next();
 }
 
+function skipPlayNextMark(movesOnly) {
+    function jumpNext() {
+        for (var i in annotation.marks) {
+            var e = annotation.marks[i];
+            var move = (e.type == 'twist' || e.type == 'rotate');
+            if (e.frame > f && movesOnly == move) {
+                jump(e.frame);
+                return true;
+            }
+        }
+        return false;
+    }
+    restart = playing;
+    playing = true;
+    auto = false;
+    speed = 1;
+    if (jumpNext()) {
+        playToNextMark(false);
+        return true;
+    }
+    playTo(annotation.frames.last, 1);
+    return false;
+}
 
 function play(speed) {
     playTo(annotation.frames.last, speed);
