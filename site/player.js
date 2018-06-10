@@ -45,10 +45,10 @@ function jumpToPreviousMark() {
     jump(n);
 }
 
-function playToNextMark() {
+function playToNextMark(movesOnly) {
     for (var i in annotation.marks) {
         var e = annotation.marks[i];
-        if (e.frame > f) {
+        if (e.frame > f && (!movesOnly || (e.type != 'idle' && e.type != 'regrip'))) {
             playTo(e.frame, 1);
             return true;
         }
@@ -59,7 +59,7 @@ function playToNextMark() {
 
 function playToNextMarksAuto() {
     function nextMark() {
-        if (playing && playToNextMark()) {
+        if (playing && playToNextMark(true)) {
             window.setTimeout(nextMark, 3000);
         }
     }

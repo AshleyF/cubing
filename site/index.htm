@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <title>Brief Cubing</title>
         <link rel="stylesheet" href="default.css" />
-        <script src="solves/zemdags.4.22/annotation.js"></script>
+        <!-- script src="solves/zemdags.4.22/annotation.js"></script -->
+        <script src="solves/ashleyf-sub40_25MAY2018/annotation.js"></script>
         <script src="render.js"></script>
         <script src="player.js"></script>
     </head>
@@ -18,11 +19,11 @@
         <div>
             <a href="javascript:rewind()">Rewind</a>
             <a href="javascript:play(1)">Play</a>
+            <a href="javascript:pause()">Pause</a>
             <a href="javascript:play(0.5)">Double-speed</a>
             <a href="javascript:play(2)">Half-speed</a>
             <a href="javascript:play(4)">Quarter-speed</a>
             <a href="javascript:play(10)">Tenth-speed</a>
-            <a href="javascript:pause()">Pause</a>
             <a href="javascript:step(-10)">&lt;&lt;</a>
             <a href="javascript:step(-1)">&lt;</a>
             <a href="javascript:step(1)">&gt;</a>
@@ -31,7 +32,8 @@
         <div id="marks"></div>
         <div>
             <a href="javascript:jumpToPreviousMark()">Previous</a>
-            <a href="javascript:playToNextMark()">Next</a>
+            <a href="javascript:playToNextMark(false)">Next</a>
+            <a href="javascript:playToNextMark(true)">Skip</a>
             <a href="javascript:playToNextMarksAuto()">Auto</a>
         </div>
     </body>

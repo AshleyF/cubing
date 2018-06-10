@@ -55,7 +55,7 @@ function renderTime(f) {
         }
     }
     if (f >= timerStopFrame) {
-        render('Solved', note, annotation.time * annotation.frames.fps, solveStopFrame - solveStartFrame);
+        render('Solved', note, (annotation.time ? annotation.time * annotation.frames.fps : timerStopFrame - timerStartFrame), solveStopFrame - solveStartFrame);
     } else if (f >= timerStartFrame) {
         render('Solving', note, f - timerStartFrame, f - solveStartFrame);
     } else if (f >= inspectionFrame) {
@@ -70,38 +70,42 @@ function renderStats(f) {
         twistCount = 0,
         rotationFrames = 0,
         rotationCount = 0,
+        regripFrames = 0,
         lockupFrames = 0,
         idleFrames = 0,
         solving = false,
         last = null;
     for (var i in annotation.marks) {
         var e = annotation.marks[i];
-        if (e.frame > f) break;
         if (solving) {
-            var frames = e.frame - last.frame;
-            switch (e.type) {
+            var frames = (e.frame > f ? f : e.frame) - last.frame;
+            switch (last.type) {
                 case 'twist': twistFrames += frames; twistCount++; break;
                 case 'rotate': rotationFrames += frames; rotationCount++; break;
                 case 'idle': idleFrames += frames; break;
+                case 'regrip': regripFrames += frames; break;
                 case 'lockup': lockupFrames += frames; break;
+                case 'solve-start': break;
                 case 'solve-stop': solving = false; break;
-                default: throw "Unknown mark type during solving.";
+                default: throw 'Unknown mark type during solving: ' + last.type;
             }
         }
         if (e.type == 'solve-start') {
             solving = true;
         }
         last = e;
+        if (e.frame > f) break;
     }
     var twists = 'Twists: ' + getTime(twistFrames) + ' (' + twistCount + ')';
     var rotations = 'Rotations: ' + getTime(rotationFrames) + ' (' + rotationCount + ')';
+    var regrips = 'Regrips: ' + getTime(regripFrames);
     var lockups = 'Lockups: ' + getTime(lockupFrames);
     var idle = 'Idle: ' + getTime(idleFrames);
-    document.getElementById('stats').innerHTML = twists + '<br />' + rotations + '<br />' + lockups + '<br />' + idle;
+    document.getElementById('stats').innerHTML = twists + '<br />' + rotations + '<br />' + regrips + '<br />' + lockups + '<br />' + idle;
 }
 
 function renderFrame(f) {
-    frame.src = 'solves/' + annotation.frames.base + f + '.jpg';
+    frame.src = 'solves/' + annotation.frames.base + ('000' + f).slice(-4) + '.jpg';
     document.getElementById('debug').innerText = 'Frame: ' + f;
     renderTime(f);
     renderStats(f);
