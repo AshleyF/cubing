@@ -1,16 +1,21 @@
 var f = annotation.frames.first,
     to = annotation.frames.last,
     playing = false,
-    auto = false;
+    auto = false,
+    speed = 1,
+    restart = false;
 
 function next() {
-    if (playing && f < to && step(1)) {
+    playing = !restart && playing && f < to && step(1);
+    if (playing) {
         playing = true;
-        window.setTimeout(next, 1000 / annotation.frames.fps);
+        window.setTimeout(next, 1000 / annotation.frames.fps * speed);
     }
+    restart = false;
 }
 
 function step(i) {
+    restart = playing;
     playing = false;
     auto = false;
     f += i;
@@ -22,8 +27,10 @@ function step(i) {
     return success;
 }
 
-function playTo(f) {
+function playTo(f, s) {
+    restart = playing;
     playing = true;
+    speed = s;
     auto = false;
     to = f;
     next();
@@ -42,44 +49,46 @@ function playToNextMark() {
     for (var i in annotation.marks) {
         var e = annotation.marks[i];
         if (e.frame > f) {
-            playTo(e.frame);
+            playTo(e.frame, 1);
             return true;
         }
     }
-    playTo(annotation.frames.last);
+    playTo(annotation.frames.last, 1);
     return false;
 }
 
 function playToNextMarksAuto() {
-    function next() {
+    function nextMark() {
         if (playing && playToNextMark()) {
-            window.setTimeout(next, 3000);
+            window.setTimeout(nextMark, 3000);
         }
     }
+    restart = playing;
     playing = true;
     auto = true;
+    speed = 1;
     next();
 }
 
 
-function play() {
-    playTo(annotation.frames.last);
+function play(speed) {
+    playTo(annotation.frames.last, speed);
 }
 
 function rewind() {
-    playing = false;
+    playing = restart = false;
     auto = false;
     f = annotation.frames.first;
     renderFrame(f);
 }
 
 function pause() {
-    playing = false;
+    playing = restart = false;
     auto = false;
 }
 
 function jump(i) {
-    playing = false;
+    playing = restart = false;
     auto = false;
     f = i;
     renderFrame(f);
