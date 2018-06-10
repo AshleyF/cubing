@@ -64,7 +64,7 @@ var annotation = {
         { name: "F'",         frame: 2466, type: "twist" },
         { name: "R",          frame: 2468, type: "twist" },
         { name: "U2'",        frame: 2470, type: "twist" },
-        { name: "R'",         frame: 2473, type: "twist", note: "OLL(CP)" },
+        { name: "R'",         frame: 2473, type: "twist", note: "OLL[CP]" },
         { name: "Release",    frame: 2476, type: "solve-stop" },
         { name: "Stop",       frame: 2479, type: "timer-stop" },
     ]

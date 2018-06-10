@@ -15,7 +15,7 @@ function renderMarks() {
         var e = annotation.marks[i];
         htm += '<a href="javascript:jump(' + e.frame + ')">' + e.name + '</a> '
         if (e.note) {
-            htm += ' (' + e.note + ')';
+            htm += ' (' + e.note + ') ';
         }
     }
     document.getElementById('marks').innerHTML = htm;
