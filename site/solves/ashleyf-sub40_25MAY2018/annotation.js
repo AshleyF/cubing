@@ -56,7 +56,7 @@ var annotation = {
         { name: "...",        frame: 444,  type: "idle" },
         { name: "M'",         frame: 451,  type: "twist" },
         { name: "...",        frame: 454,  type: "idle" },
-        { name: "...",        frame: 461,  type: "regrip", notes: "Psych" },
+        { name: "...",        frame: 461,  type: "regrip", note: "Psych" },
         { name: "U2",         frame: 479,  type: "twist" },
         { name: "...",        frame: 488,  type: "regrip" },
         { name: "R'",         frame: 496,  type: "twist" },

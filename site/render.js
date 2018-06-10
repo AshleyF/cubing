@@ -28,6 +28,16 @@ function init() {
     renderMarks();
 }
 
+function loadSolve(name) {
+    var script = document.getElementById('annotation'); // document.createElement('script');
+    document.head.removeChild(script);
+    script = document.createElement('script');
+    script.id = 'annotation';
+    document.head.appendChild(script);
+    script.onload = init;
+    script.src = './solves/' + name + '/annotation.js';
+}
+
 function getTime(frames) {
     return (frames / annotation.frames.fps).toFixed(2);
 }
@@ -100,7 +110,7 @@ function renderStats(f) {
     var rotations = 'Rotations: ' + getTime(rotationFrames) + ' (' + rotationCount + ')';
     var regrips = 'Regrips: ' + getTime(regripFrames);
     var lockups = 'Lockups: ' + getTime(lockupFrames);
-    var idle = 'Idle: ' + getTime(idleFrames);
+    var idle = 'Idle/Looking: ' + getTime(idleFrames);
     document.getElementById('stats').innerHTML = twists + '<br />' + rotations + '<br />' + regrips + '<br />' + lockups + '<br />' + idle;
 }
 

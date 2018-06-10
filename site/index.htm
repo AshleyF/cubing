@@ -4,12 +4,15 @@
         <meta charset="UTF-8">
         <title>Brief Cubing</title>
         <link rel="stylesheet" href="default.css" />
-        <!-- script src="solves/zemdags.4.22/annotation.js"></script -->
-        <script src="solves/ashleyf-sub40_25MAY2018/annotation.js"></script>
+        <script id="annotation" src="solves/zemdags.4.22/annotation.js"></script>
         <script src="render.js"></script>
         <script src="player.js"></script>
     </head>
     <body onload="init()">
+        <div>
+            <a href="javascript:loadSolve('zemdags.4.22')">Zemdags WR</a>
+            <a href="javascript:loadSolve('ashleyf-sub40_25MAY2018')">AshleyF</a>
+        </div>
         <h2 id="info"></h2>
         <h3 id="scramble"></h3>
         <img id="frame" width="512" height="288" />
