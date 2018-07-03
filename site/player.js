@@ -1,7 +1,6 @@
 var f = annotation.frames.first,
     to = annotation.frames.last,
     playing = false,
-    auto = false,
     speed = 1,
     restart = false;
 
@@ -17,7 +16,6 @@ function next() {
 function step(i) {
     restart = playing;
     playing = false;
-    auto = false;
     f += i;
     var success = (f >= annotation.frames.first && f <= annotation.frames.last);
     if (!success) {
@@ -31,7 +29,6 @@ function playTo(f, s) {
     restart = playing;
     playing = true;
     speed = s;
-    auto = false;
     to = f;
     next();
 }
@@ -57,19 +54,6 @@ function playToNextMark(movesOnly) {
     return false;
 }
 
-function playToNextMarksAuto() {
-    function nextMark() {
-        if (playing && playToNextMark(true)) {
-            window.setTimeout(nextMark, 3000);
-        }
-    }
-    restart = playing;
-    playing = true;
-    auto = true;
-    speed = 1;
-    next();
-}
-
 function skipPlayNextMark(movesOnly) {
     function jumpNext() {
         for (var i in annotation.marks) {
@@ -84,7 +68,6 @@ function skipPlayNextMark(movesOnly) {
     }
     restart = playing;
     playing = true;
-    auto = false;
     speed = 1;
     if (jumpNext()) {
         playToNextMark(false);
@@ -100,19 +83,16 @@ function play(speed) {
 
 function rewind() {
     playing = restart = false;
-    auto = false;
     f = annotation.frames.first;
     renderFrame(f);
 }
 
 function pause() {
     playing = restart = false;
-    auto = false;
 }
 
 function jump(i) {
     playing = restart = false;
-    auto = false;
     f = i;
     renderFrame(f);
 }
