@@ -93,6 +93,159 @@ GiikerCube.prototype = {
     str += giikerState.slice(32, 40).join(".");
     console.log(str);
 
+    // play
+
+    const DFR = 0;
+    const UFR = 1;
+    const UFL = 2;
+    const DFL = 3;
+    const DBR = 4;
+    const UBR = 5;
+    const UBL = 6;
+    const DBL = 7;
+
+    function giikerCornerColor(cornerNum, i) {
+      var corners = ["GYR", "GRW", "GWO", "GOY", "BRY", "BWR", "BOW", "BYO"];
+      var corner = giikerState[cornerNum] - 1;
+      var orientation = giikerState[cornerNum + 8] - 1; // 0 CW, 1 CCW, 2 solved
+      var colors = corners[corner];
+      var reverse = cornerNum == 0 || cornerNum == 2 || cornerNum == 5 || cornerNum == 7; // TODO: understand this!
+      var index = (i + (reverse ? 3 - orientation : orientation)) % 3;
+      // if (cornerNum == UBL) {
+      //   console.log("Corner: " + corner);
+      //   console.log("Orientation: " + orientation);
+      //   console.log("Colors: " + colors);
+      //   console.log("Index: " + index);
+      // }
+      return colors[index]
+    }
+
+    const DF = 0;
+    const FR = 1;
+    const UF = 2;
+    const FL = 3;
+    const DR = 4;
+    const UR = 5;
+    const UL = 6;
+    const DL = 7;
+    const DB = 8;
+    const BR = 9;
+    const UB = 10;
+    const BL = 11;
+
+    function giikerEdgeColor(edgeNum, i) {
+      var edges = ["YG", "RG", "WG", "OG", "RY", "RW", "OW", "OY", "YB", "RB", "WB", "OB"]
+      var edge = giikerState[16 + edgeNum] - 1;
+      var byte = giikerState[28 + Math.floor(edgeNum / 4)];
+      var mask = Math.pow(2, (3 - (edgeNum % 4)));
+      var flip = (byte & mask) != 0;
+      var dbg = edgeNum == UB;
+      if (dbg) {
+        console.log("Byte: " + Math.floor(edgeNum / 4) + " = " + giikerState[28 + Math.floor(edgeNum / 4)]);
+        console.log("WTF: " + (3 - (edgeNum % 4)));
+        console.log("Bit: " + Math.pow(2, (3 - (edgeNum % 4))));
+        console.log("ByteVal: " + byte);
+        console.log("MaskVal: " + mask);
+        console.log("GOD DAMN IT: " + (byte & mask));
+        console.log("Edge: " + edge + " = " + edges[edge]);
+        console.log("Flip: " + flip);
+      }
+      i = flip ? (i == 0 ? 1 : 0) : i;
+      if (dbg && flip) {
+        console.log("FLIP: " + i);
+      }
+      return edges[edge][i];
+    }
+
+    var s = "";
+    // B
+    s += giikerCornerColor(DBL, 2);
+    s += giikerEdgeColor(DB, 1);
+    s += giikerCornerColor(DBR, 1);
+    s += giikerEdgeColor(BL, 1);
+    s += "B";
+    s += giikerEdgeColor(BR, 1);
+    s += giikerCornerColor(UBL, 1);
+    s += giikerEdgeColor(UB, 1);
+    s += giikerCornerColor(UBR, 2);
+    // U
+    s += giikerCornerColor(UBL, 0);
+    s += giikerEdgeColor(UB, 0)
+    s += giikerCornerColor(UBR, 0);
+    s += giikerEdgeColor(UL, 1);
+    s += "W";
+    s += giikerEdgeColor(UR, 1);
+    s += giikerCornerColor(UFL, 0);
+    s += giikerEdgeColor(UF, 0);
+    s += giikerCornerColor(UFR, 0);
+    // L0
+    s += giikerCornerColor(UBL, 2);
+    s += giikerEdgeColor(UL, 0);
+    s += giikerCornerColor(UFL, 1);
+    // F0
+    s += giikerCornerColor(UFL, 2);
+    s += giikerEdgeColor(UF, 1);
+    s += giikerCornerColor(UFR, 1);
+    // R0
+    s += giikerCornerColor(UFR, 2);
+    s += giikerEdgeColor(UR, 0);
+    s += giikerCornerColor(UBR, 1);
+    // L1
+    s += giikerEdgeColor(BL, 0);
+    s += "O";
+    s += giikerEdgeColor(FL, 0);
+    // F1
+    s += giikerEdgeColor(FL, 1);
+    s += "G";
+    s += giikerEdgeColor(FR, 1);
+    // R1
+    s += giikerEdgeColor(FR, 0);
+    s += "R";
+    s += giikerEdgeColor(BR, 0);
+    // L2
+    s += giikerCornerColor(DBL, 1);
+    s += giikerEdgeColor(DL, 0);
+    s += giikerCornerColor(DFL, 2);
+    // F2
+    s += giikerCornerColor(DFL, 1);
+    s += giikerEdgeColor(DF, 1);
+    s += giikerCornerColor(DFR, 2);
+    // R2
+    s += giikerCornerColor(DFR, 1);
+    s += giikerEdgeColor(DR, 0);
+    s += giikerCornerColor(DBR, 2);
+    // D
+    s += giikerCornerColor(DFL, 0);
+    s += giikerEdgeColor(DF, 0);
+    s += giikerCornerColor(DFR, 0);
+    s += giikerEdgeColor(DL, 1);
+    s += "Y";
+    s += giikerEdgeColor(DR, 1);
+    s += giikerCornerColor(DBL, 0);
+    s += giikerEdgeColor(DB, 0);
+    s += giikerCornerColor(DBR, 0);
+    console.log(s);
+
+    function matchPattern(pattern, state) {
+      for (var i in pattern) {
+        var p = pattern[i];
+        if (p != '.' && p != state[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    if (matchPattern("BBBBBBBBBWWWWWWWWWOOOGGGRRROOOGGGRRROOOGGGRRRYYYYYYYYY", s)) {
+      console.log("CONGRATS! SOLVED!");
+    } else if (matchPattern("...BBBBBBWWW......O.OGGGR.RO.OGGGR.R..................", s)) {
+      console.log("SECOND BLOCK - F2B!")
+    } else if (matchPattern("...BBBBBBWWW......O.......RO.......R..................", s)) {
+      console.log("FIRST BLOCK - FB!")
+    }
+
+    // endplay
+
     for (var l of this.listeners) {
       l({
         latestMove: this.giikerMoveToAlgMove(giikerState[32], giikerState[33]),

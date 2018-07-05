@@ -361,6 +361,28 @@
              propertySameOrBothMissing(moveA, moveB, "endLayer");
     }
 
+    function areOpposite(moveA, moveB) {
+      if (moveA.type !== "move" || moveB.type !== "move") {
+        throw new Error("Something other than a move was passed into opposite().");
+      }
+
+      return ((moveA.base == "L" && moveB.base == "R") ||
+              (moveA.base == "R" && moveB.base == "L") ||
+              (moveA.base == "U" && moveB.base == "D") ||
+              (moveA.base == "D" && moveB.base == "U") ||
+              (moveA.base == "F" && moveB.base == "B") ||
+              (moveA.base == "B" && moveB.base == "F"));
+    }
+
+    function isSlice(moveA, moveB) {
+      // L -1, R +1 for example is really M -1
+      if (moveA.type !== "move" || moveB.type !== "move") {
+        return false;
+      }
+
+      return (areOpposite(moveA, moveB) && moveA.amount + moveB.amount == 0);
+    }
+
 
     /****************************************************************/
 
@@ -380,7 +402,7 @@
             sameBlock(algOut[algOut.length-1], move)
           ) {
           var amount = algOut[algOut.length-1].amount + move.amount;
-          // Mod to [-2, -1, 0, 1, 2]
+          // Mod to [-2, -1, 0, 1, 2
           // x | 0 truncates x towards 0.
           amount = amount - 4 * round(amount / 4);
           if (amount == 0) {
@@ -389,6 +411,35 @@
           else {
             algOut[algOut.length-1].amount = amount;
           }
+        }
+        else if (i < sequence.length - 1 && isSlice(move, sequence[i + 1])) {
+          console.log("Slice");
+          var sliceMove = cloneMove(move);
+          switch (move.base) {
+            case "R":
+              sliceMove.base = "M";
+              break;
+            case "L":
+              sliceMove.base = "M";
+              sliceMove.amount = -sliceMove.amount;
+              break;
+            case "U":
+              sliceMove.base = "E";
+              break;
+            case "D":
+              sliceMove.base = "E";
+              sliceMove.amount = -sliceMove.amount;
+              break;
+            case "F":
+              sliceMove.base = "S";
+              break;
+            case "B":
+              sliceMove.base = "S";
+              sliceMove.amount = -sliceMove.amount;
+              break;
+          }
+          algOut.push(sliceMove);
+          i++;
         }
         else {
           algOut.push(cloneMove(move));
