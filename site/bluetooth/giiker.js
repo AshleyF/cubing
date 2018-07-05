@@ -111,12 +111,6 @@ GiikerCube.prototype = {
       var colors = corners[corner];
       var reverse = cornerNum == 0 || cornerNum == 2 || cornerNum == 5 || cornerNum == 7; // TODO: understand this!
       var index = (i + (reverse ? 3 - orientation : orientation)) % 3;
-      // if (cornerNum == UBL) {
-      //   console.log("Corner: " + corner);
-      //   console.log("Orientation: " + orientation);
-      //   console.log("Colors: " + colors);
-      //   console.log("Index: " + index);
-      // }
       return colors[index]
     }
 
@@ -139,22 +133,14 @@ GiikerCube.prototype = {
       var byte = giikerState[28 + Math.floor(edgeNum / 4)];
       var mask = Math.pow(2, (3 - (edgeNum % 4)));
       var flip = (byte & mask) != 0;
-      var dbg = edgeNum == UB;
-      if (dbg) {
-        console.log("Byte: " + Math.floor(edgeNum / 4) + " = " + giikerState[28 + Math.floor(edgeNum / 4)]);
-        console.log("WTF: " + (3 - (edgeNum % 4)));
-        console.log("Bit: " + Math.pow(2, (3 - (edgeNum % 4))));
-        console.log("ByteVal: " + byte);
-        console.log("MaskVal: " + mask);
-        console.log("GOD DAMN IT: " + (byte & mask));
-        console.log("Edge: " + edge + " = " + edges[edge]);
-        console.log("Flip: " + flip);
-      }
-      i = flip ? (i == 0 ? 1 : 0) : i;
-      if (dbg && flip) {
-        console.log("FLIP: " + i);
-      }
-      return edges[edge][i];
+      return edges[edge][flip ? (i == 0 ? 1 : 0) : i];
+    }
+
+    function giikerTwist(i) {
+      var twists = ["B", "D", "L", "U", "R", "F"];
+      var twist = giikerState[32 + i] - 1;
+      var amount = giikerState[32 + 1 + i];
+      return twists[twist] + (amount == 2 ? "2" : amount == 3 ? "'" : "");
     }
 
     var s = "";
@@ -226,6 +212,12 @@ GiikerCube.prototype = {
     s += giikerCornerColor(DBR, 0);
     console.log(s);
 
+    var m = giikerTwist(0);
+    m += " " + giikerTwist(1);
+    m += " " + giikerTwist(2);
+    m += " " + giikerTwist(3);
+    console.log(m);
+
     function matchPattern(pattern, state) {
       for (var i in pattern) {
         var p = pattern[i];
@@ -236,11 +228,35 @@ GiikerCube.prototype = {
       return true;
     }
 
+    // BBBBBBBBBWWWWWWWWWOOOGGGRRROOOGGGRRROOOGGGRRRYYYYYYYYY
+    // BBBBBBBBBRRRWWWRRRWOWGGGYRYWOWGGGYRYWOWGGGYRYOOOYYYOOO
+    // BBBBBBBBBYYYWWWYYYRORGGGORORORGGGORORORGGGOROWWWYYYWWW
+    // BBBBBBBBBOOOWWWOOOYOYGGGWRWYOYGGGWRWYOYGGGWRWRRRYYYRRR
+    // *********   ***    * ***    * *** *  * *** *    ***
+    // BBBBBBBBBUUUUUUUUULLLFFFRRRLLLFFFRRRLLLFFFRRRDDDDDDDDD
+
     if (matchPattern("BBBBBBBBBWWWWWWWWWOOOGGGRRROOOGGGRRROOOGGGRRRYYYYYYYYY", s)) {
       console.log("CONGRATS! SOLVED!");
-    } else if (matchPattern("...BBBBBBWWW......O.OGGGR.RO.OGGGR.R..................", s)) {
+    } else if (matchPattern("B.BBBBBBBWWW......O.......RO.......RO.OG.GR.RY.Y...Y.Y", s) ||
+               matchPattern("R.RBBBBBBWWW......O.......RO.......RB.BO.OG.GY.Y...Y.Y", s) ||
+               matchPattern("G.GBBBBBBWWW......O.......RO.......RR.RB.BO.OY.Y...Y.Y", s) ||
+               matchPattern("O.OBBBBBBWWW......O.......RO.......RG.GR.RB.BY.Y...Y.Y", s)) {
+               matchPattern("BBBBB.BBBRRR.....RW.....Y.YW........W.....Y.Y......OO.", s) ||
+      console.log("CORNERS PERMUTED - CO/CP!")
+    } else if (matchPattern("...BBBBBBWWW......O.......RO.......R.........Y.Y...Y.Y", s) ||
+               matchPattern("BB.BB.BB.RR.......W.....Y.YW........W.....Y.Y......OO.", s) ||
+               matchPattern("BBBBBB...Y.Y...Y.Y.........R.......OR.......O......WWW", s) ||
+               matchPattern(".BB.BB.BB.OO......Y.Y.....W........WY.Y.....W.......RR", s)) {
+      console.log("CORNERS ORIENTED - CO!")
+    } else if (matchPattern("...BBBBBBWWW......O.OGGGR.RO.OGGGR.R..................", s) ||
+               matchPattern("BB.BB.BB.RR....RR.W.WGG....W.WGG....W.WGG....OO....OO.", s) ||
+               matchPattern("BBBBBB.....................R.RGGGO.OR.RGGGO.OWWW...WWW", s) ||
+               matchPattern(".BB.BB.BB.OO....OO....GGW.W....GGW.W....GGW.W.RR....RR", s)) {
       console.log("SECOND BLOCK - F2B!")
-    } else if (matchPattern("...BBBBBBWWW......O.......RO.......R..................", s)) {
+    } else if (matchPattern("...BBBBBBWWW......O.......RO.......R..................", s) ||
+               matchPattern("BB.BB.BB.RR.......W........W........W..............OO.", s) ||
+               matchPattern("BBBBBB.....................R.......OR.......O......WWW", s) ||
+               matchPattern(".BB.BB.BB.OO..............W........W........W.......RR", s)) {
       console.log("FIRST BLOCK - FB!")
     }
 
