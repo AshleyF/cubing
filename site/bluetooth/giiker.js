@@ -105,7 +105,7 @@ GiikerCube.prototype = {
     const DBL = 7;
 
     function giikerCornerColor(cornerNum, i) {
-      var corners = ["GYR", "GRW", "GWO", "GOY", "BRY", "BWR", "BOW", "BYO"];
+      var corners = ["gyr", "grw", "gwo", "goy", "bry", "bwr", "bow", "byo"];
       var corner = giikerState[cornerNum] - 1;
       var orientation = giikerState[cornerNum + 8] - 1; // 0 CW, 1 CCW, 2 solved
       var colors = corners[corner];
@@ -128,7 +128,7 @@ GiikerCube.prototype = {
     const BL = 11;
 
     function giikerEdgeColor(edgeNum, i) {
-      var edges = ["YG", "RG", "WG", "OG", "RY", "RW", "OW", "OY", "YB", "RB", "WB", "OB"]
+      var edges = ["yg", "rg", "wg", "og", "ry", "rw", "ow", "oy", "yb", "rb", "wb", "ob"]
       var edge = giikerState[16 + edgeNum] - 1;
       var byte = giikerState[28 + Math.floor(edgeNum / 4)];
       var mask = Math.pow(2, (3 - (edgeNum % 4)));
@@ -136,12 +136,165 @@ GiikerCube.prototype = {
       return edges[edge][flip ? (i == 0 ? 1 : 0) : i];
     }
 
+    function giikerColors() {
+      // U
+      var s = giikerCornerColor(UBL, 0);
+      s += giikerEdgeColor(UB, 0)
+      s += giikerCornerColor(UBR, 0);
+      s += giikerEdgeColor(UL, 1);
+      s += "w";
+      s += giikerEdgeColor(UR, 1);
+      s += giikerCornerColor(UFL, 0);
+      s += giikerEdgeColor(UF, 0);
+      s += giikerCornerColor(UFR, 0);
+      // R
+      s += giikerCornerColor(UFR, 2);
+      s += giikerEdgeColor(UR, 0);
+      s += giikerCornerColor(UBR, 1);
+      s += giikerEdgeColor(FR, 0);
+      s += "r";
+      s += giikerEdgeColor(BR, 0);
+      s += giikerCornerColor(DFR, 1);
+      s += giikerEdgeColor(DR, 0);
+      s += giikerCornerColor(DBR, 2);
+      // F
+      s += giikerCornerColor(UFL, 2);
+      s += giikerEdgeColor(UF, 1);
+      s += giikerCornerColor(UFR, 1);
+      s += giikerEdgeColor(FL, 1);
+      s += "g";
+      s += giikerEdgeColor(FR, 1);
+      s += giikerCornerColor(DFL, 1);
+      s += giikerEdgeColor(DF, 1);
+      s += giikerCornerColor(DFR, 2);
+      // D
+      s += giikerCornerColor(DFL, 0);
+      s += giikerEdgeColor(DF, 0);
+      s += giikerCornerColor(DFR, 0);
+      s += giikerEdgeColor(DL, 1);
+      s += "y";
+      s += giikerEdgeColor(DR, 1);
+      s += giikerCornerColor(DBL, 0);
+      s += giikerEdgeColor(DB, 0);
+      s += giikerCornerColor(DBR, 0);
+      // L
+      s += giikerCornerColor(UBL, 2);
+      s += giikerEdgeColor(UL, 0);
+      s += giikerCornerColor(UFL, 1);
+      s += giikerEdgeColor(BL, 0);
+      s += "o";
+      s += giikerEdgeColor(FL, 0);
+      s += giikerCornerColor(DBL, 1);
+      s += giikerEdgeColor(DL, 0);
+      s += giikerCornerColor(DFL, 2);
+      // B
+      s += giikerCornerColor(DBL, 2);
+      s += giikerEdgeColor(DB, 1);
+      s += giikerCornerColor(DBR, 1);
+      s += giikerEdgeColor(BL, 1);
+      s += "b";
+      s += giikerEdgeColor(BR, 1);
+      s += giikerCornerColor(UBL, 1);
+      s += giikerEdgeColor(UB, 1);
+      s += giikerCornerColor(UBR, 2);
+      return s;
+    }
+
     function giikerTwist(i) {
       var twists = ["B", "D", "L", "U", "R", "F"];
-      var twist = giikerState[32 + i] - 1;
-      var amount = giikerState[32 + 1 + i];
+      var twist = giikerState[32 + i * 2] - 1;
+      var amount = giikerState[32 + 1 + i * 2];
       return twists[twist] + (amount == 2 ? "2" : amount == 3 ? "'" : "");
     }
+
+    var m = giikerTwist(0);
+    m += " " + giikerTwist(1);
+    m += " " + giikerTwist(2);
+    m += " " + giikerTwist(3);
+    console.log(m);
+
+    document.getElementById("render").src = "http://cube.crider.co.uk/visualcube.php?fmt=svg&amp;size=256&amp;view=trans&amp;co=0&amp;fc=" + giikerColors();
+
+    var c = "";
+    // B
+    c += "   ";
+    c += giikerCornerColor(DBL, 2);
+    c += giikerEdgeColor(DB, 1);
+    c += giikerCornerColor(DBR, 1);
+    c += "\n   ";
+    c += giikerEdgeColor(BL, 1);
+    c += "B";
+    c += giikerEdgeColor(BR, 1);
+    c += "\n   "
+    c += giikerCornerColor(UBL, 1);
+    c += giikerEdgeColor(UB, 1);
+    c += giikerCornerColor(UBR, 2);
+    // U
+    c += "\n   ";
+    c += giikerCornerColor(UBL, 0);
+    c += giikerEdgeColor(UB, 0)
+    c += giikerCornerColor(UBR, 0);
+    c += "\n   "
+    c += giikerEdgeColor(UL, 1);
+    c += "W";
+    c += giikerEdgeColor(UR, 1);
+    c += "\n   "
+    c += giikerCornerColor(UFL, 0);
+    c += giikerEdgeColor(UF, 0);
+    c += giikerCornerColor(UFR, 0);
+    // L0
+    c += "\n";
+    c += giikerCornerColor(UBL, 2);
+    c += giikerEdgeColor(UL, 0);
+    c += giikerCornerColor(UFL, 1);
+    // F0
+    c += giikerCornerColor(UFL, 2);
+    c += giikerEdgeColor(UF, 1);
+    c += giikerCornerColor(UFR, 1);
+    // R0
+    c += giikerCornerColor(UFR, 2);
+    c += giikerEdgeColor(UR, 0);
+    c += giikerCornerColor(UBR, 1);
+    // L1
+    c += "\n";
+    c += giikerEdgeColor(BL, 0);
+    c += "O";
+    c += giikerEdgeColor(FL, 0);
+    // F1
+    c += giikerEdgeColor(FL, 1);
+    c += "G";
+    c += giikerEdgeColor(FR, 1);
+    // R1
+    c += giikerEdgeColor(FR, 0);
+    c += "R";
+    c += giikerEdgeColor(BR, 0);
+    // L2
+    c += "\n";
+    c += giikerCornerColor(DBL, 1);
+    c += giikerEdgeColor(DL, 0);
+    c += giikerCornerColor(DFL, 2);
+    // F2
+    c += giikerCornerColor(DFL, 1);
+    c += giikerEdgeColor(DF, 1);
+    c += giikerCornerColor(DFR, 2);
+    // R2
+    c += giikerCornerColor(DFR, 1);
+    c += giikerEdgeColor(DR, 0);
+    c += giikerCornerColor(DBR, 2);
+    // D
+    c += "\n   ";
+    c += giikerCornerColor(DFL, 0);
+    c += giikerEdgeColor(DF, 0);
+    c += giikerCornerColor(DFR, 0);
+    c += "\n   ";
+    c += giikerEdgeColor(DL, 1);
+    c += "Y";
+    c += giikerEdgeColor(DR, 1);
+    c += "\n   ";
+    c += giikerCornerColor(DBL, 0);
+    c += giikerEdgeColor(DB, 0);
+    c += giikerCornerColor(DBR, 0);
+    console.log(c);
 
     var s = "";
     // B
@@ -211,12 +364,6 @@ GiikerCube.prototype = {
     s += giikerEdgeColor(DB, 0);
     s += giikerCornerColor(DBR, 0);
     console.log(s);
-
-    var m = giikerTwist(0);
-    m += " " + giikerTwist(1);
-    m += " " + giikerTwist(2);
-    m += " " + giikerTwist(3);
-    console.log(m);
 
     function matchPattern(pattern, state) {
       for (var i in pattern) {
