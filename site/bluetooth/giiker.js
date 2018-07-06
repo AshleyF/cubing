@@ -213,7 +213,7 @@ GiikerCube.prototype = {
     m += " " + giikerTwist(3);
     console.log(m);
 
-    document.getElementById("render").src = "http://cube.crider.co.uk/visualcube.php?fmt=svg&amp;size=256&amp;view=trans&amp;co=0&amp;fc=" + giikerColors();
+    document.getElementById("render").src = "http://cube.crider.co.uk/visualcube.php?fmt=svg&size=256&view=trans&co=0&fc=" + giikerColors();
 
     var c = "";
     // B
