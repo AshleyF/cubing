@@ -26,6 +26,17 @@ Connect using Bluetooth
 - 2: FR
 - 3: UF
 - 4: FL
+- 5: DR
+- 6: UR
+- 7: UL
+- 8: DL
+- 9: DB
+- 10: BR
+- 11: UB
+- 12: BL
+
+- Next 12 bits are edge flip state
+- Next 4 nibble-pairs are move history
 
 Faces:
 - U: 4

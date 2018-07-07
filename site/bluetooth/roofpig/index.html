@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>Roofpig Test</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="jquery.min.js"></script>
+        <script src="roofpig_and_three.min.js"></script>
+        <script src="giiker.js"></script>
+        <style>
+            .roofpig { width: 512px; height: 512px; }
+        </style>
+        <script>
+            var cube = new GiikerCube();
+
+            function connect() {
+                try {
+                    cube.connect();
+                } catch (ex) {
+                    alert(ex);
+                }
+            }
+
+            function update(config) {
+                document.getElementById("cube").innerHTML = "";
+                CubeAnimation.create_in_dom('#cube', config, "class='roofpig'");
+            }
+
+            function updateColors(colors) {
+                function colorToFace(color) {
+                    switch (color) {
+                        case "r": return "F";
+                        case "o": return "B";
+                        case "y": return "U";
+                        case "g": return "R";
+                        case "b": return "L";
+                        case "w": return "D";
+                    }
+                }
+
+                function sticker(i, colors) {
+                    return colorToFace(colors[i]);
+                }
+
+                var faces = [
+                    "Ubl", "Ub", "Ubr", "Ul", "U", "Ur", "Ufl", "Uf", "Ufr",
+                    "uRf", "uR", "uRb", "fR", "R", "bR", "fdR", "dR", "bdR",
+                    "Ful", "Fu", "Fur", "Fl", "F", "Fr", "Fdl", "Fd", "Fdr",
+                    "fDl", "fD", "fDr", "Dl", "D", "Dr", "bDl", "bD", "bDr",
+                    "ubL", "uL", "ufL", "bL", "L", "fL", "bdL", "dL", "fdL",
+                    "dBl", "dB", "dBr", "Bl", "B", "Br", "uBl", "uB", "uBr"
+                    ];
+                var tweaks = "pov=Dfr|hover=3|solved=*|tweaks=";
+                for (var f in faces) {
+                    tweaks += sticker(f, colors) + ':' + faces[f] + ' ';
+                }
+                console.log(tweaks);
+                update(tweaks);
+                // update("solved=*|tweaks=F:ubR");
+            }
+
+            function load() {
+                window.setTimeout(test, 1);
+                // updateColors("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb");
+            }
+
+            function test() {
+                updateColors("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb");
+                // update("solved=*|tweaks=F:ubR");
+            }
+
+            function test2() {
+                // update("solved=*|tweaks=F:Ubr");
+                var cube = CubeAnimation.by_id[1];
+                cube.dom.play.click();
+                // cube.alg.play()
+            }
+        </script>
+    </head>
+    <body onload="load()">
+        <h1>Roofpig Test</h1>
+        <div id="cube">
+            <div id="roofpig">&nbsp;</div>
+        </div>
+        <!--div id="foo" class="roofpig" data-config="alg=R U R' U R U2 R'"></div-->
+        <button onclick="connect()">Connect</button>
+        <button onclick="test()">Test</button>
+        <button onclick="test2()">Test2</button>
+    </body>
+</html>

@@ -95,14 +95,14 @@ GiikerCube.prototype = {
 
     // play
 
-    const DFR = 0;
-    const UFR = 1;
-    const UFL = 2;
-    const DFL = 3;
-    const DBR = 4;
+    const FDR = 0;
+    const FUR = 1;
+    const FUL = 2;
+    const FDL = 3;
+    const BDR = 4;
     const UBR = 5;
     const UBL = 6;
-    const DBL = 7;
+    const BDL = 7;
 
     function giikerCornerColor(cornerNum, i) {
       var corners = ["gyr", "grw", "gwo", "goy", "bry", "bwr", "bow", "byo"];
@@ -114,15 +114,15 @@ GiikerCube.prototype = {
       return colors[index]
     }
 
-    const DF = 0;
+    const FD = 0;
     const FR = 1;
-    const UF = 2;
+    const FU = 2;
     const FL = 3;
     const DR = 4;
     const UR = 5;
     const UL = 6;
     const DL = 7;
-    const DB = 8;
+    const BD = 8;
     const BR = 9;
     const UB = 10;
     const BL = 11;
@@ -144,53 +144,53 @@ GiikerCube.prototype = {
       s += giikerEdgeColor(UL, 1);
       s += "w";
       s += giikerEdgeColor(UR, 1);
-      s += giikerCornerColor(UFL, 0);
-      s += giikerEdgeColor(UF, 0);
-      s += giikerCornerColor(UFR, 0);
+      s += giikerCornerColor(FUL, 0);
+      s += giikerEdgeColor(FU, 0);
+      s += giikerCornerColor(FUR, 0);
       // R
-      s += giikerCornerColor(UFR, 2);
+      s += giikerCornerColor(FUR, 2);
       s += giikerEdgeColor(UR, 0);
       s += giikerCornerColor(UBR, 1);
       s += giikerEdgeColor(FR, 0);
       s += "r";
       s += giikerEdgeColor(BR, 0);
-      s += giikerCornerColor(DFR, 1);
+      s += giikerCornerColor(FDR, 1);
       s += giikerEdgeColor(DR, 0);
-      s += giikerCornerColor(DBR, 2);
+      s += giikerCornerColor(BDR, 2);
       // F
-      s += giikerCornerColor(UFL, 2);
-      s += giikerEdgeColor(UF, 1);
-      s += giikerCornerColor(UFR, 1);
+      s += giikerCornerColor(FUL, 2);
+      s += giikerEdgeColor(FU, 1);
+      s += giikerCornerColor(FUR, 1);
       s += giikerEdgeColor(FL, 1);
       s += "g";
       s += giikerEdgeColor(FR, 1);
-      s += giikerCornerColor(DFL, 1);
-      s += giikerEdgeColor(DF, 1);
-      s += giikerCornerColor(DFR, 2);
+      s += giikerCornerColor(FDL, 1);
+      s += giikerEdgeColor(FD, 1);
+      s += giikerCornerColor(FDR, 2);
       // D
-      s += giikerCornerColor(DFL, 0);
-      s += giikerEdgeColor(DF, 0);
-      s += giikerCornerColor(DFR, 0);
+      s += giikerCornerColor(FDL, 0);
+      s += giikerEdgeColor(FD, 0);
+      s += giikerCornerColor(FDR, 0);
       s += giikerEdgeColor(DL, 1);
       s += "y";
       s += giikerEdgeColor(DR, 1);
-      s += giikerCornerColor(DBL, 0);
-      s += giikerEdgeColor(DB, 0);
-      s += giikerCornerColor(DBR, 0);
+      s += giikerCornerColor(BDL, 0);
+      s += giikerEdgeColor(BD, 0);
+      s += giikerCornerColor(BDR, 0);
       // L
       s += giikerCornerColor(UBL, 2);
       s += giikerEdgeColor(UL, 0);
-      s += giikerCornerColor(UFL, 1);
+      s += giikerCornerColor(FUL, 1);
       s += giikerEdgeColor(BL, 0);
       s += "o";
       s += giikerEdgeColor(FL, 0);
-      s += giikerCornerColor(DBL, 1);
+      s += giikerCornerColor(BDL, 1);
       s += giikerEdgeColor(DL, 0);
-      s += giikerCornerColor(DFL, 2);
+      s += giikerCornerColor(FDL, 2);
       // B
-      s += giikerCornerColor(DBL, 2);
-      s += giikerEdgeColor(DB, 1);
-      s += giikerCornerColor(DBR, 1);
+      s += giikerCornerColor(BDL, 2);
+      s += giikerEdgeColor(BD, 1);
+      s += giikerCornerColor(BDR, 1);
       s += giikerEdgeColor(BL, 1);
       s += "b";
       s += giikerEdgeColor(BR, 1);
@@ -218,9 +218,9 @@ GiikerCube.prototype = {
     var c = "";
     // B
     c += "   ";
-    c += giikerCornerColor(DBL, 2);
-    c += giikerEdgeColor(DB, 1);
-    c += giikerCornerColor(DBR, 1);
+    c += giikerCornerColor(BDL, 2);
+    c += giikerEdgeColor(BD, 1);
+    c += giikerCornerColor(BDR, 1);
     c += "\n   ";
     c += giikerEdgeColor(BL, 1);
     c += "B";
@@ -239,20 +239,20 @@ GiikerCube.prototype = {
     c += "W";
     c += giikerEdgeColor(UR, 1);
     c += "\n   "
-    c += giikerCornerColor(UFL, 0);
-    c += giikerEdgeColor(UF, 0);
-    c += giikerCornerColor(UFR, 0);
+    c += giikerCornerColor(FUL, 0);
+    c += giikerEdgeColor(FU, 0);
+    c += giikerCornerColor(FUR, 0);
     // L0
     c += "\n";
     c += giikerCornerColor(UBL, 2);
     c += giikerEdgeColor(UL, 0);
-    c += giikerCornerColor(UFL, 1);
+    c += giikerCornerColor(FUL, 1);
     // F0
-    c += giikerCornerColor(UFL, 2);
-    c += giikerEdgeColor(UF, 1);
-    c += giikerCornerColor(UFR, 1);
+    c += giikerCornerColor(FUL, 2);
+    c += giikerEdgeColor(FU, 1);
+    c += giikerCornerColor(FUR, 1);
     // R0
-    c += giikerCornerColor(UFR, 2);
+    c += giikerCornerColor(FUR, 2);
     c += giikerEdgeColor(UR, 0);
     c += giikerCornerColor(UBR, 1);
     // L1
@@ -270,37 +270,37 @@ GiikerCube.prototype = {
     c += giikerEdgeColor(BR, 0);
     // L2
     c += "\n";
-    c += giikerCornerColor(DBL, 1);
+    c += giikerCornerColor(BDL, 1);
     c += giikerEdgeColor(DL, 0);
-    c += giikerCornerColor(DFL, 2);
+    c += giikerCornerColor(FDL, 2);
     // F2
-    c += giikerCornerColor(DFL, 1);
-    c += giikerEdgeColor(DF, 1);
-    c += giikerCornerColor(DFR, 2);
+    c += giikerCornerColor(FDL, 1);
+    c += giikerEdgeColor(FD, 1);
+    c += giikerCornerColor(FDR, 2);
     // R2
-    c += giikerCornerColor(DFR, 1);
+    c += giikerCornerColor(FDR, 1);
     c += giikerEdgeColor(DR, 0);
-    c += giikerCornerColor(DBR, 2);
+    c += giikerCornerColor(BDR, 2);
     // D
     c += "\n   ";
-    c += giikerCornerColor(DFL, 0);
-    c += giikerEdgeColor(DF, 0);
-    c += giikerCornerColor(DFR, 0);
+    c += giikerCornerColor(FDL, 0);
+    c += giikerEdgeColor(FD, 0);
+    c += giikerCornerColor(FDR, 0);
     c += "\n   ";
     c += giikerEdgeColor(DL, 1);
     c += "Y";
     c += giikerEdgeColor(DR, 1);
     c += "\n   ";
-    c += giikerCornerColor(DBL, 0);
-    c += giikerEdgeColor(DB, 0);
-    c += giikerCornerColor(DBR, 0);
+    c += giikerCornerColor(BDL, 0);
+    c += giikerEdgeColor(BD, 0);
+    c += giikerCornerColor(BDR, 0);
     console.log(c);
 
     var s = "";
     // B
-    s += giikerCornerColor(DBL, 2);
-    s += giikerEdgeColor(DB, 1);
-    s += giikerCornerColor(DBR, 1);
+    s += giikerCornerColor(BDL, 2);
+    s += giikerEdgeColor(BD, 1);
+    s += giikerCornerColor(BDR, 1);
     s += giikerEdgeColor(BL, 1);
     s += "B";
     s += giikerEdgeColor(BR, 1);
@@ -314,19 +314,19 @@ GiikerCube.prototype = {
     s += giikerEdgeColor(UL, 1);
     s += "W";
     s += giikerEdgeColor(UR, 1);
-    s += giikerCornerColor(UFL, 0);
-    s += giikerEdgeColor(UF, 0);
-    s += giikerCornerColor(UFR, 0);
+    s += giikerCornerColor(FUL, 0);
+    s += giikerEdgeColor(FU, 0);
+    s += giikerCornerColor(FUR, 0);
     // L0
     s += giikerCornerColor(UBL, 2);
     s += giikerEdgeColor(UL, 0);
-    s += giikerCornerColor(UFL, 1);
+    s += giikerCornerColor(FUL, 1);
     // F0
-    s += giikerCornerColor(UFL, 2);
-    s += giikerEdgeColor(UF, 1);
-    s += giikerCornerColor(UFR, 1);
+    s += giikerCornerColor(FUL, 2);
+    s += giikerEdgeColor(FU, 1);
+    s += giikerCornerColor(FUR, 1);
     // R0
-    s += giikerCornerColor(UFR, 2);
+    s += giikerCornerColor(FUR, 2);
     s += giikerEdgeColor(UR, 0);
     s += giikerCornerColor(UBR, 1);
     // L1
@@ -342,27 +342,27 @@ GiikerCube.prototype = {
     s += "R";
     s += giikerEdgeColor(BR, 0);
     // L2
-    s += giikerCornerColor(DBL, 1);
+    s += giikerCornerColor(BDL, 1);
     s += giikerEdgeColor(DL, 0);
-    s += giikerCornerColor(DFL, 2);
+    s += giikerCornerColor(FDL, 2);
     // F2
-    s += giikerCornerColor(DFL, 1);
-    s += giikerEdgeColor(DF, 1);
-    s += giikerCornerColor(DFR, 2);
+    s += giikerCornerColor(FDL, 1);
+    s += giikerEdgeColor(FD, 1);
+    s += giikerCornerColor(FDR, 2);
     // R2
-    s += giikerCornerColor(DFR, 1);
+    s += giikerCornerColor(FDR, 1);
     s += giikerEdgeColor(DR, 0);
-    s += giikerCornerColor(DBR, 2);
+    s += giikerCornerColor(BDR, 2);
     // D
-    s += giikerCornerColor(DFL, 0);
-    s += giikerEdgeColor(DF, 0);
-    s += giikerCornerColor(DFR, 0);
+    s += giikerCornerColor(FDL, 0);
+    s += giikerEdgeColor(FD, 0);
+    s += giikerCornerColor(FDR, 0);
     s += giikerEdgeColor(DL, 1);
     s += "Y";
     s += giikerEdgeColor(DR, 1);
-    s += giikerCornerColor(DBL, 0);
-    s += giikerEdgeColor(DB, 0);
-    s += giikerCornerColor(DBR, 0);
+    s += giikerCornerColor(BDL, 0);
+    s += giikerEdgeColor(BD, 0);
+    s += giikerCornerColor(BDR, 0);
     console.log(s);
 
     function matchPattern(pattern, state) {
