@@ -199,7 +199,7 @@ function updateCube(giikerState) { // TODO: move out
   c += giikerCornerColor(BDL, 0);
   c += giikerEdgeColor(BD, 0);
   c += giikerCornerColor(BDR, 0);
-  console.log(c);
+  // console.log(c);
 
   var s = "";
   // B
@@ -268,7 +268,7 @@ function updateCube(giikerState) { // TODO: move out
   s += giikerCornerColor(BDL, 0);
   s += giikerEdgeColor(BD, 0);
   s += giikerCornerColor(BDR, 0);
-  console.log(s);
+  // console.log(s);
 
   function matchPattern(pattern, state) {
     for (var i in pattern) {
