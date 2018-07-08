@@ -1,45 +1,173 @@
 <!DOCTYPE html>
 <html lang=en>
     <head>
-        <title>Roofpig Test</title>
+        <title>Giiker Demo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script src="jquery.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
         <script src="giiker.js"></script>
         <style>
+            h1 { font-family: sans-serif }
             .roofpig { width: 512px; height: 512px; }
         </style>
         <script>
+            // TODO: some way to infer anchor colors and support other anchors than DL edge
+            var downAnchor = 'w'; // white
+            var leftAnchor = 'b'; // blue
+
             var cube = new GiikerCube();
 
             function connect() {
-                try {
-                    cube.connect();
-                } catch (ex) {
-                    alert(ex);
-                }
+                cube.connect();
             }
 
-            function update(config) {
+            function render(config) {
                 document.getElementById("cube").innerHTML = "";
                 CubeAnimation.create_in_dom('#cube', config, "class='roofpig'");
             }
 
-            function updateColors(colors) {
-                function colorToFace(color) {
-                    switch (color) {
-                        case "r": return "F";
-                        case "o": return "B";
-                        case "y": return "U";
-                        case "g": return "R";
-                        case "b": return "L";
-                        case "w": return "D";
-                    }
-                }
+            var lastStage = "";
+            var twists = "";
 
+            function start() {
+                lastStage = "";
+                twists = "";
+                document.getElementById("stage").innerText = "Start";
+            }
+
+            function updateSolve(twist, stage) {
+                if (stage != lastStage) {
+                    lastStage = stage;
+                    document.getElementById("stage").innerText = stage;
+                }
+                twists += " " + twist;
+                document.getElementById("twists").innerText = twists;
+            }
+
+            function onGiikerChanged(colors, twist) {
                 function sticker(i, colors) {
+                    function colorToFace(color) {
+                        switch (color) {
+                            case "r": return "F";
+                            case "o": return "B";
+                            case "y": return "U";
+                            case "g": return "R";
+                            case "b": return "L";
+                            case "w": return "D";
+                        }
+                    }
                     return colorToFace(colors[i]);
                 }
+
+                function anchor(down, left, colors) {
+                    // I used a completely rotationless Roux with DL edge possitioned during inspection TODO: other "anchors"
+                    function rotations(colors) {
+                        function cw(face) {
+                            return face[6] + face[3] + face[0] +
+                                   face[7] + face[4] + face[1] +
+                                   face[8] + face[5] + face[2];
+                        }
+                        function ccw(face) {
+                            return face[2] + face[5] + face[8] +
+                                   face[1] + face[4] + face[7] +
+                                   face[0] + face[3] + face[6];
+                        }
+                        function colorsToFaces(colors) {
+                            // UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+                            var faces = [
+                                colors.slice(0, 9), // U
+                                colors.slice(9, 18), // R
+                                colors.slice(18, 27), // F
+                                colors.slice(27, 36), // D
+                                colors.slice(36, 45), // L
+                                colors.slice(45, 54)] // B
+                            faces.mapping = { U: 'U', R: 'R', F: 'F', D: 'D', L: 'L', B: 'B' };
+                            return faces;
+                        }
+                        function facesToColors(faces) {
+                            return { colors: faces[0] + faces[1] + faces[2] + faces[3] + faces[4] + faces[5],
+                                     mapping: faces.mapping };
+                        }
+                        function x(faces) {
+                            var rotated = [faces[2], cw(faces[1]), faces[3], faces[5], ccw(faces[4]), faces[0]];
+                            rotated.mapping = { U: 'F', R: 'R', F: 'D', D: 'B', L: 'L', B: 'U' };
+                            return rotated;
+                        }
+                        function x2(faces) { return x(x(faces)); /* TODO more efficiently! */ }
+                        function xp(faces) { return x(x2(faces)); /* TODO more efficiently! */ }
+                        function y(faces) {
+                            var rotated = [cw(faces[0]), cw(cw(faces[5])), faces[1], ccw(faces[3]), faces[2], cw(cw(faces[4]))];
+                            rotated.mapping = { U: 'U', R: 'B', F: 'R', D: 'D', L: 'F', B: 'L' };
+                            return rotated;
+                        }
+                        function y2(faces) { return y(y(faces)); /* TODO more efficiently! */ }
+                        function yp(faces) { return y(y2(faces)); /* TODO more efficiently! */ }
+                        function z(faces) {
+                            var rotated = [cw(faces[4]), cw(faces[0]), cw(faces[2]), cw(faces[1]), cw(faces[3]), ccw(faces[5])];
+                            rotated.mapping = { U: 'R', R: 'U', F: 'F', D: 'L', L: 'U', B: 'B' };
+                            return rotated;
+                        }
+                        function z2(faces) { return z(z(faces)); /* TODO more efficiently! */ }
+                        function zp(faces) { return z(z2(faces)); /* TODO more efficiently! */ }
+                        var faces = colorsToFaces(colors);
+                        return [
+                            // these are all the rotations that _might_ position the DL edge
+                            facesToColors(faces), // skip
+                            facesToColors(x(faces)), // x
+                            facesToColors(y(x(faces))), // x y
+                            facesToColors(yp(x(faces))), // x y'
+                            facesToColors(y2(x(faces))), // x y2
+                            facesToColors(z(x(faces))), // x z
+                            facesToColors(zp(x(faces))), // x z'
+                            facesToColors(z2(x(faces))), // x z2
+                            facesToColors(xp(faces)), // x'
+                            facesToColors(y(xp(faces))), // x' y
+                            facesToColors(yp(xp(faces))), // x' y'
+                            facesToColors(z(xp(faces))), // x' z
+                            facesToColors(zp(xp(faces))), // x' z'
+                            facesToColors(x2(faces)), // x2
+                            facesToColors(y(x2(faces))), // x2 y
+                            facesToColors(yp(x2(faces))), // x2 y'
+                            facesToColors(z(x2(faces))), // x2 z
+                            facesToColors(zp(x2(faces))), // x2 z'
+                            facesToColors(y(faces)), // y
+                            facesToColors(yp(faces)), // y'
+                            facesToColors(y2(faces)), // y2
+                            facesToColors(z(faces)), // z
+                            facesToColors(zp(faces)), // z'
+                            facesToColors(z2(faces))]; // z2
+                    }
+                    var rot = rotations(colors);
+                    for (var r in rot) {
+                        var attempt = rot[r];
+                        if (attempt.colors[30] == down && attempt.colors[43] == left) { // edge found in DL position? TODO: other anchors
+                            return attempt;
+                        }
+                    }
+                    throw "Didn't find blue-white edge!?"
+                }  
+
+                function matchPattern(pattern, colors) {
+                    for (var i in pattern) {
+                        var p = pattern[i];
+                        if (p != '.' && p != state[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                function stage(colors) {
+                    console.log(colors);
+                    if (matchPattern("", colors)) return "Solved!";
+                    return "Start";
+                }
+
+                var anchored = anchor(downAnchor, leftAnchor, colors); // edge anchored in DL position TODO: more general!
+
+                var correctedTwist = twist.replace(twist[0], anchored.mapping[twist[0]]);
+                console.log("Twist: " + twist + " -> " + correctedTwist);
+                updateSolve(correctedTwist, stage(anchored.colors));
 
                 var faces = [
                     "Ubl", "Ub", "Ubr", "Ul", "U", "Ur", "Ufl", "Uf", "Ufr",
@@ -49,41 +177,28 @@
                     "ubL", "uL", "ufL", "bL", "L", "fL", "bdL", "dL", "fdL",
                     "dBl", "dB", "dBr", "Bl", "B", "Br", "uBl", "uB", "uBr"
                     ];
-                var tweaks = "pov=Dfr|hover=3|solved=*|tweaks=";
+                var tweaks = "pov=Ufr|hover=3|solved=*|tweaks=";
                 for (var f in faces) {
-                    tweaks += sticker(f, colors) + ':' + faces[f] + ' ';
+                    tweaks += sticker(f, anchored.colors) + ':' + faces[f] + ' ';
                 }
-                console.log(tweaks);
-                update(tweaks);
-                // update("solved=*|tweaks=F:ubR");
+                render(tweaks);
             }
 
             function load() {
+                function test() { onGiikerChanged("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb", ""); }
                 window.setTimeout(test, 1);
-                // updateColors("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb");
             }
 
-            function test() {
-                updateColors("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb");
-                // update("solved=*|tweaks=F:ubR");
-            }
-
-            function test2() {
-                // update("solved=*|tweaks=F:Ubr");
-                var cube = CubeAnimation.by_id[1];
-                cube.dom.play.click();
-                // cube.alg.play()
-            }
         </script>
     </head>
     <body onload="load()">
-        <h1>Roofpig Test</h1>
+        <h1>Giiker Demo</h1>
+        <h2 id="stage">Start</h2>
+        <h3 id="twists">Start</h3>
         <div id="cube">
             <div id="roofpig">&nbsp;</div>
         </div>
-        <!--div id="foo" class="roofpig" data-config="alg=R U R' U R U2 R'"></div-->
         <button onclick="connect()">Connect</button>
-        <button onclick="test()">Test</button>
-        <button onclick="test2()">Test2</button>
+        <button onclick="start()">Start</button>
     </body>
 </html>

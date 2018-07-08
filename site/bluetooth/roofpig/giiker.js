@@ -117,7 +117,7 @@ function updateCube(giikerState) { // TODO: move out
   m += " " + giikerTwist(3, giikerState);
   console.log(m);
 
-  updateColors(giikerColors());
+  onGiikerChanged(giikerColors(), giikerTwist(0, giikerState));
   // document.getElementById("render").src = "http://cube.crider.co.uk/visualcube.php?fmt=svg&size=256&view=trans&co=0&fc=" + giikerColors();
 
   var c = "";
@@ -350,7 +350,6 @@ GiikerCube.prototype = {
     // TODO: Can we safely save the async promise instead of waiting for the response?
     this._originalValue = await this.cubeCharacteristic.readValue();
     debug("Original value:", this._originalValue);
-    // updateCube(this._originalValue); // ASHLEYF
     this.cubeCharacteristic.addEventListener("characteristicvaluechanged",
       this.onCubeCharacteristicChanged.bind(this));
   },
