@@ -1,198 +1,456 @@
-<html>
-<head>
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>Giiker Demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="jquery.min.js"></script>
+        <script src="roofpig_and_three.min.js"></script>
+        <script src="giiker.js"></script>
+        <style>
+            h1, h2, li { font-family: sans-serif }
+            .roofpig { width: 512px; height: 512px; }
+        </style>
+        <script>
+            // TODO: some way to infer anchor colors and support other anchors than DL edge
+            /*
+            var downAnchor = 'o';
+            var leftAnchor = 'y';
+            // */
+            //
+            var downAnchor = 'w';
+            var leftAnchor = 'b';
+            //*/
 
-<title>Bluetooth Cubing</title>
+            var cube = new GiikerCube();
 
-<link href="twisty.js/demo/style.css" rel="stylesheet" media="screen" type="text/css" />
+            function connect() {
+                cube.connect();
+            }
 
-<script type="text/javascript" src="twisty.js/lib/jquery-1.11.0.min.js"></script>
+            function render(config) {
+                document.getElementById("cube").innerHTML = "";
+                CubeAnimation.create_in_dom('#cube', config, "class='roofpig'");
+            }
 
-<script type="text/javascript" src="twisty.js/lib/Three.js"></script>
-<script type="text/javascript" src="twisty.js/lib/SVGRenderer.js"></script>
-<script type="text/javascript" src="twisty.js/lib/Stats.js"></script>
+            var lastStage = null;
+            var twists = "";
+            var scramble = "";
+            var startTime = null;
+            var splitTime = null;
+            var complete = false;
+            var stats = null;
 
-<script src="twisty.js/alg/alg_jison.js" type="text/javascript"></script>
-<script src="twisty.js/alg/alg.js" type="text/javascript"></script>
-<script src="twisty.js/twisty.js" type="text/javascript"></script>
-<script src="twisty.js/puzzles/cube.js" type="text/javascript"></script>
-<script src="twisty.js/demo/demo.js" type="text/javascript"></script>
+            function init() {
+                lastStage = null;
+                twists = "";
+                startTime = null;
+                splitTIme = null;
+                complete = false;
+                stats = {
+                    Solved: Infinity,
+                    LR: Infinity,
+                    EO: Infinity,
+                    CP: Infinity,
+                    CO: Infinity,
+                    P4: Infinity,
+                    P3: Infinity,
+                    DR: Infinity,
+                    P2: Infinity,
+                    P1: Infinity,
+                    DL: Infinity };
+            }
 
-<script src="lib/localStorageDB.js" type="text/javascript"></script>
-<script src="giiker.js" type="text/javascript"></script>
-<script src="index.js" type="text/javascript"></script>
-</head>
-<body>
+            function start() {
+                init();
+                document.getElementById("stage").innerText = "Start on first twist...";
+                document.getElementById("twists").innerText = "";
+                updateStats();
+            }
 
-  <div class="header">
-    <h1 class="title">
-      <a href="http://www.cubing.net/">cubing.net</a> &rarr; <a
-        href="./">twisty.js</a>
-    </h1>
-  </div>
+            init();
 
-  <div class="content">
-    <div class="left">
+            function updateStats(stage, elapsed) {
+                function shiftMultipleSkips() {
+                    function shiftSkipTime(s0, s1) {
+                        var skip = stats[s0] == Infinity && stats[s1] != Infinity;
+                        if (skip) {
+                            stats[s0] = stats[s1];
+                            stats[s1] = 0; // skip
+                        }
+                        return skip;
+                    }
+                    if (shiftSkipTime("DL", "P1") ||
+                        shiftSkipTime("P1", "P2") ||
+                        shiftSkipTime("P2", "DR") ||
+                        shiftSkipTime("DR", "P3") ||
+                        shiftSkipTime("P3", "P4") ||
+                        shiftSkipTime("P4", "CO") ||
+                        shiftSkipTime("CO", "CP") ||
+                        shiftSkipTime("EO", "LR") ||
+                        shiftSkipTime("LR", "L4E")) {
+                            shiftMultipleSkips(); // maybe multiple
+                        }
+                }
+                if (stage) stats[stage.abbr] = elapsed;
+                shiftMultipleSkips();
 
-      <h2>Bluetooth Cubing</h2>
-      <br>
-      <div class="padded center">
-        <button id="connect">Connect</button>
-        <button id="save">Save</button>
-        <button id="view">View</button>
-        <button id="analyze">Analyze</button>
-        <br>
-        <button id="mark-scramble">Mark end of scramble</button>
-        <button id="reset">Save and Reset</button>
-        <br><br>
-        <input id="cuber" placeholder="Cuber">
-        <br>
-        <textarea class="alg" id="moves" rows=8>
-        </textarea>
-      </div>
-      <style>
-        .alg {
-          width: 90%;
-          margin: 5%;
-          background: none;
-          border: none;
-          font-family: Verdana, Helvetica, Tahoma, sans-serif;
-          font-size: 1.5em;
-        }
-        #twistyContainer.loading {
-          animation-duration: 1s;
-          animation-name: loading;
-          animation-iteration-count: infinite;
-          animation-timing-function: linear
-          /*animation-direction: */
-        }
-        @keyframes loading {
-          from {
-            background-position: 0 0, 0px 0px;
-          }
+                var fb = stats.DL + stats.P1 + stats.P2;
+                var sb = stats.DR + stats.P3 + stats.P4;
+                var f2b = fb + sb;
+                var cocp = stats.CO + stats.CP;
+                var eolr = stats.EO + stats.LR;
+                var l4e = stats.Solved - f2b - cocp - eolr;
 
-          to {
-            background-position: 32 32, 0px 0px;
-          }
-        }
-        #twistyContainer.loading div {
-          opacity: 0.3;
-        }
-      </style>
+                document.getElementById("solve").innerText = stats.Solved;
+                document.getElementById("f2b").innerText = f2b;
+                document.getElementById("fb").innerText = fb;
+                document.getElementById("dl").innerText = stats.DL;
+                document.getElementById("p1").innerText = stats.P1;
+                document.getElementById("p2").innerText = stats.P2;
+                document.getElementById("sb").innerText = sb;
+                document.getElementById("dr").innerText = stats.DR;
+                document.getElementById("p3").innerText = stats.P3;
+                document.getElementById("p4").innerText = stats.P4;
+                document.getElementById("cocp").innerText = cocp;
+                document.getElementById("co").innerText = stats.CO;
+                document.getElementById("cp").innerText = stats.CP;
+                document.getElementById("eolr").innerText = eolr;
+                document.getElementById("eo").innerText = stats.EO;
+                document.getElementById("lr").innerText = stats.LR;
+                document.getElementById("l4e").innerText = l4e;
+            }
 
-      <img id="render" width="256" height="256" src="http://cube.crider.co.uk/visualcube.php?fmt=svg&amp;size=256&amp;view=trans&amp;co=0" />
-      <p class="padded">At the moment, this page can connect to a <a href="https://www.aliexpress.com/item/Xiaomi-Giiker-Super-Rubik-s-Cube-Learn-With-Fun-Bluetooth-Connection-Sensing-Identification-Intellectual-Development-Toy/32881376857.html?">Xiaomi GiiKer i3 Cube</a> using Bluetooth and track turns. I'm working on support for reading the initial cube state when you first connect, and publishing the code as a library.</p>
-      <p class="padded">At the moment, Web Bluetooth is only available in Chrome. This page should work on Android/macOS/Chrome "out of the box" and on iOS in an app like <a href="https://itunes.apple.com/us/app/webble/id1193531073">WebBLE</a>. See <a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">here</a> for information about experimental support Windows/Linux.
-      </p>
+            function updateSolve(twist, stage) {
+                function patchTwists(twists) {
+                    var patched = twists.replace("U U ", "U2 ").replace("D D ", "D2 ").replace("L L ", "L2 ").replace("R R ", "R2 ").replace("F F ", "F2 ").replace("B B ", "B2 ")
+                                        .replace("U' U' ", "U2 ").replace("D' D' ", "D2 ").replace("L' L' ", "L2 ").replace("R' R' ", "R2 ").replace("F' F' ", "F2 ").replace("B' B' ", "B2 ")
+                                        .replace("U U' ", " ").replace("D D' ", " ").replace("L L' ", " ").replace("R R' ", " ").replace("F F' ", " ").replace("B B' ", " ")
+                                        .replace("U' U ", " ").replace("D' D ", " ").replace("L' L ", " ").replace("R' R ", " ").replace("F' F ", " ").replace("B' B ", " ")
+                                        .replace("R' L ", "M' ").replace("L R' ", "M' ")
+                                        .replace("R L' ", "M ").replace("L' R ", "M ");
+                                        // TODO: U2 U -> U', etc.
+                    if (patched == twists) return patched;
+                    return patchTwists(patched); // recurse
+                }
+                if (complete) {
+                    scramble = patchTwists(scramble + twist + " ");
+                    document.getElementById("scramble").innerText = "Scramble: " + scramble;
+                } else {
+                    twists = patchTwists(twists + twist + " ");
+                }
+                if (stage != null && stage.num == 100) {
+                    complete = true;
+                    scramble = "";
+                }
+                if (startTime == null) startTime = splitTime = new Date();
+                if (stage != null && (lastStage == null || stage.num > lastStage.num)) {
+                    var start = stage.abbr == "Solved" ? startTime : splitTime;
+                    var elapsed = ((new Date()) - start) / 1000.0;
+                    splitTime = new Date();
+                    lastStage = stage;
+                    document.getElementById("stage").innerText = stage.name;
+                    twists += "(" + stage.abbr + ") ";
+                    updateStats(stage, elapsed)
+                }
+                document.getElementById("twists").innerText = twists;
+            }
 
+            function onGiikerChanged(colors, twist) {
+                function sticker(i, colors) {
+                    function colorToFace(color) {
+                        switch (color) {
+                            case "r": return "F";
+                            case "o": return "B";
+                            case "y": return "U";
+                            case "g": return "R";
+                            case "b": return "L";
+                            case "w": return "D";
+                        }
+                    }
+                    return colorToFace(colors[i]);
+                }
 
-      <h2>Controls</h2>
-      <div class="padded center">
-          <p class="spacey">
-            <input id="cubeDimension" placeholder="Cube Dimension"
-              type="number" min="1" max="12" step="1" value="3" /> <br>
-            
-            <input type="checkbox" id="allow_dragging" checked="true"/>
-            <label for="allow_dragging">Allow Dragging</label>
-            <input type="checkbox" id="sticker_border" checked="true" />
-            <label for="sticker_border">Sticker Border</label>
-            <input type="checkbox" id="double_sided" checked="true" />
-            <label for="double_sided">Double-sided</label>
-            <input type="checkbox" id="cubies"/>
-            <label for="cubies">Cubies</label>
-            <input type="checkbox" id="hint_stickers"/>
-            <label for="hint_stickers">Hint Stickers</label>
+                function anchor(down, left, centers, colors) {
+                    // I used a completely rotationless Roux with DL edge possitioned during inspection TODO: other "anchors"
+                    function rotations(colors) {
+                        function cw(face) {
+                            return face[6] + face[3] + face[0] +
+                                    face[7] + face[4] + face[1] +
+                                    face[8] + face[5] + face[2];
+                        }
+                        function ccw(face) {
+                            return face[2] + face[5] + face[8] +
+                                    face[1] + face[4] + face[7] +
+                                    face[0] + face[3] + face[6];
+                        }
+                        function colorsToFaces(colors) {
+                            // UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+                            return [
+                                colors.slice(0, 9), // U
+                                colors.slice(9, 18), // R
+                                colors.slice(18, 27), // F
+                                colors.slice(27, 36), // D
+                                colors.slice(36, 45), // L
+                                colors.slice(45, 54)] // B
+                        }
+                        function facesToColors(faces) {
+                            return faces[0] + faces[1] + faces[2] + faces[3] + faces[4] + faces[5];
+                        }
+                        function x(faces) {
+                            return [faces[2], cw(faces[1]), faces[3], faces[5], ccw(faces[4]), faces[0]];
+                        }
+                        function x2(faces) { return x(x(faces)); /* TODO more efficiently! */ }
+                        function xp(faces) { return x(x2(faces)); /* TODO more efficiently! */ }
+                        function y(faces) {
+                            return [cw(faces[0]), cw(cw(faces[5])), faces[1], ccw(faces[3]), faces[2], cw(cw(faces[4]))];
+                        }
+                        function y2(faces) { return y(y(faces)); /* TODO more efficiently! */ }
+                        function yp(faces) { return y(y2(faces)); /* TODO more efficiently! */ }
+                        function z(faces) {
+                            return [cw(faces[4]), cw(faces[0]), cw(faces[2]), cw(faces[1]), cw(faces[3]), ccw(faces[5])];
+                        }
+                        function z2(faces) { return z(z(faces)); /* TODO more efficiently! */ }
+                        function zp(faces) { return z(z2(faces)); /* TODO more efficiently! */ }
+                        var faces = colorsToFaces(colors);
+                        return [
+                            // these are all the rotations that _might_ position the DL edge
+                            facesToColors(faces), // skip
+                            facesToColors(x(faces)), // x
+                            facesToColors(y(x(faces))), // x y
+                            facesToColors(yp(x(faces))), // x y'
+                            facesToColors(y2(x(faces))), // x y2
+                            facesToColors(z(x(faces))), // x z
+                            facesToColors(zp(x(faces))), // x z'
+                            facesToColors(z2(x(faces))), // x z2
+                            facesToColors(xp(faces)), // x'
+                            facesToColors(y(xp(faces))), // x' y
+                            facesToColors(yp(xp(faces))), // x' y'
+                            facesToColors(z(xp(faces))), // x' z
+                            facesToColors(zp(xp(faces))), // x' z'
+                            facesToColors(x2(faces)), // x2
+                            facesToColors(y(x2(faces))), // x2 y
+                            facesToColors(yp(x2(faces))), // x2 y'
+                            facesToColors(z(x2(faces))), // x2 z
+                            facesToColors(zp(x2(faces))), // x2 z'
+                            facesToColors(y(faces)), // y
+                            facesToColors(yp(faces)), // y'
+                            facesToColors(y2(faces)), // y2
+                            facesToColors(z(faces)), // z
+                            facesToColors(zp(faces)), // z'
+                            facesToColors(z2(faces))]; // z2
+                    }
+                    var rot = rotations(colors);
+                    for (var r in rot) {
+                        var attempt = rot[r];
+                        if ((centers && attempt[31] == down && attempt[40] == left) ||
+                           (!centers && attempt[30] == down && attempt[43] == left)) { // edge found in DL position? TODO: other anchors
+                            return attempt;
+                        }
+                    }
+                    throw "Didn't find blue-white edge!?"
+                } 
 
-            <br>
-            <button id="alg_ccc">Cube-in-Cube-in-Cube</button>
-            <button id="lucasparity">lucasparity</button>
-            <button id="alg_superflip">Superflip</button>
+                function giikerTwistToCenterColor(twist) {
+                    switch (twist[0]) {
+                        case 'U': return 'w';
+                        case 'D': return 'y';
+                        case 'L': return 'o';
+                        case 'R': return 'r';
+                        case 'F': return 'g';
+                        case 'B': return 'b';
+                    }
+                }
 
-            <br>
-            Renderer:
-            <input type="radio" name="renderer" value="Canvas" id="renderer_Canvas" checked="true"></input>
-            <label for="renderer_Canvas">Canvas</label>
-            <input type="radio" name="renderer" value="WebGL" id="renderer_WebGL"></input>
-            <label for="renderer_WebGL">WebGL</label>
-            <input type="radio" name="renderer" value="SVG" id="renderer_SVG"></input>
-            <label for="renderer_SVG">SVG</label>
+                function centerColorToTwist(center, colors) {
+                    // UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+                    if (colors[4] == center) return 'U';
+                    if (colors[13] == center) return 'R';
+                    if (colors[22] == center) return 'F';
+                    if (colors[31] == center) return 'D';
+                    if (colors[40] == center) return 'L';
+                    if (colors[49] == center) return 'B';
+                    throw "Couldn't find center!";
+                }
 
-            <br>
-            Stage:
-            <input type="radio" name="stage" value="full" id="stage_full" checked="true"></input>
-            <label for="stage_full">Full</label>
-            <input type="radio" name="stage" value="cross" id="stage_cross"></input>
-            <label for="stage_cross">Cross</label>
-            <input type="radio" name="stage" value="F2L" id="stage_F2L"></input>
-            <label for="stage_F2L">F2L</label>
-            <input type="radio" name="stage" value="PLL" id="stage_PLL"></input>
-            <label for="stage_PLL">PLL</label>
-            <input type="radio" name="stage" value="OLL" id="stage_OLL"></input>
-            <label for="stage_OLL">OLL</label>
-            
-            <br>
-            Init: <input id="init" placeholder="Init." type="text" value = ""/>
-            <br>
-            <input id="parse_alg" placeholder="Alg to parse." type="text" value = "R2 U R U R' U' R' U' R' U R'"/>
-            <input type="checkbox" id="solve"/><label for="solve">Solve</label>
-            <br>
-            <button id="parsed_alg1">Animate Alg (no slice moves)</button>
-            <button id="parsed_alg2">Dynamic Playback</button>
-            
-          </p>
-      </div>
+                function oppositeColor(color) {
+                    switch (color) {
+                        case 'r': return 'o';
+                        case 'o': return 'r';
+                        case 'y': return 'w';
+                        case 'g': return 'b';
+                        case 'b': return 'g';
+                        case 'w': return 'y';
+                    }
+                }
 
-      <h2>Playback
-      </h2>
-      <center>
-        <span title="Pause"><button id="rewind" style="font-size: 100%">&#9664;&#9664;</button></span>
-        <span title="Previous"><button id="previous" style="font-size: 100%">&larr;</button></span>
-        <span title="Play"><button id="play" style="font-size: 100%">&#9654;</button></span>
-        <span title="Pause"><button id="pause" style="font-size: 100%">&#x2759;&#x2759;</button></span>
-        <span title="Next"><button id="next" style="font-size: 100%">&rarr;</button></span>
-        <span title="Fast Forward"><button id="fast_forward" style="font-size: 100%">&#9654;&#9654;</button></span>
-        <br>
-        <input id="speed" type="range" min="1" max="8" step="0.1" value="6"/>
-      </center>
-      <div class="padded center">
-      <div id="playback_alg">[Algorithm]</div>
-      </div>
+                function adjacentFrontColor(down, left) { // 
+                    switch (down + left) {
+                        case 'wb': return 'r';
+                        case 'bw': return 'o';
+                        case 'rb': return 'y';
+                        case 'br': return 'w';
+                        case 'by': return 'r';
+                        case 'yb': return 'o';
+                        case 'bo': return 'y';
+                        case 'ob': return 'w';
+                        case 'rw': return 'b';
+                        case 'wr': return 'g';
+                        case 'ry': return 'g';
+                        case 'yr': return 'b';
+                        case 'oy': return 'b';
+                        case 'yo': return 'g';
+                        case 'wo': return 'b';
+                        case 'ow': return 'g';
+                        case 'gw': return 'r';
+                        case 'wg': return 'o';
+                        case 'go': return 'w';
+                        case 'og': return 'y';
+                        case 'gy': return 'o';
+                        case 'yg': return 'r';
+                        case 'gr': return 'y';
+                        case 'rg': return 'w';
+                    }
+                }
 
-      <h2>Experimental Features</h2>
-      <div class="padded center">
-      <p class="spacey">
-        <button id="enableOfflineSupport">Enable Offline Access</button>
-        <button id="createCanvasPNG">Generate PNG image from
-          Canvas</button>
-      <div id="canvasPNG"></div>
-      <a id="typed_alg">[Algorithm]</a>
-      <br>
-      <br>
-      <div id="timer"></div>
-      </p>
-      </div>
+                function edgesOriented(colors) {
+                    var c0 = colors[0];
+                    var c1 = c0 == 'y' ? 'w' : c0 == 'w' ? 'y' :
+                             c0 == 'r' ? 'o' : c0 == 'o' ? 'r' :
+                             c0 == 'b' ? 'g' : c0 == 'g' ? 'b' : '?'; // opposite
+                    for (var i = 1; i < 9; i++) { // U
+                        if (colors[i] != c0 && colors[i] != c1) return false;
+                    }
+                    for (var i = 27; i < 36; i++) { // D
+                        if (colors[i] != c0 && colors[i] != c1) return false;
+                    }
+                    return true;
+                }   
 
-      <h2>twisty.js Info</h2>
-      <div class="padded">
-        <p class="spacey">
-          Notes: <a href="README.md">README.md</a> <br>
-          <span style="font-variant: small-caps;">GitHub</span>: <a
-            href="https://github.com/cubing/twisty.js">cubing/twisty.js</a>
-          <br> 3D Library: <a
-            href="https://github.com/mrdoob/three.js/">three.js</a> (by
-          mrdoob)
-        </p>
-      </div>
+                function matchPattern(pattern, colors) {
+                    function remapColors(pat) {
+                        return pat.replace(new RegExp('w', 'g'), downAnchor.toUpperCase())
+                                  .replace(new RegExp('b', 'g'), leftAnchor.toUpperCase())
+                                  .replace(new RegExp('y', 'g'), oppositeColor(downAnchor).toUpperCase())
+                                  .replace(new RegExp('g', 'g'), oppositeColor(leftAnchor).toUpperCase())
+                                  .replace(new RegExp('r', 'g'), adjacentFrontColor(downAnchor, leftAnchor).toUpperCase())
+                                  .replace(new RegExp('o', 'g'), oppositeColor(adjacentFrontColor(downAnchor, leftAnchor)).toUpperCase())
+                                  .toLowerCase();
+                    }
+                    pattern = remapColors(pattern);
+                    for (var i in pattern) {
+                        var p = pattern[i];
+                        if (p != '.' && p != colors[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
 
-      <h2>Debug</h2>
-      <div class="padded">
-        <div id="debug" class="hi">[Debug Panel]</div>
-      </div>
+                function stage(colors) {
+                    console.log(colors);
+                    //                UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+                    if (matchPattern("yyyyyyyyygggggggggrrrrrrrrrwwwwwwwwwbbbbbbbbbooooooooo", colors)) return { num: 100, abbr: "Solved", name: "Solved!" };
+                    if (matchPattern("y.yy.yy.ygggggggggr.rr.rr.rw.ww.ww.wbbbbbbbbbo.oo.oo.o", colors)) return { num: 4.2, abbr: "LR", name: "Left/Right Edges" };
+                    // TODO: edge orientation
+                    var cocp = matchPattern("y.y...y.yg.gggggggr.rr.rr.rw.ww.ww.wb.bbbbbbbo.oo.oo.o", colors) ||
+                               matchPattern("y.y...y.yr.rggggggb.br.rr.rw.ww.ww.wo.obbbbbbo.oo.og.g", colors) ||
+                               matchPattern("y.y...y.yb.bggggggo.or.rr.rw.ww.ww.wg.gbbbbbbo.oo.or.r", colors) ||
+                               matchPattern("y.y...y.yo.oggggggg.gr.rr.rw.ww.ww.wr.rbbbbbbo.oo.ob.b", colors);
+                    if (cocp && edgesOriented(colors)) return { num: 4.1, abbr: "EO", name: "Edges Oriented" };
+                    if (cocp) return { num: 3.2, abbr: "CP", name: "Corners Permuted" };
+                    if (matchPattern("y.y...y.y...gggggg...r.rr.rw.ww.ww.w...bbbbbbo.oo.o...", colors)) return { num: 3.1, abbr: "CO", name: "Corners Oriented" };
+                    if (matchPattern("............gggggg...r.rr.rw.ww.ww.w...bbbbbbo.oo.o...", colors)) return { num: 2.2, abbr: "P4", name: "Second Block" };
+                    if (matchPattern(".............gg.gg...r..r..w..w.ww.w...bbbbbbo.oo.o...", colors)) return { num: 2.1, abbr: "P3", name: "Third Pair (back-right)" };
+                    if (matchPattern("............gg.gg....r.rr.rw.ww.ww.....bbbbbbo..o.....", colors)) return { num: 2.1, abbr: "P3", name: "Third Pair (front-right)" };
+                    if (matchPattern(".............g..g....r..r..w..w.ww.....bbbbbbo..o.....", colors)) return { num: 2.0, abbr: "DR", name: "DR Edge" };
+                    if (matchPattern(".....................r..r..w..w..w.....bbbbbbo..o.....", colors)) return { num: 1.2, abbr: "P2", name: "First Block" };
+                    if (matchPattern(".....................r..r..w..w.........bb.bb.........", colors)) return { num: 1.1, abbr: "P1", name: "First Pair (front-left)" };
+                    if (matchPattern("..............................w..w.....bb.bb.o..o.....", colors)) return { num: 1.1, abbr: "P1", name: "First Pair (back-left)" };
+                    if (matchPattern("..............................w.........b..b..........", colors)) return { num: 1.0, abbr: "DL", name: "Left Center" };
+                    return null;
+                }
 
-    </div>
-    <div class="right checkered" id="twistyContainer">
-    </div>
+                var anchored = anchor(downAnchor, leftAnchor, false, colors); // edge anchored in DL position TODO: more general!
 
-  </div>
+                if (twist != "") {
+                    var correctedTwist = twist.replace(twist[0], centerColorToTwist(giikerTwistToCenterColor(twist), anchored));
+                    console.log("Twist: " + twist + " -> " + correctedTwist);
+                    updateSolve(correctedTwist, stage(anchored));
+                }
 
-</body>
+                var faces = [
+                    "Ubl", "Ub", "Ubr", "Ul", "U", "Ur", "Ufl", "Uf", "Ufr",
+                    "uRf", "uR", "uRb", "fR", "R", "bR", "fdR", "dR", "bdR",
+                    "Ful", "Fu", "Fur", "Fl", "F", "Fr", "Fdl", "Fd", "Fdr",
+                    "fDl", "fD", "fDr", "Dl", "D", "Dr", "bDl", "bD", "bDr",
+                    "ubL", "uL", "ufL", "bL", "L", "fL", "bdL", "dL", "fdL",
+                    "dBl", "dB", "dBr", "Bl", "B", "Br", "uBl", "uB", "uBr"
+                    ];
+                var tweaks = "pov=Ufr|hover=3|solved=*|tweaks=";
+                for (var f in faces) {
+                    tweaks += sticker(f, anchored) + ':' + faces[f] + ' ';
+                }
+                render(tweaks);
+            }
+
+            function load() {
+                function test() { onGiikerChanged("wywywywywrororororgbgbgbgbgywywywywyororororobgbgbgbgb", ""); }
+                window.setTimeout(test, 1);
+            }
+
+        </script>
+    </head>
+    <body onload="load()">
+        <h1>Giiker Demo</h1>
+        <h2 id="stage">Start!</h2>
+        <h3 id="twists"></h3>
+        <hr />
+        <h3 id="scramble"></h3>
+        <button onclick="start()">Ready</button>
+        <div id="cube" style="width: 600px; float: left">
+            <div id="roofpig">&nbsp;</div>
+        </div>
+        <div style="float: left">
+            <ul>
+                <li>Solve: <span id="solve">?</span>
+                    <ul>
+                        <li>F2B: <span id="f2b">?</span>
+                            <ul>
+                                <li>FB: <span id="fb">?</span>
+                                    <ul>
+                                        <li>DL: <span id="dl">?</span></li>
+                                        <il>P1: <span id="p1">?</span></il>
+                                        <li>P2: <span id="p2">?</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>SB: <span id="sb">?</span>
+                                    <ul>
+                                        <li>DR: <span id="dr">?</span></li>
+                                        <il>P3: <span id="p3">?</span></il>
+                                        <li>P4: <span id="p4">?</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>CO/CP: <span id="cocp">?</span>
+                            <ul>
+                                <li>CO: <span id="co">?</span>
+                                <li>CP: <span id="cp">?</span>
+                            </ul>
+                        </li>
+                        <li>EOLR: <span id="eolr">?</span>
+                            <ul>
+                                <li>EO: <span id="eo">?</span>
+                                <li>LR: <span id="lr">?</span>
+                            </ul>
+                        </li>
+                        <li>L4E: <span id="l4e">?</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <button onclick="connect()">Connect</button>
+    </body>
 </html>
