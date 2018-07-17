@@ -8,30 +8,36 @@ let down, left, front = Color.W, Color.B, Color.R // TODO: color neutral (and de
 
 let patterns = [
     // Solving DL edge (during inspection)
-    "DLEdge", ".....................................B..........W.....", [] // skip
-    "DLEdge", "...W.......................B..........................", ["x"]
-    "DLEdge", ".W..................................................B.", ["x y"; "y z"; "z x"]
-    "DLEdge", ".......W..B...........................................", ["x y'"; "y' z'"; "z' x"]
-    "DLEdge", ".....W.............................B..................", ["x y2"; "x' z2"; "y2 x'"; "z2 x"]
-    "DLEdge", ".....B.............................W..................", ["x z"; "y' x"; "z y'"]
-    "DLEdge", ".............................WB.......................", ["x z'"; "y x"; "z' y"]
-    "DLEdge", "................................WB....................", ["x z2"; "x' y2"; "y2 x"; "z2 x'"]
-    "DLEdge", ".............................BW.......................", ["x'"]
-    "DLEdge", "................B.....W...............................", ["x' y"; "y z'"; "z' x'"]
-    "DLEdge", "........................................W.....B.......", ["x' y'"; "y' z"; "z x'"]
-    "DLEdge", "................................BW....................", ["x' z"; "y x'"; "z y"]
-    "DLEdge", "...B.......................W..........................", ["x' z'"; "y' x'"; "z' y'"]
-    "DLEdge", "............W......B..................................", ["x2"]
-    "DLEdge", ".......B..W...........................................", ["x2 y"; "y z2"; "y' x2"; "z2 y'"]
-    "DLEdge", "................W.....B...............................", ["x2 y'"; "y x2"; "y' z2"; "z2 y"]
-    "DLEdge", "..............B..........W............................", ["x2 z"; "y2 z'"; "z y2"; "z' x2"]
-    "DLEdge", ".....................................W..........B.....", ["x2 z'"; "y2 z"; "z x2"; "z' y2"]
-    "DLEdge", "........................................B.....W.......", ["y"]
-    "DLEdge", ".B..................................................W.", ["y'"]
-    "DLEdge", "...........................................B......W...", ["y2"]
-    "DLEdge", "...........................................W......B...", ["z"]
-    "DLEdge", "............B......W..................................", ["z'"]
-    "DLEdge", "..............W..........B............................", ["z2"]
+    "DLEdge",  ".....................................B..........W.....", [] // skip
+    "DLEdge",  "...W.......................B..........................", ["x"]
+    "DLEdge",  ".W..................................................B.", ["x y"; "y z"; "z x"]
+    "DLEdge",  ".......W..B...........................................", ["x y'"; "y' z'"; "z' x"]
+    "DLEdge",  ".....W.............................B..................", ["x y2"; "x' z2"; "y2 x'"; "z2 x"]
+    "DLEdge",  ".....B.............................W..................", ["x z"; "y' x"; "z y'"]
+    "DLEdge",  ".............................WB.......................", ["x z'"; "y x"; "z' y"]
+    "DLEdge",  "................................WB....................", ["x z2"; "x' y2"; "y2 x"; "z2 x'"]
+    "DLEdge",  ".............................BW.......................", ["x'"]
+    "DLEdge",  "................B.....W...............................", ["x' y"; "y z'"; "z' x'"]
+    "DLEdge",  "........................................W.....B.......", ["x' y'"; "y' z"; "z x'"]
+    "DLEdge",  "................................BW....................", ["x' z"; "y x'"; "z y"]
+    "DLEdge",  "...B.......................W..........................", ["x' z'"; "y' x'"; "z' y'"]
+    "DLEdge",  "............W......B..................................", ["x2"]
+    "DLEdge",  ".......B..W...........................................", ["x2 y"; "y z2"; "y' x2"; "z2 y'"]
+    "DLEdge",  "................W.....B...............................", ["x2 y'"; "y x2"; "y' z2"; "z2 y"]
+    "DLEdge",  "..............B..........W............................", ["x2 z"; "y2 z'"; "z y2"; "z' x2"]
+    "DLEdge",  ".....................................W..........B.....", ["x2 z'"; "y2 z"; "z x2"; "z' y2"]
+    "DLEdge",  "........................................B.....W.......", ["y"]
+    "DLEdge",  ".B..................................................W.", ["y'"]
+    "DLEdge",  "...........................................B......W...", ["y2"]
+    "DLEdge",  "...........................................W......B...", ["z"]
+    "DLEdge",  "............B......W..................................", ["z'"]
+    "DLEdge",  "..............W..........B............................", ["z2"]
+    "LCenter", "............................B.....G..B..........W.....", [] // skip
+    "LCenter", "....B..........................G.....B..........W.....", ["E"; "u'"]
+    "LCenter", "....G..........................B.....B..........W.....", ["u"; "E'"]
+    "LCenter", "............................G.....B..B..........W.....", ["u2"; "E2"]
+    "LCenter", ".............G.......................B..........WB....", ["r u"; "r E'"; "r' u'"; "r' E"; "M u'"; "M E"; "M' u"; "M' E'"]
+    "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"];
     ]
 
 let hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube =
@@ -44,6 +50,7 @@ let hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves
     | None -> solve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal cube
 
 let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth cubes goal stage =
+    printf "."
     let rec gen cases = function
         | cube :: remaining ->
             let solutions = hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube
@@ -54,7 +61,7 @@ let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeS
             // printfn "Key: %s" key
             match Map.tryFind key cases with
             | Some case ->
-                printf "."
+                printf "!"
                 gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) remaining
             | None ->
                 printfn ""
@@ -97,6 +104,7 @@ let genRoux () =
     // let solvedBRPaired = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     // distinctCases solutions
 
+    (*
     printfn "Placing FL edge in DF (R facing)"
     let caseFLtoDFR c = caseLC c && (look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.R)
     let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDFR "FLEdgeInDF-R"
@@ -120,13 +128,7 @@ let genRoux () =
     let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDBB "FLEdgeInDB-B"
     let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
-
-    // // TOO SLOW! try full slotting!
-    // printfn "Full slotting FL"
-    // let caseFullFL c = caseLC c && (look Face.F Sticker.L c = Color.R && look Face.F Sticker.DL c = Color.R && look Face.L Sticker.R c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W)
-    // let solutions = genCasesAndSolutions false true true true 20 solvedLC caseFullFL "FullFL"
-    // let solvedFullFL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    // distinctCases solutions
+    *)
 
     // printfn "Moving DLF corner to top with R/B up"
     // let caseNoWUp c0 c1 c2 = (c0 = Color.B && c1 = Color.R && c2 = Color.W) || (c0 = Color.R && c1 = Color.W && c2 = Color.B)
@@ -153,12 +155,36 @@ let genPaired () =
     let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
-    printfn "Pairing BWR"
-    let casePairedBWR c = (look Face.F Sticker.DL c = Color.R && look Face.L Sticker.D c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W && look Face.D Sticker.L c = Color.W)
-    let solutions = genCasesAndSolutions false true true true 10 solvedDL casePairedBWR "PairBWR"
-    let solvedPairedBWR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    printfn "Solving L center"
+    let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
+    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC "LCenter"
+    let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
-genPaired ()
+
+    // SLOW! try full slotting!
+    printfn "Full slotting BL"
+    let caseFullBL c = caseLC c && (look Face.B Sticker.L c = Color.O && look Face.B Sticker.UL c = Color.O && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.D Sticker.DL c = Color.W)
+    let solutions = genCasesAndSolutions false true true true 20 solvedLC caseFullBL "SlotBL"
+    let solvedFullBL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    // printfn "Pairing BWR"
+    // let casePairedBWR c = (look Face.F Sticker.DL c = Color.R && look Face.L Sticker.D c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W && look Face.D Sticker.L c = Color.W)
+    // let solutions = genCasesAndSolutions false true true true 10 solvedDL casePairedBWR "PairBWR"
+    // let solvedPairedBWR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    // distinctCases solutions
+// genPaired ()
+
+let genRouxL4E () =
+    printfn "Scrambling %i cubes" numCubes
+    let scrambled = List.init numCubes (fun _ -> printf "."; scrambleRouxL4E 20 |> fst)
+    printfn ""
+
+    printfn "Solving L4E"
+    let caseSolved c = c = solved
+    let solutions = genCasesAndSolutions false true true true 10 scrambled caseSolved "L4ESolved"
+    distinctCases solutions
+genRouxL4E ()
 
 (*
 Console.BackgroundColor <- ConsoleColor.Black
@@ -237,4 +263,10 @@ Long term:
 *)
 
 printfn "DONE!"
+Console.ReadLine() |> ignore
+
+printfn "DONE!!"
+Console.ReadLine() |> ignore
+
+printfn "DONE!!!"
 Console.ReadLine() |> ignore

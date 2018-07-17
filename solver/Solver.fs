@@ -12,8 +12,7 @@ let solved =
     let b = faceOfStickers Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B
     cubeOfFaces u d l r f b
 
-let scramble n =
-    let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
+let scrambleWithMoves (moves: Move list) n =
     let rand = Random()
     let rec scramble' cube sequence history n =
         let isRepeat c = List.contains c history
@@ -26,10 +25,19 @@ let scramble n =
         if n = 0 then (cube, Seq.rev sequence) else
             let m = List.item (rand.Next moves.Length) moves
             let cube' = move m cube
-            if isRepeat cube' || canUndoTwoInOneMove cube' moves
-            then scramble' cube sequence history n // try again
-            else scramble' cube' (m :: sequence) (cube' :: history) (n - 1)
+            // if isRepeat cube' || canUndoTwoInOneMove cube' moves
+            // then scramble' cube sequence history n // try again
+            // else
+            scramble' cube' (m :: sequence) (cube' :: history) (n - 1)
     scramble' solved [] [solved] n
+
+let scrambleRouxL4E =
+    let moves = [U2; M; M'; M2]
+    scrambleWithMoves moves
+
+let scramble =
+    let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
+    scrambleWithMoves moves
 
 let solve includeRotations includeMoves includeWideMoves includeSliceMoves depth check cube =
     let rec solve' max depth steps cube = seq {
