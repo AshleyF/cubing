@@ -13,9 +13,9 @@
         <h3>Single twist from solved:</h3>
         <table>
             <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 | flags=showalg" />
-                </td>
+                <!-- not possible after UL/UR <td>
+                    <div class="roofpig" data-config="alg=U2' | flags=showalg" />
+                </td-->
                 <td>
                     <div class="roofpig" data-config="alg=M | setupmoves=x&gt; | flags=showalg" />
                 </td>
@@ -27,18 +27,18 @@
                 </td>
             </tr>
         </table>
-        <h3>Two twists from solved:</h3>
+        <!-- not possible after UL/UR h3>Two twists from solved:</h3>
         <p>Bar, aligned but not on top. Move to top and <span class="twist">U2</span>:</p>
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M U2' | setupmoves=x&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M' U2 | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M' U2' | setupmoves=x&lt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M2' U2 | setupmoves=x&gt;&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M2' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
             </tr>
         </table>
@@ -46,16 +46,13 @@
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M | setupmoves=x&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M' | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M' | setupmoves=x&lt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M2' | setupmoves=x&gt;&gt; | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M2' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
             </tr>
         </table>
@@ -64,46 +61,166 @@
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 M | setupmoves=x&gt;&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M U2' M | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M' U2 M | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M' U2' M | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M2' U2 M | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M2' U2' M | setupmoves=x&lt; | flags=showalg" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 M' | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M U2' M' | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M' U2 M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M' U2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M2' U2 M' | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M2' U2' M' | setupmoves=x&gt; | flags=showalg" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 M2' | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M U2' M2' | setupmoves=x&lt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M' U2 M2' | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M' U2' M2' | setupmoves=x&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M2' U2 M2' | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M2' U2' M2' | flags=showalg" />
                 </td>
             </tr>
-        </table>
-        <p>Broken bar, aligned. Fix bar, bring to top and finish (ending with <span class="twist">M</span>/<span class="twist">M'</span>/<span class="twist">M2'</span> <span class="twist">U2</span>):</p>
+        </table-->
+        <p>Broken bar/isolated "loner". Attach, bring to top, align if necessary and finish:</p>
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M U2 | setupmoves=x&gt; | flags=showalg" />
+                    7<div class="roofpig" data-config="alg=M' U2' M' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M' U2 | setupmoves=x&lt; | flags=showalg" />
+                    9<div class="roofpig" data-config="alg=U2' M U2' M | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    19<div class="roofpig" data-config="alg=M' U2' M' U2' M' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    1<div class="roofpig" data-config="alg=U2' M U2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    21<div class="roofpig" data-config="alg=M' U2' M' U2' M2' | flags=showalg" />
+                </td>
+                <td>
+                    11<div class="roofpig" data-config="alg=U2' M U2' M' | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    30<div class="roofpig" data-config="alg=M' U2' M' U2' M | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    13<div class="roofpig" data-config="alg=U2' M U2' M2' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    18<div class="roofpig" data-config="alg=M U2' M' U2' M' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    2<div class="roofpig" data-config="alg=U2' M' U2' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    6<div class="roofpig" data-config="alg=M U2' M' U2' | flags=showalg" />
+                </td>
+                <td>
+                    10<div class="roofpig" data-config="alg=U2' M' U2' M | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    29<div class="roofpig" data-config="alg=M U2' M' U2' M2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    12<div class="roofpig" data-config="alg=U2' M' U2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    15<div class="roofpig" data-config="alg=M U2' M' U2' M | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    14<div class="roofpig" data-config="alg=U2' M' U2' M2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    4<div class="roofpig" data-config="alg=M' U2' M U2' | flags=showalg" />
+                </td>
+                <td>
+                    31<div class="roofpig" data-config="alg=M2' U2' M U2' M | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    24<div class="roofpig" data-config="alg=M' U2' M U2' M' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    5<div class="roofpig" data-config="alg=M2' U2' M U2' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    26<div class="roofpig" data-config="alg=M' U2' M U2' M2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    17<div class="roofpig" data-config="alg=M2' U2' M U2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    22<div class="roofpig" data-config="alg=M' U2' M U2' M | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    28<div class="roofpig" data-config="alg=M2' U2' M U2' M2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    3<div class="roofpig" data-config="alg=M U2' M U2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    27<div class="roofpig" data-config="alg=M2' U2' M' U2' M | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    8<div class="roofpig" data-config="alg=M2' U2' M' U2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    16<div class="roofpig" data-config="alg=M U2' M U2' M' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    23<div class="roofpig" data-config="alg=M U2' M U2' M2' | flags=showalg" />
+                </td>
+                <td>
+                    20<div class="roofpig" data-config="alg=M2' U2' M' U2' M' | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    32<div class="roofpig" data-config="alg=M U2' M U2' M | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    25<div class="roofpig" data-config="alg=M2' U2' M' U2' M2' | setupmoves=x&lt; | flags=showalg" />
                 </td>
             </tr>
         </table>
@@ -111,25 +228,25 @@
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M2' U2 | setupmoves=x&gt;&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M2' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
                 <td>
-                    A<div class="roofpig" data-config="alg=U2 M2' U2 M2' | flags=showalg" />
+                    A<div class="roofpig" data-config="alg=U2' M2' U2' M2' | flags=showalg" />
                 </td>
                 <td>
-                    B<div class="roofpig" data-config="alg=M2' U2 M2' U2 | flags=showalg" />
+                    B<div class="roofpig" data-config="alg=M2' U2' M2' U2' | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M2' U2 M' | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M2' U2' M' | setupmoves=x&gt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=U2 M2' U2 M | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=U2' M2' U2' M | setupmoves=x&lt; | flags=showalg" />
                 </td>
                 <td>
-                    A<div class="roofpig" data-config="alg=M2' U2 M2' U2 | flags=showalg" />
+                    A<div class="roofpig" data-config="alg=M2' U2' M2' U2' | flags=showalg" />
                 </td>
                 <td>
-                    B<div class="roofpig" data-config="alg=U2 M2' U2 M2' | flags=showalg" />
+                    B<div class="roofpig" data-config="alg=U2' M2' U2' M2' | flags=showalg" />
                 </td>
             </tr>
         </table>
@@ -137,67 +254,89 @@
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 M2' U2 | setupmoves=x&lt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M U2' M2' U2' | setupmoves=x&lt; | flags=showalg" />
                 </td>
                 <td>
-                    <div class="roofpig" data-config="alg=M' U2 M2' U2 | setupmoves=x&gt; | flags=showalg" />
-                </td>
-            </tr>
-        </table>
-        <p>Broken bar. Attach, bring to top, align if necessary and finish.</p>
-        <table>
-            <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=M U2 M U2 | setupmoves=x&gt;&gt; | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=M' U2 M U2 | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=M2' U2 M U2 | setupmoves=x&lt; | flags=showalg" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=M U2 M' U2 | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=M' U2 M' U2 | setupmoves=x&gt;&gt; | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=M2' U2 M' U2 | setupmoves=x&gt; | flags=showalg" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M U2 M | setupmoves=x&gt;&gt; | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M' U2 M | flags=showalg" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M U2 M' | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M' U2 M' | setupmoves=x&gt;&gt; | flags=showalg" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M U2 M2' | setupmoves=x&lt; | flags=showalg" />
-                </td>
-                <td>
-                    <div class="roofpig" data-config="alg=U2 M' U2 M2' | setupmoves=x&gt; | flags=showalg" />
+                    <div class="roofpig" data-config="alg=M' U2' M2' U2' | setupmoves=x&gt; | flags=showalg" />
                 </td>
             </tr>
         </table>
-        <p>TEMP</p>
+        <p>Two columns:</p>
         <table>
             <tr>
                 <td>
-                    <div class="roofpig" data-config="alg=M U2 M U2 | setupmoves= | flags=showalg" />
+                    A<div class="roofpig" data-config="alg=M U2' M2' U2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    B<div class="roofpig" data-config="alg=M' U2' M2' U2' M | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    A<div class="roofpig" data-config="alg=M U2' M2' U2' M | flags=showalg" />
+                </td>
+                <td>
+                    B<div class="roofpig" data-config="alg=M' U2' M2' U2' M' | flags=showalg" />
+                </td>
+            </tr>
+        </table>
+        <p>Pseudo-Dots</p>
+        <table>
+            <tr>
+                <td>
+                    Trick<div class="roofpig" data-config="alg=E2' M E2' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    Trick<div class="roofpig" data-config="alg=E2' M' E2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    Trick<div class="roofpig" data-config="alg=E2' M E2' M | setupmoves= | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="alg=U2' M2' U2' M' U2' M2' U2' | setupmoves=x&lt; | flags=showalg" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="alg=U2' M2' U2' M U2' M2' U2' | setupmoves=x&gt; | flags=showalg" />
+                </td>
+                <td>
+                    A<div class="roofpig" data-config="alg=U2' M U2' M2' U2' M U2' | flags=showalg" />
+                </td>
+                <td>
+                    B<div class="roofpig" data-config="alg=U2' M' U2' M2' U2' M' U2' | flags=showalg" />
+                </td>
+            </tr>
+        </table>
+        <p>Dots</p>
+        <table>
+            <tr>
+                <td>
+                    Trick<div class="roofpig" data-config="alg=E2' M E2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    A<div class="roofpig" data-config="alg=U2' M U2' M2' U2' M U2' M2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    B<div class="roofpig" data-config="alg=U2' M' U2' M2' U2' M' U2' M2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    C<div class="roofpig" data-config="alg=U2' M2' U2' M U2' M2' U2' M | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    D<div class="roofpig" data-config="alg=U2' M2' U2' M' U2' M2' U2' M' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    E<div class="roofpig" data-config="alg=M U2' M2' U2' M U2' M2' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    F<div class="roofpig" data-config="alg=M' U2' M2' U2' M' U2' M2' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    G<div class="roofpig" data-config="alg=M2' U2' M U2' M2' U2' M U2' | setupmoves=x&gt;&gt; | flags=showalg" />
+                </td>
+                <td>
+                    H<div class="roofpig" data-config="alg=M2' U2' M' U2' M2' U2' M' U2' | setupmoves=x&gt;&gt; | flags=showalg" />
                 </td>
             </tr>
         </table>
