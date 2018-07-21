@@ -99,34 +99,73 @@
             ];
 
             var casesIntermediateEO = [
-                { name: "U/Headlights",         colors: "...R..R......R..R....", alg: "F R U R' U' F'", auf: [0] },
-                { name: "Pi/Bruno",             colors: "..RR.........R......R", alg: "F R U R' U' R U R' U' F'", auf: [0] },
-                { name: "H/Double Headlights",  colors: "R.R...............R.R", alg: "F R U R' U' R U R' U' R U R' U' F'", auf: [0, 2] },
-                { name: "L/Bowtie",             colors: "..R.R........R..R....", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", auf: [0] },
-                { name: "T/Blinkers/Chameleon", colors: "R.....R.........R.R..", alg: "R U R' U' R' F R F'", auf: [0] },
+                { name: "U/Headlights",         colors: "...Y..Y......Y..Y....", alg: "F R U R' U' F'", auf: [0] },
+                { name: "Pi/Bruno",             colors: "..YY.........Y......Y", alg: "F R U R' U' R U R' U' F'", auf: [0] },
+                { name: "H/Double Headlights",  colors: "Y.Y...............Y.Y", alg: "F R U R' U' R U R' U' R U R' U' F'", auf: [0, 2] },
+                { name: "L/Bowtie",             colors: "..Y.Y........Y..Y....", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", auf: [0] },
+                { name: "T/Blinkers/Chameleon", colors: "Y.....Y.........Y.Y..", alg: "R U R' U' R' F R F'", auf: [0] },
+                { name: "Sune",                 colors: "Y......Y......Y.....Y", alg: sune, auf: [0] },
+                { name: "Anti-Sune",            colors: "..YY..........Y..Y...", alg: "L' U' L U' L' U2 L", auf: [-1] },
+            ];
+
+            var casesIntermediateEOTraceyRed = [
+                // { name: "U/Headlights",         colors: "...R..R......R..R....", alg: "F R U R' U' F'", auf: [0] },
+                // { name: "Pi/Bruno",             colors: "..RR.........R......R", alg: "F R U R' U' R U R' U' F'", auf: [0] },
+                // { name: "H/Double Headlights",  colors: "R.R...............R.R", alg: "F R U R' U' R U R' U' R U R' U' F'", auf: [0, 2] },
+                // { name: "L/Bowtie",             colors: "..R.R........R..R....", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", auf: [0] },
+                // { name: "T/Blinkers/Chameleon", colors: "R.....R.........R.R..", alg: "R U R' U' R' F R F'", auf: [0] },
                 { name: "Sune",                 colors: "R......R......R.....R", alg: sune, auf: [0] },
-                { name: "Anti-Sune",            colors: "..RR..........R..R...", alg: "R' U' R U' R' U2 R", auf: [0] },
+                { name: "Anti-Sune",            colors: "..RR..........R..R...", alg: "L' U' L U' L' U2 L", auf: [-1] },
             ];
 
             var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
             var casesIntermediateEP = [
-                { name: "White",  colors: "W.WGR.RB.....YR.RYB.G", alg: jperm, auf: [-1] },
-                { name: "Blue",   colors: "B.BWR.RY.....GR.RGY.W", alg: jperm, auf: [-1] },
-                { name: "Yellow", colors: "Y.YBR.RG.....WR.RWG.B", alg: jperm, auf: [-1] },
-                { name: "Green",  colors: "G.GYR.RW.....BR.RBW.Y", alg: jperm, auf: [-1] },
-                { name: "None0",  colors: "W.YGR.RG.....BR.RBW.Y", alg: yperm, auf: [] },
-                { name: "None0",  colors: "B.GWR.RW.....YR.RYB.G", alg: yperm, auf: [] },
-                { name: "None0",  colors: "Y.WBR.RB.....GR.RGY.W", alg: yperm, auf: [] },
-                { name: "None0",  colors: "G.BYR.RY.....WR.RWG.B", alg: yperm, auf: [] },
+                { name: "Blue",   colors: "B.BRY.YO.....GY.YGO.R", alg: jperm, auf: [-1] },
+                { name: "Orange", colors: "O.OBY.YG.....RY.YRG.B", alg: jperm, auf: [-1] },
+                { name: "Green",  colors: "G.GOY.YR.....BY.YBR.O", alg: jperm, auf: [-1] },
+                { name: "Red",    colors: "R.RGY.YB.....OY.YOB.G", alg: jperm, auf: [-1] },
+                { name: "None0",  colors: "R.OGY.YG.....BY.YBR.O", alg: yperm, auf: [] },
+                { name: "None0",  colors: "G.BOY.YO.....RY.YRG.B", alg: yperm, auf: [] },
+                { name: "None0",  colors: "O.RBY.YB.....GY.YGO.R", alg: yperm, auf: [] },
+                { name: "None0",  colors: "B.GRY.YR.....OY.YOB.G", alg: yperm, auf: [] },
             ];
 
-            var cases = casesIntermediateEO; // switch sets here!
+            var oDiagSwap = "L2 U L' F L U' R2 D' B' D' B"; // confused version of "r2 D r' U r D' R2 U' F' U' F";
+            var hColumns = "R U2 R' U' R U R' U' R U' R'";
+            var hRows = "F R U R' U' R U R' U' R U R' U' F'";
+            var hColumn = "R U2 R2 F R F' U2 R' F R F'"; // some 2s are actually executed prime: R U2' R2' F R F' U2 R' F R F'
+            var hRow = "L F' L2 F' L U' L' F L2 F L'"; // confused version of "r U' r2' D' r U' r' D r2 U r'";
+            var casesCMLL = [
+                { name: "O Adjacent Swap (blue)",   colors: "B.BRY.YO.....GY.YGO.R", alg: jperm,     auf: [-1] },
+                { name: "O Adjacent Swap (orange)", colors: "O.OBY.YG.....RY.YRG.B", alg: jperm,     auf: [-1] },
+                { name: "O Adjacent Swap (green)",  colors: "G.GOY.YR.....BY.YBR.O", alg: jperm,     auf: [-1] },
+                { name: "O Adjacent Swap (red)",    colors: "R.RGY.YB.....OY.YOB.G", alg: jperm,     auf: [-1] },
+                { name: "O Diagonal Swap",          colors: "R.OGY.YG.....BY.YBR.O", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
+                { name: "O Diagoaal Swap",          colors: "G.BOY.YO.....RY.YRG.B", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
+                { name: "O Diagoaal Swap",          colors: "O.RBY.YB.....GY.YGO.R", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
+                { name: "O Diagoaal Swap",          colors: "B.GRY.YR.....OY.YOB.G", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
+                { name: "H Columns (green/blue)",   colors: "Y.YOB.GO.....RB.GRY.Y", alg: hColumns,  auf: [] },
+                { name: "H Columns (red/orange)",   colors: "Y.YGO.RG.....BO.RBY.Y", alg: hColumns,  auf: [] },
+                { name: "H Rows (red/orange)",      colors: "Y.YGO.OB.....GR.RBY.Y", alg: hRows,     auf: [] },
+                { name: "H Rows (green/blue)",      colors: "Y.YRG.GO.....RB.BOY.Y", alg: hRows,     auf: [] },
+                { name: "H Column (green)",         colors: "Y.YBR.GO.....BO.GRY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
+                { name: "H Column (red)",           colors: "Y.YOB.RG.....OG.RBY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
+                { name: "H Column (orange)",        colors: "Y.YOG OB.....OB.OGY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
+                { name: "H Column (blue)",          colors: "Y.YGO.BR.....GR.BOY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
+                { name: "H Row (red)",              colors: "Y.YOB.GO.....GR.RBY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
+                { name: "H Row (blue)",             colors: "Y.YGO.RG.....RB.BOY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
+                { name: "H Row (orange)",           colors: "Y.YRG.BR.....BO.OGY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
+                { name: "H Row (green)",            colors: "Y.YBR.OB.....OG.GRY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
+            ];
+
+            //var cases = casesIntermediateEOTraceyRed; // switch sets here!
+            var cases = casesCMLL; // switch sets here!
 
             function setCase(c) {
                 colors = c.colors;
                 expectedAlg = c.alg + ' ';
                 expectedAuf = c.auf;
-                hint = "Hint: " + c.name + " - " + c.alg;
+                hint = "Hint: " + c.name + " - " + (c.display || c.alg);
                 render();
                 recoStart = new Date();
             }
@@ -220,3 +259,8 @@
         <p id="hint"></p>
     </body>
 </html>
+<!--
+    TODO: Make patterns color neutral
+    TODO: Make CMLLs, etc. more random
+    TODO: Model cube and do partial scrambles (e.g. only M/M'/M2/U2)
+-->

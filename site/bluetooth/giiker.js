@@ -436,11 +436,11 @@ function patchTwists(twists, simple) {
                         .replace("U D' ", "E ").replace("D' U ", "E ")
                         .replace("U' D ", "E' ").replace("D U' ", "E' ")
                         .replace("F B' ", "S' ").replace("B' F ", "S' ")
-                        .replace("F' B ", "S ").replace("B F' ", "S ")
-                        .replace("D ", "u ").replace("D' ", "u' "); // assume wide turn (my style)
+                        .replace("F' B ", "S ").replace("B F' ", "S ");
     if (!simple) {
       if (stage == null || stage.num >= 1.2) { // except first two pairs first-block
-          patched = patched.replace("L ", "r ").replace("L' ", "r' "); // assume wide (my style after FB)
+          patched = patched.replace("L ", "r ").replace("L' ", "r' ") // assume wide (my style after FB)
+                           .replace("D ", "u ").replace("D' ", "u' "); // assume wide turn (my style)
       }
       patched = patched.replace("U u' ", "E ").replace("u' U ", "E ") // caused by D' -> u'
                         .replace("U' u ", "E' ").replace("u U' ", "E' ") // caused by D -> u
