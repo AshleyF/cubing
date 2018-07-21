@@ -425,3 +425,29 @@ GiikerCube.prototype = {
     this.listeners.push(listener);
   }
 }
+
+function patchTwists(twists, simple) {
+    var patched = twists.replace("U U ", "U2 ").replace("D D ", "D2 ").replace("L L ", "L2 ").replace("R R ", "R2 ").replace("F F ", "F2 ").replace("B B ", "B2 ")
+                        .replace("U' U' ", "U2 ").replace("D' D' ", "D2 ").replace("L' L' ", "L2 ").replace("R' R' ", "R2 ").replace("F' F' ", "F2 ").replace("B' B' ", "B2 ")
+                        .replace("U U' ", " ").replace("D D' ", " ").replace("L L' ", " ").replace("R R' ", " ").replace("F F' ", " ").replace("B B' ", " ")
+                        .replace("U' U ", " ").replace("D' D ", " ").replace("L' L ", " ").replace("R' R ", " ").replace("F' F ", " ").replace("B' B ", " ")
+                        .replace("R' L ", "M' ").replace("L R' ", "M' ")
+                        .replace("R L' ", "M ").replace("L' R ", "M ")
+                        .replace("U D' ", "E ").replace("D' U ", "E ")
+                        .replace("U' D ", "E' ").replace("D U' ", "E' ")
+                        .replace("F B' ", "S' ").replace("B' F ", "S' ")
+                        .replace("F' B ", "S ").replace("B F' ", "S ")
+                        .replace("D ", "u ").replace("D' ", "u' "); // assume wide turn (my style)
+    if (!simple) {
+      if (stage == null || stage.num >= 1.2) { // except first two pairs first-block
+          patched = patched.replace("L ", "r ").replace("L' ", "r' "); // assume wide (my style after FB)
+      }
+      patched = patched.replace("U u' ", "E ").replace("u' U ", "E ") // caused by D' -> u'
+                        .replace("U' u ", "E' ").replace("u U' ", "E' ") // caused by D -> u
+                        .replace("R r' ", "M ").replace("r' R ", "M ") // caused by L' -> r'
+                        .replace("R' r ", "M' ").replace("r R' ", "M' ") // caused by L -> r
+    }
+    // TODO: U2 U -> U', etc.
+    if (patched == twists) return patched;
+    return patchTwists(patched); // recurse
+}

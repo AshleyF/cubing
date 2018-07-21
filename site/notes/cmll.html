@@ -4,51 +4,219 @@
         <title>CMLL</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" href="styles.css">
+        <style>#hint { color: #222; }</style>
+        <script src="../bluetooth/giiker.js"></script>
+        <script src="cmll.js"></script>
         <script lang="javascript">
-            function setColors() {
+            function load() {
+                document.getElementById('diagram').innerHTML = diagram();
+            }
+
+            var cube = new GiikerCube();
+
+            function connect() {
+                cube.connect();
+            }
+
+            var stage = 1; // HACK: giiker.js patchTwists() depends on this
+            var alg, expectedAlg, auf, expectedAuf, colors, hint, started, recoStart, algStart, manualAdvance;
+
+            function init() {
+                alg = ""; 
+                expectedAlg = "";
+                auf = null;
+                expectedAuf = [];
+                colors = ".....................";
+                hint = "";
+                started = false;
+                recoStart = null;
+                algStart = null;
+                manualAdvance = false;
+            }
+            init();
+            manualAdvance = true;
+
+            function setManualAdvance() {
+                manualAdvance = true;
+            }
+
+            function render() {
+                var match = "#08F"; // blue
+                var aufError = " ";
+                var time = "";
+                if (alg != "") {
+                    if (alg == expectedAlg) match = "#0C0"; // green
+                    else if (expectedAlg.indexOf(alg.substring(0, alg.length - 1)) != -1) match = "#FF0";
+                    else if (alg.indexOf("U' ") == alg.length - 3 && expectedAlg.indexOf(alg.substring(0, alg.length - 2)) != -1) match = "#FF0";
+                    else match = "#F10"; // red
+                }
+                var goodAuf = expectedAuf.length == 0;
+                for (var a in expectedAuf) {
+                    var e = expectedAuf[a];
+                    if ((auf == null && alg == "") || (auf == null && e == 0) || auf == e || (e == 2 && auf == 0)) goodAuf = true;
+                }
+                if (!goodAuf) {
+                    match = "#F10"; // red
+                    aufError = "(AUF?) ";
+                }
+                if (match == "#0C0") {
+                    window.setTimeout(setManualAdvance, 1000); // auto-advance
+                    var elapsedReco = (((new Date()) - recoStart) - ((new Date()) - algStart)) / 1000.0;
+                    var elapsedAlg = ((new Date()) - algStart) / 1000.0;
+                    time = "(" + elapsedReco + "/" + elapsedAlg + ")";
+                }
+                document.getElementById("alg").innerHTML = '<span style="color:' + match + '">' + (auf == -1 ? "(AUF: U') " : auf == 1 ? "(AUF: U) " : auf == 2 ? "(AUF: U2) " : aufError) + alg + '</span>' + time;
+                setColors(colors);
+                document.getElementById("hint").innerText = hint;
+            }
+
+            function reset() {
+                init();
+                render();
+            }
+
+            var sune = "R U R' U R U2 R'";
+            var casesBeginnerEO = [
+                { name: "U/Headlights",         colors: "...R..R......R..R....", alg: sune, auf: [-1] },
+                { name: "Pi/Bruno",             colors: "..RR.........R......R", alg: sune, auf: [-1, 2] },
+                { name: "H/Double Headlights",  colors: "R.R...............R.R", alg: sune, auf: [0] },
+                { name: "L/Bowtie",             colors: "..R.R........R..R....", alg: sune, auf: [2] },
+                { name: "T/Blinkers/Chameleon", colors: "R.....R.........R.R..", alg: sune, auf: [0] },
+                { name: "Sune",                 colors: "R......R......R.....R", alg: sune, auf: [0] },
+                { name: "Anti-Sune",            colors: "..RR..........R..R...", alg: sune, auf: [0] },
+            ];
+
+            var jperm = "R U R' F' R U R' U' R' F R2 U' R'";
+            var casesBeginnerEP = [
+                { name: "White",  colors: "W.WGR.RB.....YR.RYB.G", alg: jperm, auf: [-1] },
+                { name: "Blue",   colors: "B.BWR.RY.....GR.RGY.W", alg: jperm, auf: [-1] },
+                { name: "Yellow", colors: "Y.YBR.RG.....WR.RWG.B", alg: jperm, auf: [-1] },
+                { name: "Green",  colors: "G.GYR.RW.....BR.RBW.Y", alg: jperm, auf: [-1] },
+                { name: "None0",  colors: "W.YGR.RG.....BR.RBW.Y", alg: jperm, auf: [] },
+                { name: "None0",  colors: "B.GWR.RW.....YR.RYB.G", alg: jperm, auf: [] },
+                { name: "None0",  colors: "Y.WBR.RB.....GR.RGY.W", alg: jperm, auf: [] },
+                { name: "None0",  colors: "G.BYR.RY.....WR.RWG.B", alg: jperm, auf: [] },
+            ];
+
+            var casesIntermediateEO = [
+                { name: "U/Headlights",         colors: "...R..R......R..R....", alg: "F R U R' U' F'", auf: [0] },
+                { name: "Pi/Bruno",             colors: "..RR.........R......R", alg: "F R U R' U' R U R' U' F'", auf: [0] },
+                { name: "H/Double Headlights",  colors: "R.R...............R.R", alg: "F R U R' U' R U R' U' R U R' U' F'", auf: [0, 2] },
+                { name: "L/Bowtie",             colors: "..R.R........R..R....", alg: "R U2 R' U' R U R' U' R U R' U' R U' R'", auf: [0] },
+                { name: "T/Blinkers/Chameleon", colors: "R.....R.........R.R..", alg: "R U R' U' R' F R F'", auf: [0] },
+                { name: "Sune",                 colors: "R......R......R.....R", alg: sune, auf: [0] },
+                { name: "Anti-Sune",            colors: "..RR..........R..R...", alg: "R' U' R U' R' U2 R", auf: [0] },
+            ];
+
+            var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
+            var casesIntermediateEP = [
+                { name: "White",  colors: "W.WGR.RB.....YR.RYB.G", alg: jperm, auf: [-1] },
+                { name: "Blue",   colors: "B.BWR.RY.....GR.RGY.W", alg: jperm, auf: [-1] },
+                { name: "Yellow", colors: "Y.YBR.RG.....WR.RWG.B", alg: jperm, auf: [-1] },
+                { name: "Green",  colors: "G.GYR.RW.....BR.RBW.Y", alg: jperm, auf: [-1] },
+                { name: "None0",  colors: "W.YGR.RG.....BR.RBW.Y", alg: yperm, auf: [] },
+                { name: "None0",  colors: "B.GWR.RW.....YR.RYB.G", alg: yperm, auf: [] },
+                { name: "None0",  colors: "Y.WBR.RB.....GR.RGY.W", alg: yperm, auf: [] },
+                { name: "None0",  colors: "G.BYR.RY.....WR.RWG.B", alg: yperm, auf: [] },
+            ];
+
+            var cases = casesIntermediateEO; // switch sets here!
+
+            function setCase(c) {
+                colors = c.colors;
+                expectedAlg = c.alg + ' ';
+                expectedAuf = c.auf;
+                hint = "Hint: " + c.name + " - " + c.alg;
+                render();
+                recoStart = new Date();
             }
 
             function test() {
-                document.getElementById('u4').setAttribute('fill', '#00F');
+                setCase(cases[0]);
+            }
+
+            var current = 0;
+            function next() {
+                init();
+                setCase(cases[current++]);
+                if (current >= cases.length) current = 0;
+            }
+
+            function random() {
+                function rotate(c) {
+                    var b0 = c[0];
+                    var b1 = c[1];
+                    var b2 = c[2];
+                    var l0 = c[3];
+                    var u0 = c[4];
+                    var u1 = c[5];
+                    var u2 = c[6];
+                    var r0 = c[7];
+                    var l1 = c[8];
+                    var u3 = c[9];
+                    var u4 = c[10];
+                    var u5 = c[11];
+                    var r1 = c[12];
+                    var l2 = c[13];
+                    var u6 = c[14];
+                    var u7 = c[15];
+                    var u8 = c[16];
+                    var r2 = c[17];
+                    var f0 = c[18];
+                    var f1 = c[19];
+                    var f2 = c[20];
+                    return l2 + l1 + l0 + f0 + u6 + u3 + u0 + b0 + f1 + u7 + u4 + u1 + b1 + f2 + u8 + u5 + u2 + b2 + r2 + r1 + r0;
+                }
+                function randInt(n) {
+                    return Math.floor(Math.random() * Math.floor(n));
+                }
+                init();
+                var r = randInt(cases.length);
+                var c = cases[r];
+                var n = randInt(4);
+                for (var i = 0; i < n; i++) {
+                    c.colors = rotate(c.colors);
+                    for (var j = 0; j < c.auf.length; j++) {
+                        c.auf[j] = c.auf[j] - 1;
+                        if (c.auf[j] == -2) c.auf[j] = 2;
+                    }
+                }
+                setCase(c);
+            }
+
+            function onGiikerChanged(colors, twist) {
+                if (manualAdvance) {
+                    manualAdvance = false;
+                    random();
+                    return;
+                }
+                if (!started) {
+                    started = true;
+                    algStart = new Date();
+                }
+                console.log(twist);
+                if (alg == "" && (twist == "U" || twist == "U'")) {
+                    auf += twist == "U" ? 1 : -1;
+                    if (auf == 3) auf = -1;
+                    else if (auf == -2) auf = 2;
+                    else if (auf == -3) auf = 1;
+                    console.log(auf);
+                } else {
+                    alg = patchTwists(alg + twist + " ", true);
+                }
+                render();
             }
         </script>
     </head>
-    <body>
-        <h1>CMLL</h1>
-        <!-- generated initially by Conrad's VisualCube - http://cube.crider.co.uk/visualcube.php -->
-            <svg version='1.1' xmlns='http://www.w3.org/2000/svg'
-            width='600' height='600'
-            viewBox='-0.9 -0.9 1.8 1.8'>
-            <rect fill='#000' x='-0.9' y='-0.9' width='1.8' height='1.8'/>
-            <g style='stroke-width:0.1;stroke-linejoin:round;opacity:1'>
-                <polygon fill='#000000' stroke='#000000' points='-0.522222222222,-0.522222222222 0.522222222222,-0.522222222222 0.522222222222,0.522222222222 -0.522222222222,0.522222222222'/>
-            </g>
-            <g style='opacity:1;stroke-opacity:0.5;stroke-width:0;stroke-linejoin:round'>
-                <polygon id="u0" fill='#333' stroke='#000000'  points='-0.527777777778,-0.527777777778 -0.212962962963,-0.527777777778 -0.212962962963,-0.212962962963 -0.527777777778,-0.212962962963'/>
-                <polygon id="u1" fill='#333' stroke='#000000'  points='-0.157407407407,-0.527777777778 0.157407407407,-0.527777777778 0.157407407407,-0.212962962963 -0.157407407407,-0.212962962963'/>
-                <polygon id="u2" fill='#333' stroke='#000000'  points='0.212962962963,-0.527777777778 0.527777777778,-0.527777777778 0.527777777778,-0.212962962963 0.212962962963,-0.212962962963'/>
-                <polygon id="u3" fill='#333' stroke='#000000'  points='-0.527777777778,-0.157407407407 -0.212962962963,-0.157407407407 -0.212962962963,0.157407407407 -0.527777777778,0.157407407407'/>
-                <polygon id="u4" fill='#333' stroke='#000000'  points='-0.157407407407,-0.157407407407 0.157407407407,-0.157407407407 0.157407407407,0.157407407407 -0.157407407407,0.157407407407'/>
-                <polygon id="u5" fill='#333' stroke='#000000'  points='0.212962962963,-0.157407407407 0.527777777778,-0.157407407407 0.527777777778,0.157407407407 0.212962962963,0.157407407407'/>
-                <polygon id="u6" fill='#333' stroke='#000000'  points='-0.527777777778,0.212962962963 -0.212962962963,0.212962962963 -0.212962962963,0.527777777778 -0.527777777778,0.527777777778'/>
-                <polygon id="u7" fill='#333' stroke='#000000'  points='-0.157407407407,0.212962962963 0.157407407407,0.212962962963 0.157407407407,0.527777777778 -0.157407407407,0.527777777778'/>
-                <polygon id="u8" fill='#333' stroke='#000000'  points='0.212962962963,0.212962962963 0.527777777778,0.212962962963 0.527777777778,0.527777777778 0.212962962963,0.527777777778'/>
-            </g>
-            <g style='opacity:1;stroke-opacity:1;stroke-width:0.02;stroke-linejoin:round'>
-                <polygon id="b0" fill='#333' stroke='#000000'  points='-0.195146871009,-0.554406130268 -0.543295019157,-0.554406130268 -0.507279693487,-0.718390804598 -0.183141762452,-0.718390804598'/>
-                <polygon id="b1" fill='#333' stroke='#000000'  points='0.174457215837,-0.554406130268 -0.173690932312,-0.554406130268 -0.161685823755,-0.718390804598 0.16245210728,-0.718390804598'/>
-                <polygon id="b2" fill='#333' stroke='#000000'  points='0.544061302682,-0.554406130268 0.195913154534,-0.554406130268 0.183908045977,-0.718390804598 0.508045977011,-0.718390804598'/>
-                <polygon id="l0" fill='#333' stroke='#000000'  points='-0.554406130268,-0.544061302682 -0.554406130268,-0.195913154534 -0.718390804598,-0.183908045977 -0.718390804598,-0.508045977011'/>
-                <polygon id="l1" fill='#333' stroke='#000000'  points='-0.554406130268,-0.174457215837 -0.554406130268,0.173690932312 -0.718390804598,0.161685823755 -0.718390804598,-0.16245210728'/>
-                <polygon id="l2" fill='#333' stroke='#000000'  points='-0.554406130268,0.195146871009 -0.554406130268,0.543295019157 -0.718390804598,0.507279693487 -0.718390804598,0.183141762452'/>
-                <polygon id="r0" fill='#333' stroke='#000000'  points='0.554406130268,-0.195146871009 0.554406130268,-0.543295019157 0.718390804598,-0.507279693487 0.718390804598,-0.183141762452'/>
-                <polygon id="r1" fill='#333' stroke='#000000'  points='0.554406130268,0.174457215837 0.554406130268,-0.173690932312 0.718390804598,-0.161685823755 0.718390804598,0.16245210728'/>
-                <polygon id="r2" fill='#333' stroke='#000000'  points='0.554406130268,0.544061302682 0.554406130268,0.195913154534 0.718390804598,0.183908045977 0.718390804598,0.508045977011'/>
-                <polygon id="f0" fill='#333' stroke='#000000'  points='-0.544061302682,0.554406130268 -0.195913154534,0.554406130268 -0.183908045977,0.718390804598 -0.508045977011,0.718390804598'/>
-                <polygon id="f1" fill='#333' stroke='#000000'  points='-0.174457215837,0.554406130268 0.173690932312,0.554406130268 0.161685823755,0.718390804598 -0.16245210728,0.718390804598'/>
-                <polygon id="f2" fill='#333' stroke='#000000'  points='0.195146871009,0.554406130268 0.543295019157,0.554406130268 0.507279693487,0.718390804598 0.183141762452,0.718390804598'/>
-            </g>
-        </svg>
+    <body onload="load()">
+        <div id="diagram"></div>
+        <h1 id="alg">...</h1>
+        <button onclick="connect()">Connect</button>
+        <button onclick="reset()">Reset</button>
+        <button onclick="next()">Next</button>
+        <button onclick="random()">Random</button>
         <button onclick="test()">Test</button>
+        <p>Hold with white up and green front.</p>
+        <p id="hint"></p>
     </body>
 </html>
