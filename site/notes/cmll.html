@@ -4,7 +4,7 @@
         <title>CMLL</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" href="styles.css">
-        <style>#hint { color: #222; }</style>
+        <style>#hint { color: #444; }</style>
         <script src="../bluetooth/giiker.js"></script>
         <script src="cmll.js"></script>
         <script lang="javascript">
@@ -60,7 +60,7 @@
                     aufError = "(AUF?) ";
                 }
                 if (match == "#0C0") {
-                    window.setTimeout(setManualAdvance, 1000); // auto-advance
+                    window.setTimeout(setManualAdvance, 500); // auto-advance
                     var elapsedReco = (((new Date()) - recoStart) - ((new Date()) - algStart)) / 1000.0;
                     var elapsedAlg = ((new Date()) - algStart) / 1000.0;
                     time = "(" + elapsedReco + "/" + elapsedAlg + ")";
@@ -135,7 +135,10 @@
             var hRows = "F R U R' U' R U R' U' R U R' U' F'";
             var hColumn = "R U2 R2 F R F' U2 R' F R F'"; // some 2s are actually executed prime: R U2' R2' F R F' U2 R' F R F'
             var hRow = "L F' L2 F' L U' L' F L2 F L'"; // confused version of "r U' r2' D' r U' r' D r2 U r'";
+            var tLeftBar = "R U R' U' R' F R F'";
+            var tRightBar = "L' U' L U L F' L' F";
             var casesCMLL = [
+                // O
                 { name: "O Adjacent Swap (blue)",   colors: "B.BRY.YO.....GY.YGO.R", alg: jperm,     auf: [-1] },
                 { name: "O Adjacent Swap (orange)", colors: "O.OBY.YG.....RY.YRG.B", alg: jperm,     auf: [-1] },
                 { name: "O Adjacent Swap (green)",  colors: "G.GOY.YR.....BY.YBR.O", alg: jperm,     auf: [-1] },
@@ -144,10 +147,12 @@
                 { name: "O Diagoaal Swap",          colors: "G.BOY.YO.....RY.YRG.B", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
                 { name: "O Diagoaal Swap",          colors: "O.RBY.YB.....GY.YGO.R", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
                 { name: "O Diagoaal Swap",          colors: "B.GRY.YR.....OY.YOB.G", alg: oDiagSwap, auf: [], display: "r2 D r' U r D' R2 U' F' U' F" },
-                { name: "H Columns (green/blue)",   colors: "Y.YOB.GO.....RB.GRY.Y", alg: hColumns,  auf: [] },
-                { name: "H Columns (red/orange)",   colors: "Y.YGO.RG.....BO.RBY.Y", alg: hColumns,  auf: [] },
-                { name: "H Rows (red/orange)",      colors: "Y.YGO.OB.....GR.RBY.Y", alg: hRows,     auf: [] },
-                { name: "H Rows (green/blue)",      colors: "Y.YRG.GO.....RB.BOY.Y", alg: hRows,     auf: [] },
+                // */
+                // H
+                { name: "H Columns (green/blue)",   colors: "Y.YOB.GO.....RB.GRY.Y", alg: hColumns,  auf: [0] },
+                { name: "H Columns (red/orange)",   colors: "Y.YGO.RG.....BO.RBY.Y", alg: hColumns,  auf: [0] },
+                { name: "H Rows (red/orange)",      colors: "Y.YGO.OB.....GR.RBY.Y", alg: hRows,     auf: [0] },
+                { name: "H Rows (green/blue)",      colors: "Y.YRG.GO.....RB.BOY.Y", alg: hRows,     auf: [0] },
                 { name: "H Column (green)",         colors: "Y.YBR.GO.....BO.GRY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
                 { name: "H Column (red)",           colors: "Y.YOB.RG.....OG.RBY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
                 { name: "H Column (orange)",        colors: "Y.YOG OB.....OB.OGY.Y", alg: hColumn,   auf: [1], display: "R U2' R2' F R F' U2 R' F R F'" },
@@ -156,6 +161,17 @@
                 { name: "H Row (blue)",             colors: "Y.YGO.RG.....RB.BOY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
                 { name: "H Row (orange)",           colors: "Y.YRG.BR.....BO.OGY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
                 { name: "H Row (green)",            colors: "Y.YBR.OB.....OG.GRY.Y", alg: hRow,      auf: [2], display: "r U' r2' D' r U' r' D r2 U r'" },
+                // */
+                // T
+                { name: "T Left Bar (green)",       colors: "Y.BBR.YO.....OG.YGY.R", alg: tLeftBar,  auf: [0] },
+                { name: "T Left Bar (red)",         colors: "Y.OOB.YG.....GR.YRY.B", alg: tLeftBar,  auf: [0] },
+                { name: "T Left Bar (blue)",        colors: "Y.GGO.YR.....RB.YBY.O", alg: tLeftBar,  auf: [0] },
+                { name: "T Left Bar (orange)",      colors: "Y.RRG.YB.....BO.YOY.G", alg: tLeftBar,  auf: [0] },
+                { name: "T Right Bar (blue)",       colors: "G.YOY.RG.....BY.BOR.Y", alg: tRightBar, auf: [0] },
+                { name: "T Right Bar (orange)",     colors: "R.YGY.BR.....OY.OGB.Y", alg: tRightBar, auf: [0] },
+                { name: "T Right Bar (green)",      colors: "B.YRY.OB.....GY.GRO.Y", alg: tRightBar, auf: [0] },
+                { name: "T Right Bar (reb)",        colors: "O.YBY.GO.....RY.RBG.Y", alg: tRightBar, auf: [0] },
+                // */
             ];
 
             //var cases = casesIntermediateEOTraceyRed; // switch sets here!

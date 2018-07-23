@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>Drill</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <style>#hint { color: #444; }</style>
+        <script src="../bluetooth/giiker.js"></script>
+        <script lang="javascript">
+            var cube = new GiikerCube();
+
+            function connect() {
+                cube.connect();
+            }
+
+            var stage = 1; // HACK: giiker.js patchTwists() depends on this
+            var alg, expectedAlg, started, algStart, lastTwist;
+
+            function clear() {
+                alg = ""; 
+                started = false;
+                algStart = null;
+            }
+
+            function init() {
+                clear();
+                expectedAlg = "";
+                lastTwist = new Date();
+            }
+            init();
+
+            function render() {
+                var match = "#08F"; // blue
+                var time = "";
+                if (alg != "" && expectedAlg != "") {
+                    if (alg == expectedAlg) match = "#0C0"; // green
+                    else if (expectedAlg.indexOf(alg.substring(0, alg.length - 1)) != -1) match = "#FF0";
+                    else if (alg.indexOf("U' ") == alg.length - 3 && expectedAlg.indexOf(alg.substring(0, alg.length - 2)) != -1) match = "#FF0";
+                    else match = "#F10"; // red
+                }
+                if (match == "#0C0") {
+                    var elapsedAlg = ((new Date()) - algStart) / 1000.0;
+                    time = "(" + elapsedAlg + ")";
+                }
+                if (match == "#0C0") nextClears = true;
+                document.getElementById("alg").innerHTML = '<span style="color:' + match + '">' + alg + '</span>' + time;
+                document.getElementById("hint").innerText = "Hint: " + expectedAlg;
+            }
+
+            function oops() {
+                clear();
+                render();
+            }
+
+            function setAlg() {
+                expectedAlg = alg;
+                clear();
+                render();
+            }
+
+            var nextClears = false;
+            function timeout() {
+                var elaped = ((new Date()) - lastTwist);
+                if (elaped >= 1000) {
+                    nextClears = true;
+                }
+            }
+
+            function onGiikerChanged(colors, twist) {
+                if (nextClears) {
+                    nextClears = false;
+                    clear();
+                }
+                lastTwist = new Date();
+                window.setTimeout(timeout, 1000);
+                if (!started) {
+                    started = true;
+                    algStart = lastTwist;
+                }
+                console.log(twist);
+                alg = patchTwists(alg + twist + " ", true);
+                render();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="diagram"></div>
+        <h1 id="alg">...</h1>
+        <button onclick="connect()">Connect</button>
+        <button onclick="setAlg()">Set</button>
+        <button onclick="oops()">Oops!</button>
+        <p>Hold with white up and green front. Execute alg, click 'Set'.</p>
+        <p id="hint"></p>
+    </body>
+</html>
