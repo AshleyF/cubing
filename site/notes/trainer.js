@@ -118,7 +118,7 @@ function colorToCss(c) {
     switch (c) {
         case 'R': return "#F10";
         case 'O': return "#F90";
-        case 'Y': return "#FF0";
+        case 'Y': return "#EF0";
         case 'W': return "#FFF";
         case 'B': return "#08F";
         case 'G': return "#0C0";

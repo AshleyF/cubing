@@ -10,12 +10,31 @@
         <script src="eo.js"></script>
         <script lang="javascript">
             var cases = [
-                { name: "6 Flip",              colors: ".P.P.P.P..P.....P.", alg: "", auf: [],     display: "R U' r' U' M' U r U r'" },
-                { name: "4 Flip - 2 Top Line", colors: "...P.P..........P.", alg: "", auf: [],     display: "M' U2 M' U2 M U' M'" },
-                { name: "4 Flip - 2 Top Line", colors: ".P.....P..P.....P.", alg: "", auf: [1,-1], display: "M' U2 M' U2 M U' M'" },
-                { name: "2 Flip Bottom",       colors: "................P.", alg: "", auf: [],     display: "M' U M' U' M U' M'" },
-                { name: "Arrow - Front",       colors: "...P.P.P..P.....P.", alg: "", auf: [],     display: "M' U' M" },
-                { name: "Arrow - Back",        colors: ".P.P.P............", alg: "", auf: [],     display: "M U' M'" },
+                { name: "6 Flip",              colors: ".P.P.P.P..P.....P.", alg: "R U' L' B' M' U L F L'", auf: [],     display: "R U' r' U' M' U r U r'" },
+                { name: "4 Flip - 2 Top Line", colors: "...P.P..........P.", alg: "M' F2 M' D2 M F' M'", auf: [0,2],     display: "M' U2 M' U2 M U' M'" },
+                { name: "4 Flip - 2 Top Line", colors: ".P.....P..P.....P.", alg: "M' F2 M' D2 M F' M'", auf: [1,-1], display: "M' U2 M' U2 M U' M'" },
+                { name: "2 Flip - Bottom",     colors: "................P.", alg: "M' F M' D' M F' M'", auf: [],     display: "M' U M' U' M U' M'" },
+                { name: "Arrow - Front",       colors: "...P.P.P..P.....P.", alg: "M' F' M'", auf: [0],     display: "M' U' M" },
+                { name: "Arrow - Front",       colors: ".P.P...P..P.....P.", alg: "M' F' M'", auf: [-1],     display: "M' U' M" },
+                { name: "Arrow - Front",       colors: ".P.P.P..........P.", alg: "M' F' M'", auf: [2],     display: "M' U' M" },
+                { name: "Arrow - Front",       colors: ".P...P.P..P.....P.", alg: "M' F' M'", auf: [1],     display: "M' U' M" },
+                { name: "Arrow - Back",        colors: ".P.P.P............", alg: "M B' M'", auf: [0],     display: "M U' M'" },
+                { name: "Arrow - Back",        colors: ".P.P...P..P.......", alg: "M B' M'", auf: [1],     display: "M U' M'" },
+                { name: "Arrow - Back",        colors: ".P...P.P..P.......", alg: "M B' M'", auf: [-1],     display: "M U' M'" },
+                { name: "Arrow - Back",        colors: "...P.P.P..P.......", alg: "M B' M'", auf: [2],     display: "M U' M'" },
+                { name: "4 Flip - Top",        colors: ".P.P.P.P..P.......", alg: "M' F2 M' D2 M' B' M'", auf: [],     display: "M' U2 M' U2 M' U' M'" },
+                { name: "2 Flip - Top Line",   colors: ".P.....P..P.......", alg: "M' F M U' M' F' M'", auf: [0],     display: "M' U M U' M' U' M'" },
+                { name: "2 Flip - Top Line",   colors: "...P.P............", alg: "M' F M U' M' F' M'", auf: [1,-1],     display: "M' U M U' M' U' M'" },
+                { name: "2 Flip - Top L",      colors: ".P.P..............", alg: "M' F M' D2 M' B' M'", auf: [],     display: "M' U M' U2 M' U' M'" },
+                { name: "2 Flip - Top L",      colors: "...P...P..P.......", alg: "M' F M' D2 M' B' M'", auf: [1],     display: "M' U M' U2 M' U' M'" },
+                { name: "2 Flip - Top L",      colors: ".....P.P..P.......", alg: "M' F M' D2 M' B' M'", auf: [2],     display: "M' U M' U2 M' U' M'" },
+                { name: "2 Flip - Top L",      colors: ".P...P............", alg: "M' F M' D2 M' B' M'", auf: [-1],     display: "M' U M' U2 M' U' M'" },
+                { name: "2 Flip - Diagonal F", colors: ".......P..P.......", alg: "M' B' M' U' M' F' M'", auf: [0],     display: "M' U' M' U' M U' M'" },
+                { name: "2 Flip - Diagonal B", colors: ".P..............P.", alg: "M' F' M U' M' F' M'", auf: [0],     display: "M' U' M U' M' U' M'" },
+                { name: "4 Flip - Top L",      colors: ".P.P............P.", alg: "M' M' D' M' B' M'", auf: [],     display: "M2 U' M' U' M'" },
+                { name: "4 Flip - Top L",      colors: "...P...P..P.....P.", alg: "M' M' D' M' B' M'", auf: [1],     display: "M2 U' M' U' M'" },
+                { name: "4 Flip - Top L",      colors: ".....P.P..P.....P.", alg: "M' M' D' M' B' M'", auf: [2],     display: "M2 U' M' U' M'" },
+                { name: "4 Flip - Top L",      colors: ".P...P..........P.", alg: "M' M' D' M' B' M'", auf: [2],     display: "M2 U' M' U' M'" },
             ];
 
             function nextCase() {
