@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>EO</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <style>#hint { color: #444; }</style>
+        <script src="../bluetooth/giiker.js"></script>
+        <script src="trainer.js"></script>
+        <script src="eo.js"></script>
+        <script lang="javascript">
+            var cases = [
+                { name: "6 Flip",              colors: ".P.P.P.P..P.....P.", alg: "", auf: [],     display: "R U' r' U' M' U r U r'" },
+                { name: "4 Flip - 2 Top Line", colors: "...P.P..........P.", alg: "", auf: [],     display: "M' U2 M' U2 M U' M'" },
+                { name: "4 Flip - 2 Top Line", colors: ".P.....P..P.....P.", alg: "", auf: [1,-1], display: "M' U2 M' U2 M U' M'" },
+                { name: "2 Flip Bottom",       colors: "................P.", alg: "", auf: [],     display: "M' U M' U' M U' M'" },
+                { name: "Arrow - Front",       colors: "...P.P.P..P.....P.", alg: "", auf: [],     display: "M' U' M" },
+                { name: "Arrow - Back",        colors: ".P.P.P............", alg: "", auf: [],     display: "M U' M'" },
+            ];
+
+            function nextCase() {
+                function randInt(n) {
+                    return Math.floor(Math.random() * Math.floor(n));
+                }
+                init();
+                var c = cloneCase(cases[randInt(cases.length)]);
+                function replace(i, x) {
+                    c.colors = c.colors.substring(0, i) + x + c.colors.substring(i + 1);
+                }
+                function shuffle(a) {
+                    var i = a.length;
+                    while (0 !== i) {
+                        var r = randInt(i);
+                        i -= 1;
+                        var t = a[i];
+                        a[i] = a[r];
+                        a[r] = t;
+                    }
+                    return a;
+                }
+                var lse = shuffle(["YB", "YG", "YO", "YR", "WR", "WO"]); // TODO: color neutral
+                function place(i, e, oriented, misoriented) {
+                    replace(i, c.colors[i] == 'P' ? lse[e][misoriented] : lse[e][oriented]);
+                }
+                var centers = shuffle(["YR", "WO"])[randInt(2)];
+                var front = shuffle(['R', 'O', 'B', 'G'])[randInt(4)];
+                replace(0, 'Y');
+                place(1, 0, 0, 1);
+                replace(2, 'Y');
+                place(3, 1, 0, 1);
+                replace(4, centers[0]);
+                place(5, 2, 0, 1);
+                replace(6, 'Y');
+                place(7, 3, 0, 1);
+                replace(8, 'Y');
+                replace(9, front);
+                place(10, 4, 1, 0);
+                replace(11, front);
+                replace(12, 'R');
+                replace(13, centers[1]);
+                replace(14, 'R');
+                replace(15, 'R');
+                place(16, 5, 1, 0);
+                replace(17, 'R');
+                setCase(c);
+            }
+        </script>
+    </head>
+    <body onload="load()">
+        <div id="diagram"></div>
+        <h1 id="alg">...</h1>
+        <button onclick="connect()">Connect</button>
+        <button onclick="reset()">Reset</button>
+        <button onclick="next()">Next</button>
+        <button onclick="nextCase()">Random</button>
+        <p>Hold with white up and green front.</p>
+        <p id="hint"></p>
+    </body>
+</html>
+<!--
+    TODO: Make patterns color neutral
+    TODO: Make CMLLs, etc. more random
+    TODO: Model cube and do partial scrambles (e.g. only M/M'/M2/U2)
+-->

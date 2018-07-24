@@ -40,20 +40,20 @@ let patterns = [
     "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"];
     ]
 
-let hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube =
+let hybridSolve includeRotations includeMoves includeSliceMoves depth goal stage cube =
     let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c) p c
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
         match algs with
         | a :: _ -> [a.Split(' ') |> Seq.map stringToStep] |> Seq.ofList
         | [] -> Seq.empty // skip
-    | None -> solve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal cube
+    | None -> solve includeRotations includeMoves includeSliceMoves depth goal cube
 
-let genCasesAndSolutions includeRotations includeMoves includeWideMoves includeSliceMoves depth cubes goal stage =
+let genCasesAndSolutions includeRotations includeMoves includeSliceMoves depth cubes goal stage =
     printf "."
     let rec gen cases = function
         | cube :: remaining ->
-            let solutions = hybridSolve includeRotations includeMoves includeWideMoves includeSliceMoves depth goal stage cube
+            let solutions = hybridSolve includeRotations includeMoves includeSliceMoves depth goal stage cube
             let algs = String.Join(" | ", Seq.map stepsToString solutions)
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
@@ -87,45 +87,45 @@ let genRoux () =
 
     printfn "Solving DL edge (during inspection)"
     let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
-    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD "DLEdge"
+    let solutions = genCasesAndSolutions true false false 10 scrambled caseDLD "DLEdge"
     let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Solving L center"
     let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
-    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC "LCenter"
+    let solutions = genCasesAndSolutions false true true 10 solvedDL caseLC "LCenter"
     let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     // THIS TAKES TOO LONG!
     // printfn "Pairing R/B edge and corner in upper layer"
     // let caseBRPaired c = caseLC c && (look Face.U Sticker.D c = Color.R && look Face.U Sticker.DR c = Color.R && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.U c = Color.B && look Face.F Sticker.UR c = Color.B)
-    // let solutions = genCasesAndSolutions false true true true 10 solvedLC caseBRPaired "R/BEdgeAndCorner"
+    // let solutions = genCasesAndSolutions false true true 10 solvedLC caseBRPaired "R/BEdgeAndCorner"
     // let solvedBRPaired = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     // distinctCases solutions
 
     (*
     printfn "Placing FL edge in DF (R facing)"
     let caseFLtoDFR c = caseLC c && (look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.R)
-    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDFR "FLEdgeInDF-R"
+    let solutions = genCasesAndSolutions false true true 10 solvedLC caseFLtoDFR "FLEdgeInDF-R"
     let solvedFTtoDFR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Placing FL edge in DF (B facing)"
     let caseFLtoDFB c = caseLC c && (look Face.D Sticker.U c = Color.R && look Face.F Sticker.D c = Color.B)
-    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDFB "FLEdgeInDF-B"
+    let solutions = genCasesAndSolutions false true true 10 solvedLC caseFLtoDFB "FLEdgeInDF-B"
     let solvedFTtoDFB = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Placing FL edge in DB (R facing)"
     let caseFLtoDBR c = caseLC c && (look Face.D Sticker.D c = Color.B && look Face.B Sticker.U c = Color.R)
-    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDBR "FLEdgeInDB-R"
+    let solutions = genCasesAndSolutions false true true 10 solvedLC caseFLtoDBR "FLEdgeInDB-R"
     let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Placing FL edge in DB (B facing)"
     let caseFLtoDBB c = caseLC c && (look Face.D Sticker.D c = Color.R && look Face.B Sticker.U c = Color.B)
-    let solutions = genCasesAndSolutions false true true true 10 solvedLC caseFLtoDBB "FLEdgeInDB-B"
+    let solutions = genCasesAndSolutions false true true 10 solvedLC caseFLtoDBB "FLEdgeInDB-B"
     let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
     *)
@@ -137,7 +137,7 @@ let genRoux () =
     // let caseDLFtoULB c = caseNoWUp (look Face.U Sticker.UL c) (look Face.L Sticker.UL c) (look Face.B Sticker.DL c)
     // let caseDLFtoURB c = caseNoWUp (look Face.U Sticker.UR c) (look Face.B Sticker.DR c) (look Face.R Sticker.UR c)
     // let caseDLFTopWithRBUp c = caseFLtoDF c && (caseDLFtoULF c || caseDLFtoURF c || caseDLFtoULB c ||caseDLFtoURB c)
-    // let solutions = genCasesAndSolutions false true true true 10 solvedFTtoDF caseDLFTopWithRBUp "DLFToTopWithR/BUp"
+    // let solutions = genCasesAndSolutions false true true 10 solvedFTtoDF caseDLFTopWithRBUp "DLFToTopWithR/BUp"
     // let solvedDLFTOpWithRBUp = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     // distinctCases solutions
 
@@ -151,38 +151,38 @@ let genPaired () =
 
     printfn "Solving DL edge (during inspection)"
     let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
-    let solutions = genCasesAndSolutions true false false false 10 scrambled caseDLD "DLEdge"
+    let solutions = genCasesAndSolutions true false false 10 scrambled caseDLD "DLEdge"
     let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     printfn "Solving L center"
     let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
-    let solutions = genCasesAndSolutions false true true true 10 solvedDL caseLC "LCenter"
+    let solutions = genCasesAndSolutions false true true 10 solvedDL caseLC "LCenter"
     let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     // SLOW! try full slotting!
     printfn "Full slotting BL"
     let caseFullBL c = caseLC c && (look Face.B Sticker.L c = Color.O && look Face.B Sticker.UL c = Color.O && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.D Sticker.DL c = Color.W)
-    let solutions = genCasesAndSolutions false true true true 20 solvedLC caseFullBL "SlotBL"
+    let solutions = genCasesAndSolutions false true true 20 solvedLC caseFullBL "SlotBL"
     let solvedFullBL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     // printfn "Pairing BWR"
     // let casePairedBWR c = (look Face.F Sticker.DL c = Color.R && look Face.L Sticker.D c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W && look Face.D Sticker.L c = Color.W)
-    // let solutions = genCasesAndSolutions false true true true 10 solvedDL casePairedBWR "PairBWR"
+    // let solutions = genCasesAndSolutions false true true 10 solvedDL casePairedBWR "PairBWR"
     // let solvedPairedBWR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     // distinctCases solutions
 // genPaired ()
 
 let genRouxL4E () =
     printfn "Scrambling %i cubes" numCubes
-    let scrambled = List.init numCubes (fun _ -> printf "."; scrambleRouxL4E 20 |> fst)
+    let scrambled = List.init numCubes (fun _ -> printf "."; scrambleRouxL4E 20 |> fst) |> List.map (fun c -> if look Face.R Sticker.U c = Color.B then moveU2 c else c)
     printfn ""
 
     printfn "Solving L4E"
     let caseSolved c = c = solved
-    let solutions = genCasesAndSolutions false true true true 10 scrambled caseSolved "L4ESolved"
+    let solutions = genCasesAndSolutions false true true 10 scrambled caseSolved "L4ESolved"
     distinctCases solutions
 genRouxL4E ()
 
@@ -214,14 +214,14 @@ let testSolver () =
     let c, s = scramble 20
     render c
     printfn "Scramble: %s                  " (movesToString s)
-    let solutions = solve true false false false 3 checkDLEdge c |> List.ofSeq
+    let solutions = solve true false false 3 checkDLEdge c |> List.ofSeq
     printfn "Number of solutions (DL edge): %i" (Seq.length solutions)
     pause ()
     for s in solutions do
         let c = executeSteps s c
         render c
         printfn "Solution (DL edge): %s" (stepsToString s)
-        let sols = solve false true true true 3 checkLC c |> List.ofSeq
+        let sols = solve false true true 3 checkLC c |> List.ofSeq
         printfn "Number of solutions (LC): %i" (Seq.length solutions)
         pause ()
         for s in sols do
