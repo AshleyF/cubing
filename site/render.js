@@ -13,7 +13,7 @@ function renderMarks() {
     var htm = '';
     for (var i in annotation.marks) {
         var e = annotation.marks[i];
-        htm += '<a href="javascript:jump(' + e.frame + ')">' + e.name + '</a> '
+        htm += '<span onmouseenter="jump(' + e.frame + ')" onmousedown="jump(' + e.frame + ')" onmouseup="playToNextMark(false)">' + e.name + '</span>'
         if (e.note) {
             htm += ' (' + e.note + ') ';
         }
@@ -118,7 +118,18 @@ function renderStats(f) {
 }
 
 function renderFrame(f) {
-    frame.src = 'solves/' + annotation.frames.base + ('000' + f).slice(-4) + '.jpg';
+    var pad = '';
+    var dig = -1;
+    for (var i = 10; ; i *= 10) {
+        if (annotation.frames.last > i) {
+            pad += '0';
+            dig -= 1;
+        } else {
+            break;
+        }
+    }
+
+    frame.src = 'solves/' + annotation.frames.base + (pad + f).slice(dig) + '.jpg';
     document.getElementById('debug').innerText = 'Frame: ' + f;
     renderTime(f);
     renderStats(f);

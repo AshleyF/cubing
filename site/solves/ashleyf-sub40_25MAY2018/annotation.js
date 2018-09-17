@@ -1,6 +1,6 @@
 var annotation = {
     frames: {
-        base: "ashleyf-sub40_25MAY2018/Sub40_25MAY2018 ",
+        base: "ashleyf-sub40_25MAY2018/Sub40_25MAY2018%20",
         fps: 30,
         first: 1,
         last: 1378,

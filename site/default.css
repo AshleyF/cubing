@@ -9,3 +9,14 @@ body {
 a {
     color: white;
 }
+
+#marks span {
+    padding: 4px;
+    margin: 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    background-color: #444;
+    cursor: pointer;
+}
