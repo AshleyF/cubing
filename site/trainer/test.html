@@ -6,6 +6,13 @@
         <script src="jquery.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
         <script src="cube.js"></script>
+        <script src="display.js"></script>
+        <script>
+            function load() {
+                function delay() { display(apply("L U L x", solved)); }
+                window.setTimeout(delay, 1);
+            }
+        </script>
         <style>
             h1, h2, li { font-family: sans-serif }
             .roofpig { width: 360px; height: 408px; }
@@ -13,8 +20,6 @@
     </head>
     <body onload="load()">
         <h1>Test</h1>
-        <div id="cube" style="width: 300px; float: left">
-            <div id="roofpig">&nbsp;</div>
-        </div>
+        <div id="cube" style="width: 300px; float: left"></div>
     </body>
 </html>

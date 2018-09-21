@@ -1,5 +1,6 @@
 /*
-Cube orientation: green top/white front
+Cube representation. Eight corners (c) with three orientations. Twelve edges (e) which may be flipped.
+Separately (not strictly part of the cube), a view (v) specifying U, D, L, R, F, B. This controls the "camera" when displaying.
 
 Corners (above view);
 
@@ -27,6 +28,8 @@ Edges (above view):
                       3            6  7            11
 
   Orientation: F/B moves flip (not F2/B2, which is like F F; canceling)
+
+Default cube orientation: green top/white front
 */
 
 var solved = {
@@ -53,60 +56,58 @@ var solved = {
     v: [0, 1, 2, 3, 4, 5]
 }
 
-function map(mapping, cube) {
-    // corners
-    function co(m, o) {
-        if (m) {
-            switch (m) {
-                case 0: return o;
-                case 1: return o == 1 ? 1 : o == 2 ? 3 : 2;
-                case 2: return o == 2 ? 2 : o == 1 ? 3 : 1;
-                case 3: return o == 3 ? 3 : o == 2 ? 1 : 2;
-            }
-        } else return o;
-    }
-    var cs = cube.c.slice(0);
-    if (mapping.c) {
-        for (var j in mapping.c) {
-            var m = mapping.c[j];
-            var i = m.i;
-            var n = m.p || i;
-            var c = cube.c[n - 1];
-            c.o = co(m.o, c.o);
-            cs[i - 1] = c;
-        }
-    }
-    // edges
-    function eo(m, o) {
-        if (m) {
-            return m == 1 ? o == 1 ? 2 : 1 : o;
-        } else return o;
-    }
-    var es = cube.e.slice(0);
-    if (mapping.e) {
-        for (var j in mapping.e) {
-            var m = mapping.e[j];
-            var i = m.i;
-            var n = m.p || i;
-            var e = cube.e[n - 1];
-            e.o = eo(m.o, e.o);
-            es[i - 1] = e;
-        }
-    }
-    // view
-    var vs = cube.v.slice(0);
-    if (mapping.v) {
-        var m = mapping.v;
-        for (var i = 0; i < 6; i++) {
-            vs[i] = cube.v[m[i]];
-        }
-    }
-    return { c: cs, e: es, v: vs };
-}
-
-var test = "S'";
 function twist(notation, cube) {
-    var maps = [
+    function map(mapping, cube) {
+        // corners
+        function co(m, o) {
+            if (m) {
+                switch (m) {
+                    case 0: return o;
+                    case 1: return o == 1 ? 1 : o == 2 ? 3 : 2;
+                    case 2: return o == 2 ? 2 : o == 1 ? 3 : 1;
+                    case 3: return o == 3 ? 3 : o == 2 ? 1 : 2;
+                }
+            } else return o;
+        }
+        var cs = cube.c.slice(0);
+        if (mapping.c) {
+            for (var j in mapping.c) {
+                var m = mapping.c[j];
+                var i = m.i;
+                var n = m.p || i;
+                var c = cube.c[n - 1];
+                c.o = co(m.o, c.o);
+                cs[i - 1] = c;
+            }
+        }
+        // edges
+        function eo(m, o) {
+            if (m) {
+                return m == 1 ? o == 1 ? 2 : 1 : o;
+            } else return o;
+        }
+        var es = cube.e.slice(0);
+        if (mapping.e) {
+            for (var j in mapping.e) {
+                var m = mapping.e[j];
+                var i = m.i;
+                var n = m.p || i;
+                var e = cube.e[n - 1];
+                e.o = eo(m.o, e.o);
+                es[i - 1] = e;
+            }
+        }
+        // view
+        var vs = cube.v.slice(0);
+        if (mapping.v) {
+            var m = mapping.v;
+            for (var i = 0; i < 6; i++) {
+                vs[i] = cube.v[m[i]];
+            }
+        }
+        return { c: cs, e: es, v: vs };
+    }
+    var maps = [ // U, D, L, R, F, B twists in original orientation (remapped as necessary below)
         { c: [{ i: 1, p: 2, o: 3 }, { i: 2, p: 3, o: 3 }, { i: 3, p: 4, o: 3 }, { i: 4, p: 1, o: 3 }],
         e: [{ i: 1, p: 2 }, { i: 2, p: 3 }, { i: 3, p: 4 }, { i: 4, p: 1 }]},
         { c: [{ i: 5, p: 8, o: 3 }, { i: 6, p: 5, o: 3 }, { i: 7, p: 6, o: 3 }, { i: 8, p: 7, o: 3 }],
@@ -200,66 +201,4 @@ function apply(alg, cube) {
         cube = twist(twists[t], cube);
     }
     return cube;
-}
-
-// roofpig integration
-
-var corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
-var edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
-
-function update(cube) {
-    function twistColors(colors, corner, twist) {
-        var c0 = colors[0];
-        var c1 = colors[1];
-        var c2 = colors[2];
-        var lastToFront = corner == 0 || corner == 2 || corner == 5 || corner == 7;
-        switch (twist) {
-            case 1: return lastToFront ? c2 + c0 + c1 : c1 + c2 + c0;
-            case 2: return lastToFront ? c1 + c2 + c0 : c2 + c0 + c1;
-            case 3: return colors; // no twist
-        }
-    }
-    function side(s) {
-        return "udlrfb"[s];
-    }
-    function render(config) {
-        document.getElementById("cube").innerHTML = "";
-        CubeAnimation.create_in_dom('#cube', config, "class='roofpig'");
-    }
-
-    var tweaks = "flags=canvas|pov=" + side(cube.v[0]).toUpperCase() + side(cube.v[4]) + side(cube.v[3]) + "|hover=3|solved=*|tweaks=";
-
-    // edges
-    for (var e = 0; e < 12; e++) {
-        var colors = edges[cube.e[e].p - 1];
-        var flipped = cube.e[e].o == 2;
-        var c0 = flipped ? colors[1] : colors[0];
-        var c1 = flipped ? colors[0] : colors[1];
-        var edge = edges[e].toLowerCase();
-        tweaks += c0 + ':' + edge[0].toUpperCase() + edge[1] + ' ';
-        tweaks += c1 + ':' + edge[0] + edge[1].toUpperCase() + ' ';
-    }
-    // corners
-    for (var c = 0; c < 8; c++) {
-        var colors = twistColors(corners[cube.c[c].p - 1], c, cube.c[c].o);
-        var targets = corners[c].toLowerCase();
-        var c0 = colors[0];
-        var c1 = colors[1];
-        var c2 = colors[2];
-        var t0 = targets[0];
-        var t1 = targets[1];
-        var t2 = targets[2];
-        tweaks += c0 + ':' + t0.toUpperCase() + t1 + t2 + ' ';
-        tweaks += c1 + ':' + t0 + t1.toUpperCase() + t2 + ' ';
-        tweaks += c2 + ':' + t0 + t1 + t2.toUpperCase() + ' ';
-    }
-    // centers
-    tweaks += "U:U D:D L:L R:R F:F B:B"
-    render(tweaks);
-}
-
-function load() {
-    // function delay() { update(apply("L U L x", solved)); }
-    function delay() { update(apply(test, solved)); }
-    window.setTimeout(delay, 1);
 }
