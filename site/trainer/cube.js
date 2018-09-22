@@ -11,16 +11,6 @@ Corners (above view);
                2 = U/D on L/R
                3 = U/D on U/D (oriented)
 
-     1   2   3
-  1 LUB BLU UBL (last to front)
-  2 LFU FUL ULF (first to back)
-  3 RUF FRU UFR (last to front)
-  4 RBU BUR URB (first to back)
-  5 LBD BDL DLB (first to back)
-  6 LDF FLD DFL (last to front)
-  7 RFD FDR DRF (first to back)
-  8 RDB BRD DBR (last to front)
-
 Edges (above view):
 
   Permutation: Top:   1    Middle: 5  8  Bottom:    9
@@ -30,6 +20,8 @@ Edges (above view):
   Orientation: F/B moves flip (not F2/B2, which is like F F; canceling)
 
 Default cube orientation: green top/white front
+
+Permutation of zero (0) means that this piece is not to be considered in comparisons and renders gray.
 */
 
 var solved = {
@@ -56,6 +48,20 @@ var solved = {
     v: [0, 1, 2, 3, 4, 5]
 }
 
+function compare(cube0, cube1) {
+    for (var c = 0; c < 8; c++) {
+        var c0 = cube0.c[c];
+        var c1 = cube1.c[c];
+        if (c0.p != 0 && c1.p != 0 && (c0.p != c1.p || c0.o != c1.o)) return false;
+    }
+    for (var e = 0; e < 12; e++) {
+        var e0 = cube0.e[e];
+        var e1 = cube1.e[e];
+        if (e0.p != 0 && e1.p != 0 && (e0.p != e1.p || e0.o != e1.o)) return false;
+    }
+    return true;
+}
+
 function twist(notation, cube) {
     function map(mapping, cube) {
         // corners
@@ -75,7 +81,8 @@ function twist(notation, cube) {
                 var m = mapping.c[j];
                 var i = m.i;
                 var n = m.p || i;
-                var c = cube.c[n - 1];
+                var x = cube.c[n - 1];
+                var c = { o: x.o, p: x.p }; // clone
                 c.o = co(m.o, c.o);
                 cs[i - 1] = c;
             }
@@ -92,7 +99,8 @@ function twist(notation, cube) {
                 var m = mapping.e[j];
                 var i = m.i;
                 var n = m.p || i;
-                var e = cube.e[n - 1];
+                var x = cube.e[n - 1];
+                var e = { o: x.o, p: x.p }; // clone
                 e.o = eo(m.o, e.o);
                 es[i - 1] = e;
             }

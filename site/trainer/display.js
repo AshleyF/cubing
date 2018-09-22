@@ -28,36 +28,37 @@ function display(cube) {
 
     var tweaks = "flags=canvas|pov=" + side(cube.v[0]).toUpperCase() + side(cube.v[4]) + side(cube.v[3]) + "|hover=3|solved=*|tweaks=";
 
-    // edges
-    for (var e = 0; e < 12; e++) {
-        var colors = edges[cube.e[e].p - 1];
-        var flipped = cube.e[e].o == 2;
-        var c0 = flipped ? colors[1] : colors[0];
-        var c1 = flipped ? colors[0] : colors[1];
-        var edge = edges[e].toLowerCase();
-        tweaks += c0 + ':' + edge[0].toUpperCase() + edge[1] + ' ';
-        tweaks += c1 + ':' + edge[0] + edge[1].toUpperCase() + ' ';
-    }
+    // centers
+    tweaks += "U:U D:D L:L R:R F:F B:B "
     // corners
     for (var c = 0; c < 8; c++) {
-        var colors = twistColors(corners[cube.c[c].p - 1], c, cube.c[c].o);
-        var targets = corners[c].toLowerCase();
-        var c0 = colors[0];
-        var c1 = colors[1];
-        var c2 = colors[2];
-        var t0 = targets[0];
-        var t1 = targets[1];
-        var t2 = targets[2];
-        tweaks += c0 + ':' + t0.toUpperCase() + t1 + t2 + ' ';
-        tweaks += c1 + ':' + t0 + t1.toUpperCase() + t2 + ' ';
-        tweaks += c2 + ':' + t0 + t1 + t2.toUpperCase() + ' ';
+        var p = cube.c[c].p;
+        if (p != 0) {
+            var colors = twistColors(corners[p - 1], c, cube.c[c].o);
+            var targets = corners[c].toLowerCase();
+            var c0 = colors[0];
+            var c1 = colors[1];
+            var c2 = colors[2];
+            var t0 = targets[0];
+            var t1 = targets[1];
+            var t2 = targets[2];
+            tweaks += c0 + ':' + t0.toUpperCase() + t1 + t2 + ' ';
+            tweaks += c1 + ':' + t0 + t1.toUpperCase() + t2 + ' ';
+            tweaks += c2 + ':' + t0 + t1 + t2.toUpperCase() + ' ';
+        }
     }
-    // centers
-    tweaks += "U:U D:D L:L R:R F:F B:B"
+    // edges
+    for (var e = 0; e < 12; e++) {
+        var p = cube.e[e].p;
+        if (p != 0) {
+            var colors = edges[p - 1];
+            var flipped = cube.e[e].o == 2;
+            var c0 = flipped ? colors[1] : colors[0];
+            var c1 = flipped ? colors[0] : colors[1];
+            var edge = edges[e].toLowerCase();
+            tweaks += c0 + ':' + edge[0].toUpperCase() + edge[1] + ' ';
+            tweaks += c1 + ':' + edge[0] + edge[1].toUpperCase() + ' ';
+        }
+    }
     render(tweaks);
-}
-
-function load() {
-    function delay() { display(apply("L U L x", solved)); }
-    window.setTimeout(delay, 1);
 }
