@@ -3,23 +3,60 @@
     <head>
         <title>Test</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="styles.css">
         <script src="jquery.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
         <script src="cube.js"></script>
         <script src="display.js"></script>
+        <script src="giiker.js"></script>
         <script>
+            function tests() {
+                var results = "";
+                function test(name, fn) {
+                    results += "<li style='color:" + (fn() ? "green" : "red") + "'>" + name + "</li>";
+                }
+                test("Comparison", function() { return Cube.same(Cube.alg("U L", Cube.solved), Cube.alg("U L", Cube.solved)); })
+                test("Equivalent", function() { return Cube.same(Cube.alg("U R", Cube.solved), Cube.alg("x2 D R", Cube.solved)); })
+                document.getElementById("results").innerHTML = results;
+            }
+
             function load() {
-                function delay() { display(solved); }
+                tests();
+                var x = Cube.alg("L U", Cube.solved);
+                // var x = Cube.solved;
+                function delay() {
+                    Display.display3DCube(Cube.faces(x), "cube");
+                    Display.displayLL(Cube.faces(x), "ll");
+                    Display.displayUF(Cube.faces(x), "uf");
+                }
                 window.setTimeout(delay, 1);
             }
+
+            function twist(t) {
+                alert(JSON.stringify(t));
+            }
+
+            function connected(success, exception) {
+                if (success) {
+                    document.getElementById("connect").style = "display:none";
+                } else {
+                    alert("Error: " + exception.message);
+                }
+            }
+
+            function connect() {
+                Giiker.connect(connected, twist);
+                document.getElementById("connect").Enabled = false;
+            }
         </script>
-        <style>
-            h1, h2, li { font-family: sans-serif }
-            .roofpig { width: 360px; height: 408px; }
-        </style>
     </head>
-    <body onload="load()">
-        <h1>Test</h1>
-        <div id="cube" style="width: 300px; float: left"></div>
+    <body onload="load()" style="background: black">
+        <h1>Tests</h1>
+        <ol id="results">
+        </ol>
+        <div id="cube" style="width: 700px"></div>
+        <div id="ll" style="width: 300px"></div>
+        <div id="uf" style="width: 300px"></div>
+        <button id="connect" onclick="connect()">Connect</button>
     </body>
 </html>

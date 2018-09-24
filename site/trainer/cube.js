@@ -19,50 +19,48 @@ Edges (above view):
 
   Orientation: F/B moves flip (not F2/B2, which is like F F; canceling)
 
-Default cube orientation: green top/white front
-
 Permutation of zero (0) means that this piece is not to be considered in comparisons and renders gray.
 */
 
-var solved = {
-    c: [{ p: 1, o: 3 },
-        { p: 2, o: 3 },
-        { p: 3, o: 3 },
-        { p: 4, o: 3 },
-        { p: 5, o: 3 },
-        { p: 6, o: 3 },
-        { p: 7, o: 3 },
-        { p: 8, o: 3 }],
-    e: [{ p: 1, o: 1 },
-        { p: 2, o: 1 },
-        { p: 3, o: 1 },
-        { p: 4, o: 1 },
-        { p: 5, o: 1 },
-        { p: 6, o: 1 },
-        { p: 7, o: 1 },
-        { p: 8, o: 1 },
-        { p: 9, o: 1 },
-        { p: 10, o: 1 },
-        { p: 11, o: 1 },
-        { p: 12, o: 1 }],
-    v: [0, 1, 2, 3, 4, 5]
-}
-
-function compare(cube0, cube1) {
-    for (var c = 0; c < 8; c++) {
-        var c0 = cube0.c[c];
-        var c1 = cube1.c[c];
-        if (c0.p != 0 && c1.p != 0 && (c0.p != c1.p || c0.o != c1.o)) return false;
+var Cube = (function () {
+    var solved = {
+        c: [{ p: 1, o: 3 },
+            { p: 2, o: 3 },
+            { p: 3, o: 3 },
+            { p: 4, o: 3 },
+            { p: 5, o: 3 },
+            { p: 6, o: 3 },
+            { p: 7, o: 3 },
+            { p: 8, o: 3 }],
+        e: [{ p: 1, o: 1 },
+            { p: 2, o: 1 },
+            { p: 3, o: 1 },
+            { p: 4, o: 1 },
+            { p: 5, o: 1 },
+            { p: 6, o: 1 },
+            { p: 7, o: 1 },
+            { p: 8, o: 1 },
+            { p: 9, o: 1 },
+            { p: 10, o: 1 },
+            { p: 11, o: 1 },
+            { p: 12, o: 1 }],
+        v: [0, 1, 2, 3, 4, 5]
     }
-    for (var e = 0; e < 12; e++) {
-        var e0 = cube0.e[e];
-        var e1 = cube1.e[e];
-        if (e0.p != 0 && e1.p != 0 && (e0.p != e1.p || e0.o != e1.o)) return false;
-    }
-    return true;
-}
 
-function twist(notation, cube) {
+    function compare(cube0, cube1) {
+        for (var c = 0; c < 8; c++) {
+            var c0 = cube0.c[c];
+            var c1 = cube1.c[c];
+            if (c0.p != 0 && c1.p != 0 && (c0.p != c1.p || c0.o != c1.o)) return false;
+        }
+        for (var e = 0; e < 12; e++) {
+            var e0 = cube0.e[e];
+            var e1 = cube1.e[e];
+            if (e0.p != 0 && e1.p != 0 && (e0.p != e1.p || e0.o != e1.o)) return false;
+        }
+        return true;
+    }
+
     function map(mapping, cube) {
         // corners
         function co(m, o) {
@@ -115,98 +113,192 @@ function twist(notation, cube) {
         }
         return { c: cs, e: es, v: vs };
     }
-    var maps = [ // U, D, L, R, F, B twists in original orientation (remapped as necessary below)
-        { c: [{ i: 1, p: 2, o: 3 }, { i: 2, p: 3, o: 3 }, { i: 3, p: 4, o: 3 }, { i: 4, p: 1, o: 3 }],
-        e: [{ i: 1, p: 2 }, { i: 2, p: 3 }, { i: 3, p: 4 }, { i: 4, p: 1 }]},
-        { c: [{ i: 5, p: 8, o: 3 }, { i: 6, p: 5, o: 3 }, { i: 7, p: 6, o: 3 }, { i: 8, p: 7, o: 3 }],
-        e: [{ i: 9, p: 12 }, { i: 10, p: 9 }, { i: 11, p: 10 }, { i: 12, p: 11 }]},
-        { c: [{ i: 1, p: 5, o: 2 }, { i: 2, p: 1, o: 2 }, { i: 5, p: 6, o: 2 }, { i: 6, p: 2, o: 2 }],
-        e: [{ i: 2, p: 5 }, { i: 6, p: 2 }, { i: 10, p: 6 }, { i: 5, p: 10 }]},
-        { c: [{ i: 3, p: 7, o: 2 }, { i: 4, p: 3, o: 2 }, { i: 7, p: 8, o: 2 }, { i: 8, p: 4, o: 2 }],
-        e: [{ i: 4, p: 7 }, { i: 7, p: 12 }, { i: 8, p: 4 }, { i: 12, p: 8 }]},
-        { c: [{ i: 2, p: 6, o: 1 }, { i: 3, p: 2, o: 1 }, { i: 6, p: 7, o: 1 }, { i: 7, p: 3, o: 1 }],
-        e: [{ i: 3, p: 6, o: 1 }, { i: 6, p: 11, o: 1 }, { i: 7, p: 3, o: 1 }, { i: 11, p: 7, o: 1 }]},
-        { c: [{ i: 1, p: 4, o: 1 }, { i: 4, p: 8, o: 1 }, { i: 5, p: 1, o: 1 }, { i: 8, p: 5, o: 1 }],
-        e: [{ i: 1, p: 8, o: 1 }, { i: 5, p: 1, o: 1 }, { i: 8, p: 9, o: 1 }, { i: 9, p: 5, o: 1 }]}];
-    var u = maps[cube.v[0]];
-    var d = maps[cube.v[1]];
-    var l = maps[cube.v[2]];
-    var r = maps[cube.v[3]];
-    var f = maps[cube.v[4]];
-    var b = maps[cube.v[5]];
-    var x = { v: [4, 5, 2, 3, 1, 0] };
-    var y = { v: [0, 1, 4, 5, 3, 2] };
-    var z = { v: [2, 3, 1, 0, 4, 5] };
-    switch (notation) {
-        case "U": return map(u, cube);
-        case "U2": return map(u, map(u, cube));
-        case "U'": return map(u, map(u, map(u, cube)));
-        case "D": return map(d, cube);
-        case "D2": return map(d, map(d, cube));
-        case "D'": return map(d, map(d, map(d, cube)));
-        case "L": return map(l, cube);
-        case "L2": return map(l, map(l, cube));
-        case "L'": return map(l, map(l, map(l, cube)));
-        case "R": return map(r, cube);
-        case "R2": return map(r, map(r, cube));
-        case "R'": return map(r, map(r, map(r, cube)));
-        case "F": return map(f, cube);
-        case "F2": return map(f, map(f, cube));
-        case "F'": return map(f, map(f, map(f, cube)));
-        case "B": return map(b, cube);
-        case "B2": return map(b, map(b, cube));
-        case "B'": return map(b, map(b, map(b, cube)));
-        case "M": return map(l, map(l, map(l, map(r, map(x, map(x, map(x, cube)))))));
-        case "M2": return map(l, map(l, map(r, map(r, map(x, map(x, cube))))));
-        case "M'": return map(l, map(r, map(r, map(r, map(x, cube)))));
-        case "E": return map(u, map(d, map(d, map(d, map(y, map(y, map(y, cube)))))));
-        case "E2": return map(u, map(u, map(d, map(d, map(y, map(y, cube))))));
-        case "E'": return map(u, map(u, map(u, map(d, map(y, cube)))));
-        case "S": return map(f, map(f, map(f, map(b, map(z, cube)))));
-        case "S2": return map(f, map(f, map(b, map(b, map(z, map(z, cube))))));
-        case "S'": return map(f, map(b, map(b, map(b, map(z, map(z, map(z, cube)))))));
-        // relative cube orientations
-        case "x": return map(x, cube);
-        case "x2": return map(x, map(x, cube));
-        case "x'": return map(x, map(x, map(x, cube)));
-        case "y": return map(y, cube);
-        case "y2": return map(y, map(y, cube));
-        case "y'": return map(y, map(y, map(y, cube)));
-        case "z": return map(z, cube);
-        case "z2": return map(z, map(z, cube));
-        case "z'": return map(z, map(z, map(z, cube)));
-        // absolute cube orientations (U/F color pair) // TODO: Handle these some other way
-        case "yr": return map({ v: [0, 1, 2, 3, 4, 5] }, cube);
-        case "ry": return map({ v: [4, 5, 3, 2, 0, 1] }, cube);
-        case "yg": return map({ v: [0, 1, 4, 5, 3, 2] }, cube);
-        case "gy": return map({ v: [3, 2, 5, 4, 0, 1] }, cube);
-        case "yo": return map({ v: [0, 1, 3, 2, 5, 4] }, cube);
-        case "oy": return map({ v: [5, 4, 2, 3, 0, 1] }, cube);
-        case "yb": return map({ v: [0, 1, 5, 4, 2, 3] }, cube);
-        case "by": return map({ v: [2, 3, 4, 5, 0, 1] }, cube);
-        case "gr": return map({ v: [3, 2, 0, 1, 4, 5] }, cube);
-        case "rg": return map({ v: [4, 5, 1, 0, 3, 2] }, cube);
-        case "og": return map({ v: [5, 4, 0, 1, 3, 2] }, cube);
-        case "go": return map({ v: [3, 2, 1, 0, 5, 4] }, cube);
-        case "bo": return map({ v: [2, 3, 0, 1, 5, 4] }, cube);
-        case "ob": return map({ v: [5, 4, 1, 0, 2, 3] }, cube);
-        case "rb": return map({ v: [4, 5, 0, 1, 2, 3] }, cube);
-        case "br": return map({ v: [2, 3, 1, 0, 4, 5] }, cube);
-        case "wr": return map({ v: [1, 0, 3, 2, 4, 5] }, cube);
-        case "rw": return map({ v: [4, 5, 2, 3, 1, 0] }, cube);
-        case "wb": return map({ v: [1, 0, 4, 5, 2, 3] }, cube);
-        case "bw": return map({ v: [2, 3, 5, 4, 1, 0] }, cube);
-        case "wo": return map({ v: [1, 0, 2, 3, 5, 4] }, cube);
-        case "ow": return map({ v: [5, 4, 3, 2, 1, 0] }, cube);
-        case "wg": return map({ v: [1, 0, 5, 4, 3, 2] }, cube);
-        case "gw": return map({ v: [3, 2, 4, 5, 1, 0] }, cube);
-    }
-}
 
-function apply(alg, cube) {
-    var twists = alg.split(' ');
-    for (var t in twists) {
-        cube = twist(twists[t], cube);
+    function same(cube0, cube1) {
+        // compare all (24) orientations
+        var orientations = [
+            [0, 1, 2, 3, 4, 5], // YR
+            [4, 5, 3, 2, 0, 1], // RY
+            [0, 1, 4, 5, 3, 2], // YG
+            [3, 2, 5, 4, 0, 1], // GY
+            [0, 1, 3, 2, 5, 4], // YO
+            [5, 4, 2, 3, 0, 1], // OY
+            [0, 1, 5, 4, 2, 3], // YB
+            [2, 3, 4, 5, 0, 1], // BY
+            [3, 2, 0, 1, 4, 5], // GR
+            [4, 5, 1, 0, 3, 2], // RG
+            [5, 4, 0, 1, 3, 2], // OG
+            [3, 2, 1, 0, 5, 4], // GO
+            [2, 3, 0, 1, 5, 4], // BO
+            [5, 4, 1, 0, 2, 3], // OB
+            [4, 5, 0, 1, 2, 3], // RB
+            [2, 3, 1, 0, 4, 5], // BR
+            [1, 0, 3, 2, 4, 5], // WR
+            [4, 5, 2, 3, 1, 0], // RW
+            [1, 0, 4, 5, 2, 3], // WB
+            [2, 3, 5, 4, 1, 0], // BW
+            [1, 0, 2, 3, 5, 4], // WO
+            [5, 4, 3, 2, 1, 0], // OW
+            [1, 0, 5, 4, 3, 2], // WG
+            [3, 2, 4, 5, 1, 0]] // GW
+        for (o in orientations) {
+            if (compare(map({ v: orientations[o] }, cube0), cube1)) return true;
+        }
+        return false;
     }
-    return cube;
-}
+
+    function twist(notation, cube) {
+        var maps = [ // U, D, L, R, F, B twists in original orientation (remapped as necessary below)
+            { c: [{ i: 1, p: 2, o: 3 }, { i: 2, p: 3, o: 3 }, { i: 3, p: 4, o: 3 }, { i: 4, p: 1, o: 3 }],
+            e: [{ i: 1, p: 2 }, { i: 2, p: 3 }, { i: 3, p: 4 }, { i: 4, p: 1 }]},
+            { c: [{ i: 5, p: 8, o: 3 }, { i: 6, p: 5, o: 3 }, { i: 7, p: 6, o: 3 }, { i: 8, p: 7, o: 3 }],
+            e: [{ i: 9, p: 12 }, { i: 10, p: 9 }, { i: 11, p: 10 }, { i: 12, p: 11 }]},
+            { c: [{ i: 1, p: 5, o: 2 }, { i: 2, p: 1, o: 2 }, { i: 5, p: 6, o: 2 }, { i: 6, p: 2, o: 2 }],
+            e: [{ i: 2, p: 5 }, { i: 6, p: 2 }, { i: 10, p: 6 }, { i: 5, p: 10 }]},
+            { c: [{ i: 3, p: 7, o: 2 }, { i: 4, p: 3, o: 2 }, { i: 7, p: 8, o: 2 }, { i: 8, p: 4, o: 2 }],
+            e: [{ i: 4, p: 7 }, { i: 7, p: 12 }, { i: 8, p: 4 }, { i: 12, p: 8 }]},
+            { c: [{ i: 2, p: 6, o: 1 }, { i: 3, p: 2, o: 1 }, { i: 6, p: 7, o: 1 }, { i: 7, p: 3, o: 1 }],
+            e: [{ i: 3, p: 6, o: 1 }, { i: 6, p: 11, o: 1 }, { i: 7, p: 3, o: 1 }, { i: 11, p: 7, o: 1 }]},
+            { c: [{ i: 1, p: 4, o: 1 }, { i: 4, p: 8, o: 1 }, { i: 5, p: 1, o: 1 }, { i: 8, p: 5, o: 1 }],
+            e: [{ i: 1, p: 8, o: 1 }, { i: 5, p: 1, o: 1 }, { i: 8, p: 9, o: 1 }, { i: 9, p: 5, o: 1 }]}];
+        var u = maps[cube.v[0]];
+        var d = maps[cube.v[1]];
+        var l = maps[cube.v[2]];
+        var r = maps[cube.v[3]];
+        var f = maps[cube.v[4]];
+        var b = maps[cube.v[5]];
+        var x = { v: [4, 5, 2, 3, 1, 0] };
+        var y = { v: [0, 1, 4, 5, 3, 2] };
+        var z = { v: [2, 3, 1, 0, 4, 5] };
+        switch (notation) {
+            // normal moves
+            case "U": return map(u, cube);
+            case "U2":
+            case "U2'": return map(u, map(u, cube));
+            case "U'": return map(u, map(u, map(u, cube)));
+            case "D": return map(d, cube);
+            case "D2":
+            case "D2'": return map(d, map(d, cube));
+            case "D'": return map(d, map(d, map(d, cube)));
+            case "L": return map(l, cube);
+            case "L2":
+            case "L2'": return map(l, map(l, cube));
+            case "L'": return map(l, map(l, map(l, cube)));
+            case "R": return map(r, cube);
+            case "R2":
+            case "R2'": return map(r, map(r, cube));
+            case "R'": return map(r, map(r, map(r, cube)));
+            case "F": return map(f, cube);
+            case "F2":
+            case "F2'": return map(f, map(f, cube));
+            case "F'": return map(f, map(f, map(f, cube)));
+            case "B": return map(b, cube);
+            case "B2":
+            case "B2'": return map(b, map(b, cube));
+            case "B'": return map(b, map(b, map(b, cube)));
+            // slice moves
+            case "M": return map(l, map(l, map(l, map(r, map(x, map(x, map(x, cube)))))));
+            case "M2":
+            case "M2'": return map(l, map(l, map(r, map(r, map(x, map(x, cube))))));
+            case "M'": return map(l, map(r, map(r, map(r, map(x, cube)))));
+            case "E": return map(u, map(d, map(d, map(d, map(y, map(y, map(y, cube)))))));
+            case "E2":
+            case "E2'": return map(u, map(u, map(d, map(d, map(y, map(y, cube))))));
+            case "E'": return map(u, map(u, map(u, map(d, map(y, cube)))));
+            case "S": return map(f, map(f, map(f, map(b, map(z, cube)))));
+            case "S2":
+            case "S2'": return map(f, map(f, map(b, map(b, map(z, map(z, cube))))));
+            case "S'": return map(f, map(b, map(b, map(b, map(z, map(z, map(z, cube)))))));
+            // relative cube orientations
+            case "x": return map(x, cube);
+            case "x2": return map(x, map(x, cube));
+            case "x'": return map(x, map(x, map(x, cube)));
+            case "y": return map(y, cube);
+            case "y2": return map(y, map(y, cube));
+            case "y'": return map(y, map(y, map(y, cube)));
+            case "z": return map(z, cube);
+            case "z2": return map(z, map(z, cube));
+            case "z'": return map(z, map(z, map(z, cube)));
+        }
+    }
+
+    function alg(alg, cube) {
+        var twists = alg.split(' ');
+        for (var t in twists) {
+            cube = twist(twists[t], cube);
+        }
+        return cube;
+    }
+
+    function faces(cube) {
+        var corners = ["UBL", "UFL", "UFR", "UBR", "DBL", "DFL", "DFR", "DRB"]
+        var edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
+
+        function twistColors(colors, corner, twist) {
+            var c0 = colors[0];
+            var c1 = colors[1];
+            var c2 = colors[2];
+            var lastToFront = corner == 0 || corner == 2 || corner == 5 || corner == 7;
+            switch (twist) {
+                case 1: return lastToFront ? c2 + c0 + c1 : c1 + c2 + c0;
+                case 2: return lastToFront ? c1 + c2 + c0 : c2 + c0 + c1;
+                case 3: return colors; // no twist
+            }
+        }
+
+        function side(s) {
+            return "udlrfb"[s];
+        }
+
+        var faces = {
+            // centers (orientation)
+            U: side(cube.v[0]).toUpperCase(),
+            D: side(cube.v[1]).toUpperCase(),
+            L: side(cube.v[2]).toUpperCase(),
+            R: side(cube.v[3]).toUpperCase(),
+            F: side(cube.v[4]).toUpperCase(),
+            B: side(cube.v[5]).toUpperCase(),
+        }
+
+        // corners
+        for (var c = 0; c < 8; c++) {
+            var p = cube.c[c].p;
+            if (p != 0) {
+                var colors = twistColors(corners[p - 1], c, cube.c[c].o);
+                var c0 = colors[0];
+                var c1 = colors[1];
+                var c2 = colors[2];
+                var targets = corners[c].toLowerCase();
+                var t0 = targets[0];
+                var t1 = targets[1];
+                var t2 = targets[2];
+                faces[t0.toUpperCase() + t1 + t2] = c0;
+                faces[t0 + t1.toUpperCase() + t2] = c1;
+                faces[t0 + t1 + t2.toUpperCase()] = c2;
+            }
+        }
+
+        // edges
+        for (var e = 0; e < 12; e++) {
+            var p = cube.e[e].p;
+            if (p != 0) {
+                var colors = edges[p - 1];
+                var flipped = cube.e[e].o == 2;
+                var c0 = flipped ? colors[1] : colors[0];
+                var c1 = flipped ? colors[0] : colors[1];
+                var edge = edges[e].toLowerCase();
+                faces[edge[0].toUpperCase() + edge[1]] = c0;
+                faces[edge[0] + edge[1].toUpperCase()] = c1;
+            }
+        }
+
+        return faces;
+    }
+
+    return {
+        solved: solved,
+        alg: alg,
+        same: same,
+        faces: faces
+    }
+}());
