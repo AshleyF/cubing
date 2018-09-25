@@ -17,7 +17,7 @@ var Giiker = (function () {
 
     var device;
 
-    async function connect(connected, callback) {
+    async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             console.log("Attempting to pair.")
             device = await navigator.bluetooth.requestDevice({
@@ -41,69 +41,58 @@ var Giiker = (function () {
             console.log(cubeCharacteristic);
             // TODO: Can we safely save the async promise instead of waiting for the response?
             var originalValue = await cubeCharacteristic.readValue();
-            cubeCharacteristic.addEventListener("characteristicvaluechanged", onCubeCharacteristicChanged.bind(callback));
+            cubeCharacteristic.addEventListener("characteristicvaluechanged", onCubeCharacteristicChanged.bind(twistCallback));
+            device.addEventListener('gattserverdisconnected', disconnected.bind(errorCallback));
             await cubeCharacteristic.startNotifications();
-      /*
-            console.log("Attempting to pair.")
-            this.device = await window.navigator.bluetooth.requestDevice({
-                filters: [{
-                    namePrefix: 'GiC',
-                }],
-                optionalServices: [SERVICE_UUID, SYSTEM_SERVICE_UUID],
-            });
-            console.log("Device:", this.device);
-            this.server = await this.device.gatt.connect();
-            console.log("Server:", this.server);
-            this.cubeService = await this.server.getPrimaryService(SERVICE_UUID);
-            console.log("Service:", this.cubeService);
-            this.cubeCharacteristic = await this.cubeService.getCharacteristic(CHARACTERISTIC_UUID);
-            console.log(this.cubeCharacteristic);
-            await this.cubeCharacteristic.startNotifications();
-            // var value = await characteristic.readValue(); // TODO
-            this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged.bind(this));
-            // var systemService = await server.getPrimaryService(SYSTEM_SERVICE_UUID); // TODO
-            this.device.addEventListener('gattserverdisconnected', disconnected);
-            */
-            connected(true);
-        } catch(ex) {
-            connected(false, ex);
+            connectedCallback();
+        } catch (ex) {
+            device = null;
+            errorCallback(ex);
         }
     }
 
     function disconnected() {
-        // TODO
-        alert("Disconnected!");
+        device = null;
+        this("Giiker Disconnected"); // disconnected callback
+    }
+
+    function connected() {
+        return device ? true : false;
     }
 
     function disconnect() {
-        if (!device) return;
-        device.gatt.disconnect();
+        // note: does not call disconnectedCallback
+        if (connected()) device.gatt.disconnect();
     }
 
     function onCubeCharacteristicChanged(event) {
-        alert("EVENT");
-        alert("CALLBACK: " + this);
-        var val = event.target.value;
-        console.log(val);
-        console.log(event);
-        var giikerState = [];
-        for (var i = 0; i < 20; i++) {
-            giikerState.push(Math.floor(val.getUint8(i) / 16));
-            giikerState.push(val.getUint8(i) % 16);
-        }
-        var str = "";
-        str += giikerState.slice(0, 8).join(".");
-        str += "\n"
-        str += giikerState.slice(8, 16).join(".");
-        str += "\n"
-        str += giikerState.slice(16, 28).join(".");
-        str += "\n"
-        str += giikerState.slice(28, 32).join(".");
-        str += "\n"
-        str += giikerState.slice(32, 40).join(".");
-        console.log(str);
+        try {
+            alert("EVENT");
+            alert("CALLBACK: " + this);
+            var val = event.target.value;
+            console.log(val);
+            console.log(event);
+            var giikerState = [];
+            for (var i = 0; i < 20; i++) {
+                giikerState.push(Math.floor(val.getUint8(i) / 16));
+                giikerState.push(val.getUint8(i) % 16);
+            }
+            var str = "";
+            str += giikerState.slice(0, 8).join(".");
+            str += "\n"
+            str += giikerState.slice(8, 16).join(".");
+            str += "\n"
+            str += giikerState.slice(16, 28).join(".");
+            str += "\n"
+            str += giikerState.slice(28, 32).join(".");
+            str += "\n"
+            str += giikerState.slice(32, 40).join(".");
+            console.log(str);
 
-        this(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]);
+            this(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]); // twistCallback
+        } catch (ex) {
+            alert("ERROR: " + ex.message);
+        }
       }
 
       return {
