@@ -17,6 +17,37 @@ var Giiker = (function () {
 
     async function connect(connected, callback) {
         try {
+            var UUIDs = {
+                cubeService: "0000aadb-0000-1000-8000-00805f9b34fb",
+                cubeCharacteristic: "0000aadc-0000-1000-8000-00805f9b34fb" };
+
+            console.log("Attempting to pair.")
+            this.device = await navigator.bluetooth.requestDevice({
+            filters: [{
+                namePrefix: "GiC"
+            }],
+            optionalServices: [
+                "00001530-1212-efde-1523-785feabcd123",
+                "0000aaaa-0000-1000-8000-00805f9b34fb",
+                "0000aadb-0000-1000-8000-00805f9b34fb",
+                "0000180f-0000-1000-8000-00805f9b34fb",
+                "0000180a-0000-1000-8000-00805f9b34fb"
+            ]
+            });
+            console.log("Device:", this.device);
+            this.server = await this.device.gatt.connect();
+            console.log("Server:", this.server);
+            this.cubeService = await this.server.getPrimaryService(UUIDs.cubeService);
+            console.log("Service:", this.cubeService);
+            this.cubeCharacteristic = await this.cubeService.getCharacteristic(UUIDs.cubeCharacteristic);
+            console.log(this.cubeCharacteristic);
+            await this.cubeCharacteristic.startNotifications();
+            // TODO: Can we safely save the async promise instead of waiting for the response?
+            this._originalValue = await this.cubeCharacteristic.readValue();
+            debug("Original value:", this._originalValue);
+            this.cubeCharacteristic.addEventListener("characteristicvaluechanged",
+            this.onCubeCharacteristicChanged.bind(this));
+      /*
             console.log("Attempting to pair.")
             this.device = await window.navigator.bluetooth.requestDevice({
                 filters: [{
@@ -36,6 +67,7 @@ var Giiker = (function () {
             this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged.bind(this));
             // var systemService = await server.getPrimaryService(SYSTEM_SERVICE_UUID); // TODO
             this.device.addEventListener('gattserverdisconnected', disconnected);
+            */
             connected(true);
         } catch(ex) {
             connected(false, ex);
