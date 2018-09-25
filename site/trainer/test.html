@@ -100,8 +100,8 @@
             var current = Cube.solved;
 
             function twist(t) {
-                current = Cube.Alg(t, current);
-                Display.display3DCube(current, "cube")
+                current = Cube.alg(t, current);
+                Display.display3DCube(Cube.faces(current), "cube")
             }
 
             function connected() {
@@ -146,6 +146,7 @@
         <div id="ll" style="width: 300px"></div>
         <div id="uf" style="width: 300px"></div>
         <button id="giiker" onclick="giiker()">Connect</button>
+        <button onclick="twist(prompt('Twists'))">SimTwists</button>
         <p id="debug"></p>
     </body>
 </html>
