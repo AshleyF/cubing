@@ -50,6 +50,11 @@
                 Giiker.connect(connected, twist);
                 document.getElementById("connect").Enabled = false;
             }
+
+            function disconnect() {
+                Giiker.disconnect();
+                // TODO: toggle button
+            }
         </script>
     </head>
     <body onload="load()" style="background: black">
@@ -60,5 +65,6 @@
         <div id="ll" style="width: 300px"></div>
         <div id="uf" style="width: 300px"></div>
         <button id="connect" onclick="connect()">Connect</button>
+        <button id="disconnect" enabled="false" onclick="disconnect()">Disconnect</button>
     </body>
 </html>

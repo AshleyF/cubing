@@ -1,6 +1,13 @@
 // This is a modified version of lgarron's giiker.js from https://github.com/cubing/cuble.js
 
 var Giiker = (function () {
+    const SERVICE_UUID = '0000aadb-0000-1000-8000-00805f9b34fb';
+    const CHARACTERISTIC_UUID = '0000aadc-0000-1000-8000-00805f9b34fb';
+
+    const SYSTEM_SERVICE_UUID = '0000aaaa-0000-1000-8000-00805f9b34fb';
+    const SYSTEM_READ_UUID = '0000aaab-0000-1000-8000-00805f9b34fb';
+    const SYSTEM_WRITE_UUID = '0000aaac-0000-1000-8000-00805f9b34fb';
+
     function giikerTwist(i, giikerState) {
         var twists = "BDLURF";
         var twist = giikerState[32 + i * 2] - 1;
@@ -8,36 +15,41 @@ var Giiker = (function () {
         return twists[twist] + (amount == 2 ? "2" : amount == 3 ? "'" : "");
     }
 
-    const UUIDs = {
-        cubeService: "0000aadb-0000-1000-8000-00805f9b34fb",
-        cubeCharacteristic: "0000aadc-0000-1000-8000-00805f9b34fb" };
-
     async function connect(connected, callback) {
         try {
             console.log("Attempting to pair.")
-            this.device = await navigator.bluetooth.requestDevice({
-                filters: [{ namePrefix: "GiC" }],
-                optionalServices: [
-                    "00001530-1212-efde-1523-785feabcd123",
-                    "0000aaaa-0000-1000-8000-00805f9b34fb",
-                    "0000aadb-0000-1000-8000-00805f9b34fb",
-                    "0000180f-0000-1000-8000-00805f9b34fb",
-                    "0000180a-0000-1000-8000-00805f9b34fb"
-                ]
+            this.device = await window.navigator.bluetooth.requestDevice({
+                filters: [{
+                    namePrefix: 'GiC',
+                }],
+                optionalServices: [SERVICE_UUID, SYSTEM_SERVICE_UUID],
             });
             console.log("Device:", this.device);
             this.server = await this.device.gatt.connect();
             console.log("Server:", this.server);
-            this.cubeService = await this.server.getPrimaryService(this.UUIDs.cubeService);
+            this.cubeService = await this.server.getPrimaryService(SERVICE_UUID);
             console.log("Service:", this.cubeService);
-            this.cubeCharacteristic = await this.cubeService.getCharacteristic(this.UUIDs.cubeCharacteristic);
+            this.cubeCharacteristic = await this.cubeService.getCharacteristic(CHARACTERISTIC_UUID);
             console.log(this.cubeCharacteristic);
             await this.cubeCharacteristic.startNotifications();
+            var value = await characteristic.readValue(); // TODO
             this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged.bind(this));
+            var systemService = await server.getPrimaryService(SYSTEM_SERVICE_UUID); // TODO
+            this.device.addEventListener('gattserverdisconnected', disconnected);
             connected(true);
         } catch(ex) {
             connected(false, ex);
         }
+    }
+
+    function disconnected() {
+        // TODO
+        alert("Disconnected!");
+    }
+
+    function disconnect() {
+        if (!this.device) return;
+        this.device.gatt.disconnect();
     }
 
     function onCubeCharacteristicChanged(event) {
@@ -65,6 +77,7 @@ var Giiker = (function () {
       }
 
       return {
-          connect: connect
+          connect: connect,
+          disconnect: disconnect
       };
 }());
