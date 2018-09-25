@@ -81,6 +81,8 @@ var Giiker = (function () {
     }
 
     function onCubeCharacteristicChanged(event) {
+        alert("EVENT");
+        alert("CALLBACK: " + callback);
         var val = event.target.value;
         console.log(val);
         console.log(event);

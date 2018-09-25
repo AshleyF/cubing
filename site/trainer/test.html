@@ -15,29 +15,54 @@
                 function test(name, fn) {
                     results += "<li style='color:" + (fn() ? "green" : "red") + "'>" + name + "</li>";
                 }
-                function testAlg(alg, expected) {
-                    test("Alg: " + alg, function() { return Cube.toString(Cube.alg(alg, Cube.solved)) == expected; })
+                function testAlgs(algs, expected) {
+                    for (var a in algs) {
+                        var alg = algs[a];
+                        test("Alg: " + alg, function() { return Cube.toString(Cube.alg(alg, Cube.solved)) == expected; })
+                    }
                 }
                 test("Solved", function() { return Cube.toString(Cube.solved) == "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"; });
-                testAlg("U", "UUUUUUUUUFFFLLLLLLRRRFFFFFFBBBRRRRRRDDDDDDDDDBBBBBBLLL");
-                testAlg("u", "UUUUUUUUUFFFFFFLLLRRRRRRFFFBBBBBBRRRDDDDDDDDDBBBLLLLLL");
-                testAlg("u'", "UUUUUUUUUBBBBBBLLLLLLLLLFFFFFFFFFRRRDDDDDDDDDBBBRRRRRR");
-                testAlg("u2", "UUUUUUUUURRRRRRLLLBBBBBBFFFLLLLLLRRRDDDDDDDDDBBBFFFFFF");
-                testAlg("d", "UUUUUUUUULLLBBBBBBFFFLLLLLLRRRFFFFFFDDDDDDDDDRRRRRRBBB");
-                testAlg("d'", "UUUUUUUUUBBBFFFFFFLLLRRRRRRFFFBBBBBBDDDDDDDDDLLLLLLRRR");
-                testAlg("d2", "UUUUUUUUULLLRRRRRRFFFBBBBBBRRRLLLLLLDDDDDDDDDFFFFFFBBB");
-                // testAlg("l", "");
-                // testAlg("l'", "");
-                // testAlg("l2", "");
-                // testAlg("r", "");
-                // testAlg("r'", "");
-                // testAlg("r2", "");
-                // testAlg("f", "");
-                // testAlg("f'", "");
-                // testAlg("f2", "");
-                // testAlg("b", "");
-                // testAlg("b'", "");
-                // testAlg("b2", "");
+                testAlgs(["U"], "UUUUUUUUUFFFLLLLLLRRRFFFFFFBBBRRRRRRDDDDDDDDDBBBBBBLLL");
+                testAlgs(["U2", "U2'"], "UUUUUUUUURRRLLLLLLBBBFFFFFFLLLRRRRRRDDDDDDDDDBBBBBBFFF");
+                testAlgs(["U'"], "UUUUUUUUUBBBLLLLLLLLLFFFFFFFFFRRRRRRDDDDDDDDDBBBBBBRRR");
+                testAlgs(["u", "Uw"], "UUUUUUUUUFFFFFFLLLRRRRRRFFFBBBBBBRRRDDDDDDDDDBBBLLLLLL");
+                testAlgs(["u2", "u2'", "Uw2", "Uw2'"], "UUUUUUUUURRRRRRLLLBBBBBBFFFLLLLLLRRRDDDDDDDDDBBBFFFFFF");
+                testAlgs(["u'", "Uw'"], "UUUUUUUUUBBBBBBLLLLLLLLLFFFFFFFFFRRRDDDDDDDDDBBBRRRRRR");
+                testAlgs(["D"], "UUUUUUUUULLLLLLBBBFFFFFFLLLRRRRRRFFFDDDDDDDDDRRRBBBBBB");
+                testAlgs(["D2", "D2'"], "UUUUUUUUULLLLLLRRRFFFFFFBBBRRRRRRLLLDDDDDDDDDFFFBBBBBB");
+                testAlgs(["D'"], "UUUUUUUUULLLLLLFFFFFFFFFRRRRRRRRRBBBDDDDDDDDDLLLBBBBBB");
+                // testAlgs(["d", "Dw"], "");
+                // testAlgs(["d2", "d2'", "Dw2", "Dw2'"], "");
+                // testAlgs(["d'", "Dw'"], "");
+                // testAlgs(["L"], "");
+                // testAlgs(["L2", "L2'"], "");
+                // testAlgs(["L'"], "");
+                // testAlgs(["l", "Lw"], "");
+                // testAlgs(["l2", "l2'", "Lw2", "Lw2'"], "");
+                // testAlgs(["l'", "Lw'"], "");
+                // testAlgs(["R"], "");
+                // testAlgs(["R2", "R2'"], "");
+                // testAlgs(["R'"], "");
+                // testAlgs(["r", "Rw"], "");
+                // testAlgs(["r2", "r2'", "Rw2", "Rw2'"], "");
+                // testAlgs(["r'", "Rw'"], "");
+                // testAlgs(["F"], "");
+                // testAlgs(["F2", "F2'"], "");
+                // testAlgs(["F'"], "");
+                // testAlgs(["f", "Fw"], "");
+                // testAlgs(["f2", "f2'", "Fw2", "Fw2'"], "");
+                // testAlgs(["f'", "Fw'"], "");
+                // testAlgs(["B"], "");
+                // testAlgs(["B2", "B2'"], "");
+                // testAlgs(["B'"], "");
+                // testAlgs(["b", "Bw"], "");
+                // testAlgs(["b2", "b2'", "Bw2", "Bw2'"], "");
+                // testAlgs(["b'", "Bw'"], "");
+                testAlgs(["d"], "UUUUUUUUULLLBBBBBBFFFLLLLLLRRRFFFFFFDDDDDDDDDRRRRRRBBB");
+                testAlgs(["d2"], "UUUUUUUUULLLRRRRRRFFFBBBBBBRRRLLLLLLDDDDDDDDDFFFFFFBBB");
+                testAlgs(["d'"], "UUUUUUUUUBBBFFFFFFLLLRRRRRRFFFBBBBBBDDDDDDDDDLLLLLLRRR");
+                testAlgs(["U' D L2 U B2 D2 B2 D2 L F' U D' R U' F2 L F' B'"], "UUUUUUUUULBLBLDLBLFFFFFFFFFRRRRRRRRRDLDDDBDLDBDBLBDBLB"); // "magic"
+                testAlgs(["M2 U' R2 D' S M2 U M' U2 F2 D' S M2 U' R2 U'"], "DLDBDFDRDBDBLBRBUBRDRBRFRURFDFRFLFUFURUBUFULULULBLFLDL"); // superflip
                 test("Comparison", function() { return Cube.same(Cube.alg("U L", Cube.solved), Cube.alg("U L", Cube.solved)); });
                 test("Equivalent", function() { return Cube.same(Cube.alg("U R", Cube.solved), Cube.alg("x2 D R", Cube.solved)); });
                 document.getElementById("results").innerHTML = results;
@@ -56,7 +81,7 @@
 
             function load() {
                 tests();
-                displayAlg("d2");
+                displayAlg("D'");
                 /*
                 var x = Cube.solved;
                 // prompt("Cube", Cube.toString(Cube.alg("U", Cube.solved)));
@@ -96,10 +121,10 @@
         </script>
     </head>
     <body onload="load()" style="background: black">
-        <h1>Tests v0.6</h1>
+        <h1>Tests v0.7</h1>
         <ol id="results">
         </ol>
-        <div id="cube" style="width: 700px"></div>
+        <div id="cube" style="width: 70px"></div>
         <div id="ll" style="width: 300px"></div>
         <div id="uf" style="width: 300px"></div>
         <button id="connect" onclick="connect()">Connect</button>

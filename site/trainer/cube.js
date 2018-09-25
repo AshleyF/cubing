@@ -213,52 +213,52 @@ var Cube = (function () {
             // wide moves
             case "u":
             case "Uw": return map(y, map(d, cube));
-            case "u'":
-            case "Uw'": return map(y, map(y, map(y, map(d, map(d, map(d, cube))))));
             case "u2":
             case "u2'":
             case "Uw2":
             case "Uw2'": return map(y, map(y, map(d, map(d, cube))));
+            case "u'":
+            case "Uw'": return map(y, map(y, map(y, map(d, map(d, map(d, cube))))));
             case "d":
             case "Dw": return map(y, map(y, map(y, map(u, cube))));
-            case "d'":
-            case "Dw'": return map(y, map(u, map(u, cube)));
             case "d2":
             case "d2'":
             case "Dw2":
             case "Dw2'": return map(y, map(y, map(u, map(u, cube))));
+            case "d'":
+            case "Dw'": return map(y, map(u, map(u, cube)));
             case "l":
             case "Lw": return 
-            case "l'":
-            case "Lw'": return 
             case "l2":
             case "l2'":
             case "Lw2":
             case "Lw2'": return 
+            case "l'":
+            case "Lw'": return 
             case "r":
             case "Rw": return 
-            case "r'":
-            case "Rw'": return 
             case "r2":
             case "r2'":
             case "Rw2":
             case "Rw2'": return 
+            case "r'":
+            case "Rw'": return 
             case "f":
             case "Fw": return 
-            case "f'":
-            case "Fw'": return 
             case "f2":
             case "f2'":
             case "Fw2":
             case "Fw2'": return 
+            case "f'":
+            case "Fw'": return 
             case "b":
             case "Bw": return 
-            case "b'":
-            case "Bw'": return 
             case "b2":
             case "b2'":
             case "Bw2":
             case "Bw2'": return 
+            case "b'":
+            case "Bw'": return 
             // relative cube orientations
             case "x": return map(x, cube);
             case "x2": return map(x, map(x, cube));
