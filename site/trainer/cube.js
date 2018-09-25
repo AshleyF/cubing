@@ -210,6 +210,55 @@ var Cube = (function () {
             case "S2":
             case "S2'": return map(f, map(f, map(b, map(b, map(z, map(z, cube))))));
             case "S'": return map(f, map(b, map(b, map(b, map(z, map(z, map(z, cube)))))));
+            // wide moves
+            case "u":
+            case "Uw": return map(y, map(d, cube));
+            case "u'":
+            case "Uw'": return map(y, map(y, map(y, map(d, map(d, map(d, cube))))));
+            case "u2":
+            case "u2'":
+            case "Uw2":
+            case "Uw2'": return map(y, map(y, map(d, map(d, cube))));
+            case "d":
+            case "Dw": return map(y, map(y, map(y, map(u, cube))));
+            case "d'":
+            case "Dw'": return map(y, map(u, map(u, cube)));
+            case "d2":
+            case "d2'":
+            case "Dw2":
+            case "Dw2'": return map(y, map(y, map(u, map(u, cube))));
+            case "l":
+            case "Lw": return 
+            case "l'":
+            case "Lw'": return 
+            case "l2":
+            case "l2'":
+            case "Lw2":
+            case "Lw2'": return 
+            case "r":
+            case "Rw": return 
+            case "r'":
+            case "Rw'": return 
+            case "r2":
+            case "r2'":
+            case "Rw2":
+            case "Rw2'": return 
+            case "f":
+            case "Fw": return 
+            case "f'":
+            case "Fw'": return 
+            case "f2":
+            case "f2'":
+            case "Fw2":
+            case "Fw2'": return 
+            case "b":
+            case "Bw": return 
+            case "b'":
+            case "Bw'": return 
+            case "b2":
+            case "b2'":
+            case "Bw2":
+            case "Bw2'": return 
             // relative cube orientations
             case "x": return map(x, cube);
             case "x2": return map(x, map(x, cube));
@@ -318,12 +367,28 @@ var Cube = (function () {
         return faces[canonical(pov)];
     }
 
+    function toString(cube) {
+        var fs = faces(cube);
+        var str = "";
+        var order = ["Ubl", "Ub", "Ubr", "Ul", "U", "Ur", "Ufl", "Uf", "Ufr", // U
+                     "uLb", "uL", "ufL", "bL", "L", "fL", "dbL", "dL", "dfL", // L
+                     "uFl", "uF", "uFr", "Fl", "F", "Fr", "dFl", "dF", "dFr", // F
+                     "ufR", "uR", "ubR", "fR", "R", "bR", "dfR", "dR", "dbR", // R
+                     "Dfl", "Df", "Dfr", "Dl", "D", "Dr", "Dbl", "Db", "Dbr", // D
+                     "Bdl", "Bd", "Bdr", "Bl", "B", "Br", "Bul", "Bu", "Bur"] // B
+        for (var i = 0; i < order.length; i++) {
+            str += faceColor(order[i], fs);
+        }
+        return str;
+    }
+
     return {
         solved: solved,
         alg: alg,
         random: random,
         same: same,
         faces: faces,
-        faceColor: faceColor
+        faceColor: faceColor,
+        toString: toString
     }
 }());

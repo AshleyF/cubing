@@ -1,12 +1,12 @@
 // This is a modified version of lgarron's giiker.js from https://github.com/cubing/cuble.js
 
 var Giiker = (function () {
-    const SERVICE_UUID = '0000aadb-0000-1000-8000-00805f9b34fb';
-    const CHARACTERISTIC_UUID = '0000aadc-0000-1000-8000-00805f9b34fb';
+    const SERVICE_UUID = "0000aadb-0000-1000-8000-00805f9b34fb";
+    const CHARACTERISTIC_UUID = "0000aadc-0000-1000-8000-00805f9b34fb";
 
-    const SYSTEM_SERVICE_UUID = '0000aaaa-0000-1000-8000-00805f9b34fb';
-    const SYSTEM_READ_UUID = '0000aaab-0000-1000-8000-00805f9b34fb';
-    const SYSTEM_WRITE_UUID = '0000aaac-0000-1000-8000-00805f9b34fb';
+    const SYSTEM_SERVICE_UUID = "0000aaaa-0000-1000-8000-00805f9b34fb";
+    const SYSTEM_READ_UUID = "0000aaab-0000-1000-8000-00805f9b34fb";
+    const SYSTEM_WRITE_UUID = "0000aaac-0000-1000-8000-00805f9b34fb";
 
     function giikerTwist(i, giikerState) {
         var twists = "BDLURF";
@@ -15,36 +15,34 @@ var Giiker = (function () {
         return twists[twist] + (amount == 2 ? "2" : amount == 3 ? "'" : "");
     }
 
+    var device;
+
     async function connect(connected, callback) {
         try {
-            var UUIDs = {
-                cubeService: "0000aadb-0000-1000-8000-00805f9b34fb",
-                cubeCharacteristic: "0000aadc-0000-1000-8000-00805f9b34fb" };
-
             console.log("Attempting to pair.")
-            this.device = await navigator.bluetooth.requestDevice({
+            device = await navigator.bluetooth.requestDevice({
             filters: [{
                 namePrefix: "GiC"
             }],
             optionalServices: [
+                SERVICE_UUID,
                 "00001530-1212-efde-1523-785feabcd123",
                 "0000aaaa-0000-1000-8000-00805f9b34fb",
-                "0000aadb-0000-1000-8000-00805f9b34fb",
                 "0000180f-0000-1000-8000-00805f9b34fb",
                 "0000180a-0000-1000-8000-00805f9b34fb"
             ]
             });
-            console.log("Device:", this.device);
-            this.server = await this.device.gatt.connect();
-            console.log("Server:", this.server);
-            this.cubeService = await this.server.getPrimaryService(UUIDs.cubeService);
-            console.log("Service:", this.cubeService);
-            this.cubeCharacteristic = await this.cubeService.getCharacteristic(UUIDs.cubeCharacteristic);
-            console.log(this.cubeCharacteristic);
-            await this.cubeCharacteristic.startNotifications();
+            console.log("Device:", device);
+            var server = await device.gatt.connect();
+            console.log("Server:", server);
+            var cubeService = await server.getPrimaryService(SERVICE_UUID);
+            console.log("Service:", cubeService);
+            var cubeCharacteristic = await cubeService.getCharacteristic(CHARACTERISTIC_UUID);
+            console.log(cubeCharacteristic);
             // TODO: Can we safely save the async promise instead of waiting for the response?
-            var originalValue = await this.cubeCharacteristic.readValue();
-            this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged);
+            var originalValue = await cubeCharacteristic.readValue();
+            cubeCharacteristic.addEventListener("characteristicvaluechanged", onCubeCharacteristicChanged);
+            await cubeCharacteristic.startNotifications();
       /*
             console.log("Attempting to pair.")
             this.device = await window.navigator.bluetooth.requestDevice({
@@ -78,8 +76,8 @@ var Giiker = (function () {
     }
 
     function disconnect() {
-        if (!this.device) return;
-        this.device.gatt.disconnect();
+        if (!device) return;
+        device.gatt.disconnect();
     }
 
     function onCubeCharacteristicChanged(event) {

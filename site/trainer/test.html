@@ -15,14 +15,51 @@
                 function test(name, fn) {
                     results += "<li style='color:" + (fn() ? "green" : "red") + "'>" + name + "</li>";
                 }
-                test("Comparison", function() { return Cube.same(Cube.alg("U L", Cube.solved), Cube.alg("U L", Cube.solved)); })
-                test("Equivalent", function() { return Cube.same(Cube.alg("U R", Cube.solved), Cube.alg("x2 D R", Cube.solved)); })
+                function testAlg(alg, expected) {
+                    test("Alg: " + alg, function() { return Cube.toString(Cube.alg(alg, Cube.solved)) == expected; })
+                }
+                test("Solved", function() { return Cube.toString(Cube.solved) == "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRDDDDDDDDDBBBBBBBBB"; });
+                testAlg("U", "UUUUUUUUUFFFLLLLLLRRRFFFFFFBBBRRRRRRDDDDDDDDDBBBBBBLLL");
+                testAlg("u", "UUUUUUUUUFFFFFFLLLRRRRRRFFFBBBBBBRRRDDDDDDDDDBBBLLLLLL");
+                testAlg("u'", "UUUUUUUUUBBBBBBLLLLLLLLLFFFFFFFFFRRRDDDDDDDDDBBBRRRRRR");
+                testAlg("u2", "UUUUUUUUURRRRRRLLLBBBBBBFFFLLLLLLRRRDDDDDDDDDBBBFFFFFF");
+                testAlg("d", "UUUUUUUUULLLBBBBBBFFFLLLLLLRRRFFFFFFDDDDDDDDDRRRRRRBBB");
+                testAlg("d'", "UUUUUUUUUBBBFFFFFFLLLRRRRRRFFFBBBBBBDDDDDDDDDLLLLLLRRR");
+                testAlg("d2", "UUUUUUUUULLLRRRRRRFFFBBBBBBRRRLLLLLLDDDDDDDDDFFFFFFBBB");
+                // testAlg("l", "");
+                // testAlg("l'", "");
+                // testAlg("l2", "");
+                // testAlg("r", "");
+                // testAlg("r'", "");
+                // testAlg("r2", "");
+                // testAlg("f", "");
+                // testAlg("f'", "");
+                // testAlg("f2", "");
+                // testAlg("b", "");
+                // testAlg("b'", "");
+                // testAlg("b2", "");
+                test("Comparison", function() { return Cube.same(Cube.alg("U L", Cube.solved), Cube.alg("U L", Cube.solved)); });
+                test("Equivalent", function() { return Cube.same(Cube.alg("U R", Cube.solved), Cube.alg("x2 D R", Cube.solved)); });
                 document.getElementById("results").innerHTML = results;
+            }
+
+            function displayAlg(alg) {
+                var cube = Cube.alg(alg, Cube.solved);
+                document.getElementById("debug").innerText = Cube.toString(cube);
+                function delay() {
+                    Display.display3DCube(Cube.faces(cube), "cube");
+                    Display.displayLL(Cube.faces(cube), "ll");
+                    Display.displayUF(Cube.faces(cube), "uf");
+                }
+                window.setTimeout(delay, 1);
             }
 
             function load() {
                 tests();
+                displayAlg("d2");
+                /*
                 var x = Cube.solved;
+                // prompt("Cube", Cube.toString(Cube.alg("U", Cube.solved)));
                 x = Cube.random(["x", "x'", "x2", "y", "y'", "y2", "z", "z'", "z2"], 100, x);
                 x = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, x);
                 x = Cube.random(["", "U", "U'", "U2"], 1, x);
@@ -32,6 +69,7 @@
                     Display.displayUF(Cube.faces(x), "uf");
                 }
                 window.setTimeout(delay, 1);
+                */
             }
 
             function twist(t) {
@@ -58,7 +96,7 @@
         </script>
     </head>
     <body onload="load()" style="background: black">
-        <h1>Tests v0.5</h1>
+        <h1>Tests v0.6</h1>
         <ol id="results">
         </ol>
         <div id="cube" style="width: 700px"></div>
@@ -66,5 +104,6 @@
         <div id="uf" style="width: 300px"></div>
         <button id="connect" onclick="connect()">Connect</button>
         <button id="disconnect" enabled="false" onclick="disconnect()">Disconnect</button>
+        <p id="debug"></p>
     </body>
 </html>
