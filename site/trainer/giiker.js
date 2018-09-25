@@ -43,8 +43,7 @@ var Giiker = (function () {
             console.log(this.cubeCharacteristic);
             await this.cubeCharacteristic.startNotifications();
             // TODO: Can we safely save the async promise instead of waiting for the response?
-            this._originalValue = await this.cubeCharacteristic.readValue();
-            debug("Original value:", this._originalValue);
+            var originalValue = await this.cubeCharacteristic.readValue();
             this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged);
       /*
             console.log("Attempting to pair.")
