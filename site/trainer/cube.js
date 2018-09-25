@@ -230,8 +230,16 @@ var Cube = (function () {
         return cube;
     }
 
+    function random(algs, n, cube) {
+        for (var i = 0; i < n; i++) {
+            cube = alg(algs[Math.floor(Math.random() * algs.length)], cube);
+        }
+        return cube;
+    }
+
     function faces(cube) {
-        var corners = ["UBL", "UFL", "UFR", "UBR", "DBL", "DFL", "DFR", "DRB"]
+
+        var corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
         var edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
 
         function twistColors(colors, corner, twist) {
@@ -298,6 +306,7 @@ var Cube = (function () {
     return {
         solved: solved,
         alg: alg,
+        random: random,
         same: same,
         faces: faces
     }

@@ -22,8 +22,9 @@
 
             function load() {
                 tests();
-                var x = Cube.alg("L U", Cube.solved);
-                // var x = Cube.solved;
+                var x = Cube.solved;
+                // x = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 1, x);
+                x = Cube.alg("U", x);
                 function delay() {
                     Display.display3DCube(Cube.faces(x), "cube");
                     Display.displayLL(Cube.faces(x), "ll");
