@@ -41,7 +41,7 @@ var Giiker = (function () {
             console.log(cubeCharacteristic);
             // TODO: Can we safely save the async promise instead of waiting for the response?
             var originalValue = await cubeCharacteristic.readValue();
-            cubeCharacteristic.addEventListener("characteristicvaluechanged", onCubeCharacteristicChanged);
+            cubeCharacteristic.addEventListener("characteristicvaluechanged", onCubeCharacteristicChanged.bind(callback));
             await cubeCharacteristic.startNotifications();
       /*
             console.log("Attempting to pair.")
@@ -82,7 +82,7 @@ var Giiker = (function () {
 
     function onCubeCharacteristicChanged(event) {
         alert("EVENT");
-        alert("CALLBACK: " + callback);
+        alert("CALLBACK: " + this);
         var val = event.target.value;
         console.log(val);
         console.log(event);
@@ -103,7 +103,7 @@ var Giiker = (function () {
         str += giikerState.slice(32, 40).join(".");
         console.log(str);
 
-        callback(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]);
+        this(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]);
       }
 
       return {
