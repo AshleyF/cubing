@@ -45,8 +45,7 @@ var Giiker = (function () {
             // TODO: Can we safely save the async promise instead of waiting for the response?
             this._originalValue = await this.cubeCharacteristic.readValue();
             debug("Original value:", this._originalValue);
-            this.cubeCharacteristic.addEventListener("characteristicvaluechanged",
-            this.onCubeCharacteristicChanged.bind(this));
+            this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged);
       /*
             console.log("Attempting to pair.")
             this.device = await window.navigator.bluetooth.requestDevice({
