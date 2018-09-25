@@ -81,7 +81,7 @@
 
             function load() {
                 tests();
-                displayAlg("D'");
+                displayAlg("d");
                 /*
                 var x = Cube.solved;
                 // prompt("Cube", Cube.toString(Cube.alg("U", Cube.solved)));
@@ -101,34 +101,48 @@
                 alert(JSON.stringify(t));
             }
 
-            function connected(success, exception) {
-                if (success) {
-                    document.getElementById("connect").style = "display:none";
-                } else {
-                    alert("Error: " + exception.message);
-                }
+            function connected() {
+                var btn = document.getElementById("giiker");
+                btn.disabled = false;
+                btn.innerText = "Disconnect";
             }
 
             function giiker() {
-                if ()
-                Giiker.connect(connected, twist);
-                document.getElementById("connect").Enabled = false;
+                var btn = document.getElementById("giiker");
+                if (Giiker.connected) {
+                    btn.disabled = false;
+                    btn.innerText = "Connect";
+                    Giiker.disconnect();
+                } else {
+                    btn.disabled = true;
+                    btn.innerText = "Connecting...";
+                    Giiker.connect(connected, twist, error);
+                }
             }
 
             function disconnect() {
+                var btn = document.getElementById("giiker");
+                btn.disabled = false;
+                btn.innerText = "Connect";
                 Giiker.disconnect();
-                // TODO: toggle button
+            }
+
+            function error(ex) {
+                var btn = document.getElementById("giiker");
+                btn.disabled = false;
+                btn.innerText = "Connect";
+                alert("Error: " + ex.message);
             }
         </script>
     </head>
     <body onload="load()" style="background: black">
-        <h1>Tests v0.9</h1>
+        <h1>Tests v0.10</h1>
         <ol id="results">
         </ol>
         <div id="cube" style="width: 70px"></div>
         <div id="ll" style="width: 300px"></div>
         <div id="uf" style="width: 300px"></div>
-        <button id="connect" onclick="giiker()">Connect</button>
+        <button id="giiker" onclick="giiker()">Connect</button>
         <p id="debug"></p>
     </body>
 </html>
