@@ -171,6 +171,7 @@ var Cube = (function () {
         var y = { v: [0, 1, 4, 5, 3, 2] };
         var z = { v: [2, 3, 1, 0, 4, 5] };
         switch (notation) {
+            case "": return cube; // null move
             // normal moves
             case "U": return map(u, cube);
             case "U2":
@@ -237,8 +238,11 @@ var Cube = (function () {
         return cube;
     }
 
-    function faces(cube) {
+    function canonical(face) {
+        return face.split('').sort().join('');
+    }
 
+    function faces(cube) {
         var corners = ["UBL", "ULF", "UFR", "URB", "DLB", "DFL", "DRF", "DBR"]
         var edges = ["UB", "UL", "UF", "UR", "BL", "FL", "FR", "BR", "DB", "DL", "DF", "DR"];
 
@@ -280,9 +284,9 @@ var Cube = (function () {
                 var t0 = targets[0];
                 var t1 = targets[1];
                 var t2 = targets[2];
-                faces[t0.toUpperCase() + t1 + t2] = c0;
-                faces[t0 + t1.toUpperCase() + t2] = c1;
-                faces[t0 + t1 + t2.toUpperCase()] = c2;
+                faces[canonical(t0.toUpperCase() + t1 + t2)] = c0;
+                faces[canonical(t0 + t1.toUpperCase() + t2)] = c1;
+                faces[canonical(t0 + t1 + t2.toUpperCase())] = c2;
             }
         }
 
@@ -295,12 +299,23 @@ var Cube = (function () {
                 var c0 = flipped ? colors[1] : colors[0];
                 var c1 = flipped ? colors[0] : colors[1];
                 var edge = edges[e].toLowerCase();
-                faces[edge[0].toUpperCase() + edge[1]] = c0;
-                faces[edge[0] + edge[1].toUpperCase()] = c1;
+                faces[canonical(edge[0].toUpperCase() + edge[1])] = c0;
+                faces[canonical(edge[0] + edge[1].toUpperCase())] = c1;
             }
         }
 
         return faces;
+    }
+
+    function faceColor(face, faces) {
+        if (face.length == 1) return faces[face];
+        var pov = "";
+        for (var i = 0; i < face.length; i++) {
+            var f = face[i].toUpperCase();
+            var m = faces[f]; // map to pov
+            pov += (f != face[i] ? m.toLowerCase() : m); // match case
+        }
+        return faces[canonical(pov)];
     }
 
     return {
@@ -308,6 +323,7 @@ var Cube = (function () {
         alg: alg,
         random: random,
         same: same,
-        faces: faces
+        faces: faces,
+        faceColor: faceColor
     }
 }());
