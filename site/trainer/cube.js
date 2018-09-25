@@ -228,11 +228,11 @@ var Cube = (function () {
             case "d'":
             case "Dw'": return map(y, map(u, map(u, cube)));
             case "l":
-            case "Lw": return 
+            case "Lw": return map(x, map(x, map(x, map(r, cube))));
             case "l2":
             case "l2'":
             case "Lw2":
-            case "Lw2'": return 
+            case "Lw2'": return map(x, map(x, map(r, map(r, cube))));
             case "l'":
             case "Lw'": return 
             case "r":

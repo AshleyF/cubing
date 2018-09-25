@@ -31,14 +31,14 @@
                 testAlgs(["D"], "UUUUUUUUULLLLLLBBBFFFFFFLLLRRRRRRFFFDDDDDDDDDRRRBBBBBB");
                 testAlgs(["D2", "D2'"], "UUUUUUUUULLLLLLRRRFFFFFFBBBRRRRRRLLLDDDDDDDDDFFFBBBBBB");
                 testAlgs(["D'"], "UUUUUUUUULLLLLLFFFFFFFFFRRRRRRRRRBBBDDDDDDDDDLLLBBBBBB");
-                // testAlgs(["d", "Dw"], "");
-                // testAlgs(["d2", "d2'", "Dw2", "Dw2'"], "");
-                // testAlgs(["d'", "Dw'"], "");
-                // testAlgs(["L"], "");
-                // testAlgs(["L2", "L2'"], "");
-                // testAlgs(["L'"], "");
-                // testAlgs(["l", "Lw"], "");
-                // testAlgs(["l2", "l2'", "Lw2", "Lw2'"], "");
+                testAlgs(["d", "Dw"], "UUUUUUUUULLLBBBBBBFFFLLLLLLRRRFFFFFFDDDDDDDDDRRRRRRBBB");
+                testAlgs(["d2", "d2'", "Dw2", "Dw2'"], "UUUUUUUUULLLRRRRRRFFFBBBBBBRRRLLLLLLDDDDDDDDDFFFFFFBBB");
+                testAlgs(["d'", "Dw'"], "UUUUUUUUUBBBFFFFFFLLLRRRRRRFFFBBBBBBDDDDDDDDDLLLLLLRRR");
+                testAlgs(["L"], "BUUBUUBUULLLLLLLLLUFFUFFUFFRRRRRRRRRFDDFDDFDDDBBDBBDBB");
+                testAlgs(["L2", "L2'"], "DUUDUUDUULLLLLLLLLBFFBFFBFFRRRRRRRRRUDDUDDUDDFBBFBBFBB");
+                testAlgs(["L'"], "FUUFUUFUULLLLLLLLLDFFDFFDFFRRRRRRRRRBDDBDDBDDUBBUBBUBB");
+                testAlgs(["l", "Lw"], "BBUBBUBBULLLLLLLLLUUFUUFUUFRRRRRRRRRFFDFFDFFDDDBDDBDDB");
+                testAlgs(["l2", "l2'", "Lw2", "Lw2'"], "DDUDDUDDULLLLLLLLLBBFBBFBBFRRRRRRRRRUUDUUDUUDFFBFFBFFB");
                 // testAlgs(["l'", "Lw'"], "");
                 // testAlgs(["R"], "");
                 // testAlgs(["R2", "R2'"], "");
@@ -81,7 +81,7 @@
 
             function load() {
                 tests();
-                displayAlg("d");
+                displayAlg("l2");
                 /*
                 var x = Cube.solved;
                 // prompt("Cube", Cube.toString(Cube.alg("U", Cube.solved)));
@@ -97,8 +97,11 @@
                 */
             }
 
+            var current = Cube.solved;
+
             function twist(t) {
-                alert(JSON.stringify(t));
+                current = Cube.Alg(t, current);
+                Display.display3DCube(current, "cube")
             }
 
             function connected() {
@@ -136,7 +139,7 @@
         </script>
     </head>
     <body onload="load()" style="background: black">
-        <h1>Tests v0.11</h1>
+        <h1>Tests v0.13</h1>
         <ol id="results">
         </ol>
         <div id="cube" style="width: 70px"></div>

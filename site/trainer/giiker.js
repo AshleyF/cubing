@@ -57,6 +57,7 @@ var Giiker = (function () {
     }
 
     function connected() {
+        alert("CONNECTED? " + device);
         return device ? true : false;
     }
 
@@ -65,8 +66,13 @@ var Giiker = (function () {
         if (connected()) device.gatt.disconnect();
     }
 
+    var first = true;
     function onCubeCharacteristicChanged(event) {
         try {
+            if (first) {
+                first = false;
+                return; // skip first event
+            }
             var val = event.target.value;
             console.log(val);
             console.log(event);
