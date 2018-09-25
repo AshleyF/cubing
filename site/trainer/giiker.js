@@ -89,6 +89,8 @@ var Giiker = (function () {
             str += giikerState.slice(32, 40).join(".");
             console.log(str);
 
+            var face = giikerState[32];
+            var amount = giikerState[33];
             this(["?", "B", "D", "L", "U", "R", "F"][face] + ["", "", "2", "'"][amount == 9 ? 2 : amount]); // twistCallback
         } catch (ex) {
             alert("ERROR: " + ex.message);
