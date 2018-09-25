@@ -32,9 +32,9 @@ var Giiker = (function () {
             this.cubeCharacteristic = await this.cubeService.getCharacteristic(CHARACTERISTIC_UUID);
             console.log(this.cubeCharacteristic);
             await this.cubeCharacteristic.startNotifications();
-            var value = await characteristic.readValue(); // TODO
+            // var value = await characteristic.readValue(); // TODO
             this.cubeCharacteristic.addEventListener("characteristicvaluechanged", this.onCubeCharacteristicChanged.bind(this));
-            var systemService = await server.getPrimaryService(SYSTEM_SERVICE_UUID); // TODO
+            // var systemService = await server.getPrimaryService(SYSTEM_SERVICE_UUID); // TODO
             this.device.addEventListener('gattserverdisconnected', disconnected);
             connected(true);
         } catch(ex) {
