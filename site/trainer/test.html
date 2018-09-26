@@ -120,6 +120,7 @@
             }
 
             function twist(t) {
+                if (t == "") return;
                 alg += t + ' ';
                 var result = Cube.alg(alg, instance);
                 // update(result);
