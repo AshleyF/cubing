@@ -7,8 +7,6 @@ The Giiker may be held in any orientation (I even took the stickers off mine!). 
 ## TODO
 
 * Disconnect button is broken
-* Check whole cube state
-* CFOP vs. Roux, COLL/CMLL differences (scramble M slice, random U center [makes full color neutrality difficult])
 * Countdown on timeouts
 * Move-based advancing
 * Roofpig-less (optimization)

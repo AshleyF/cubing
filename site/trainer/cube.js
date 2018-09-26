@@ -407,6 +407,17 @@ var Cube = (function () {
         return str;
     }
 
+    function matchPattern(pattern, cube) {
+        var state = toString(cube);
+        for (var i in pattern) {
+            var p = pattern[i];
+            if (p != '.' && p != state[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     return {
         solved: solved,
         alg: alg,
@@ -414,6 +425,7 @@ var Cube = (function () {
         same: same,
         faces: faces,
         faceColor: faceColor,
-        toString: toString
+        toString: toString,
+        matchPattern: matchPattern
     }
 }());

@@ -98,11 +98,11 @@ var Giiker = (function () {
         } catch (ex) {
             alert("ERROR: " + ex.message);
         }
-      }
+    }
 
-      return {
-          connect: connect,
-          connected: connected,
-          disconnect: disconnect
-      };
+    return {
+        connect: connect,
+        connected: connected,
+        disconnect: disconnect
+    };
 }());

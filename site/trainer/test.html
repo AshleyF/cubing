@@ -85,74 +85,7 @@
 
             function load() {
                 tests();
-                // Ui.displayAlg("S'");
-                function delay() { next(); }
-                window.setTimeout(delay, 1);
-            }
-
-            var alg = "";
-            var solution = "";
-            var verify;
-
-            function check() {
-                var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
-                for (var i = 0; i < rotations.length; i++) {
-                    var rot = rotations[i];
-                    // apply rotation, alg, inverse rotation
-                    var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
-                    if (verify(result)) {
-                        document.getElementById("status").innerText = "Well done!";
-                        document.body.style.backgroundColor = "green";
-                        window.setTimeout(next, 3000);
-                        return true;
-                    }
-                }
-            }
-
-            function next() {
-                alg = "";
-                challenge(
-                    "R U R' U R U2 R'",
-                    function(result) {
-                        var rf = Cube.faces(result);
-                        var ef = Cube.faces(Cube.alg(solution, instance));
-                        var rbl = Cube.faceColor("Ubl", rf);
-                        var ebl = Cube.faceColor("Ubl", ef);
-                        var rbr = Cube.faceColor("Ubr", rf);
-                        var ebr = Cube.faceColor("Ubr", ef);
-                        var rfl = Cube.faceColor("Ufl", rf);
-                        var efl = Cube.faceColor("Ufl", ef);
-                        var rfr = Cube.faceColor("Ufr", rf);
-                        var efr = Cube.faceColor("Ufr", ef);
-                        return rbl == ebl && rbr == ebr && rfl == efl && rfr == efr;
-                    });
-                update(instance);
-                document.getElementById("status").innerText = "Good luck!";
-                document.body.style.backgroundColor = "black";
-            }
-
-            function refresh() {
-                alg = "";
-                update(instance);
-                document.getElementById("status").innerText = "Try again";
-                document.body.style.backgroundColor = "black";
-            }
-
-            function challenge(alg, expected) {
-                verify = expected;
-                var auf = ["", "U ", "U' ", "U2 "][Math.floor(Math.random() * 4)]
-                solution = auf + alg;
-                instance = Cube.solved;
-                // instance = Cube.random(["x", "x'", "x2", "y", "y'", "y2", "z", "z'", "z2"], 100, instance);
-                instance = Cube.alg("x", instance);
-                instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
-                var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
-                for (var i = 0; i < 10; i++) {
-                    instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
-                    instance = Cube.random([jperm_b, yperm], 1, instance);
-                }
-                instance = Cube.alg(solution, instance, true);
+                Ui.displayAlg("S'");
             }
         </script>
     </head>
@@ -161,12 +94,9 @@
         <div id="status">Welcome</div>
         <button id="giiker" onclick="Ui.giiker()">Connect</button>
         <button onclick="Ui.twist(prompt('Twists'))">SimTwists</button>
-        <hr />
-        <button onclick="refresh()">Refresh</button>
-        <button onclick="next()">Next</button>
-        <div id="ll" style="width: 150px"></div>
-        <div id="cube" style="width: 350px"></div>
-        <div id="uf" style="width: 150px"></div>
+        <div id="ll"></div>
+        <div id="cube" style="width: 100%"></div>
+        <div id="uf"></div>
         <p id="debug"></p>
         <ol id="results">
         </ol>

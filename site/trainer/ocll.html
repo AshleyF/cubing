@@ -11,80 +11,81 @@
         <script src="giiker.js"></script>
         <script src="ui.js"></script>
         <script>
-            var instance = Cube.solved;
-
             function update(cube) {
                 Display.displayLL(Cube.faces(cube), "ll");
             }
 
             function load() {
-                function delay() { next(); }
+                function delay() { settingsUpdate(); }
                 window.setTimeout(delay, 1);
             }
 
-            var alg = "";
-            var solution = "";
-            var verify;
+            function verifyCornersOriented(result) {
+                if (Ui.settings.method == "cfop") {
+                    return Cube.matchPattern("U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", result); // whole first two layers
+                } else {
+                    return Cube.matchPattern("U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", result); // M-slice free
+                }
+            }
 
-            function check() {
-                var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
-                for (var i = 0; i < rotations.length; i++) {
-                    var rot = rotations[i];
-                    // apply rotation, alg, inverse rotation
-                    var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
-                    if (verify(result)) {
-                        document.getElementById("status").innerText = "Well done!";
-                        document.body.style.backgroundColor = "green";
-                        window.setTimeout(next, 3000);
-                        return true;
+            function settingsUpdate() {
+                function addAlgIfChecked(name) {
+                    var cb = document.getElementById(name);
+                    if (cb.checked) {
+                        Ui.settings.algs.push(cb.value);
                     }
                 }
-            }
-
-            function next() {
-                alg = "";
-                challenge(
-                    "R U R' U R U2 R'",
-                    function(result) {
-                        var rf = Cube.faces(result);
-                        var ef = Cube.faces(Cube.alg(solution, instance));
-                        var rbl = Cube.faceColor("Ubl", rf);
-                        var ebl = Cube.faceColor("Ubl", ef);
-                        var rbr = Cube.faceColor("Ubr", rf);
-                        var ebr = Cube.faceColor("Ubr", ef);
-                        var rfl = Cube.faceColor("Ufl", rf);
-                        var efl = Cube.faceColor("Ufl", ef);
-                        var rfr = Cube.faceColor("Ufr", rf);
-                        var efr = Cube.faceColor("Ufr", ef);
-                        return rbl == ebl && rbr == ebr && rfl == efl && rfr == efr;
-                    });
-                update(instance);
-                document.getElementById("status").innerText = "Good luck!";
-                document.body.style.backgroundColor = "black";
-            }
-
-            function refresh() {
-                alg = "";
-                update(instance);
-                document.getElementById("status").innerText = "Try again";
-                document.body.style.backgroundColor = "black";
-            }
-
-            function challenge(alg, expected) {
-                verify = expected;
-                var auf = ["", "U ", "U' ", "U2 "][Math.floor(Math.random() * 4)]
-                solution = auf + alg;
-                instance = Cube.solved;
-                // instance = Cube.random(["x", "x'", "x2", "y", "y'", "y2", "z", "z'", "z2"], 100, instance);
-                instance = Cube.alg("x", instance);
-                instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
-                var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
-                for (var i = 0; i < 10; i++) {
-                    instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
-                    instance = Cube.random([jperm_b, yperm], 1, instance);
+                Ui.settings.method = document.getElementById("method").value;
+                Ui.settings.yellow = document.getElementById("yellow").checked;
+                Ui.settings.white = document.getElementById("white").checked;
+                Ui.settings.red = document.getElementById("red").checked;
+                Ui.settings.orange = document.getElementById("orange").checked;
+                Ui.settings.green = document.getElementById("green").checked;
+                Ui.settings.blue = document.getElementById("blue").checked;
+                if (!Ui.settings.yellow && !Ui.settings.white && !Ui.settings.red && !Ui.settings.orange && !Ui.settings.green && !Ui.settings.blue) {
+                    // default
+                    document.getElementById("yellow").checked = true;
+                    Ui.settings.yellow = true;
                 }
-                instance = Cube.alg(solution, instance, true);
+                document.getElementById("anyColor").checked = (Ui.settings.yellow && Ui.settings.white && Ui.settings.red && Ui.settings.orange && Ui.settings.green && Ui.settings.blue);
+                Ui.settings.auf = document.getElementById("auf").checked;
+                Ui.settings.algs = [];
+                addAlgIfChecked("s");
+                addAlgIfChecked("as");
+                addAlgIfChecked("l");
+                addAlgIfChecked("u");
+                addAlgIfChecked("t");
+                addAlgIfChecked("pi");
+                addAlgIfChecked("h");
+                if (Ui.settings.algs.length == 0) {
+                    document.getElementById("s").checked = true;
+                    addAlgIfChecked("s");
+                }
+                document.getElementById("anyCase").checked = (Ui.settings.algs.length == 7);
+                Ui.next();
+            }
+
+            function settingsAnyColorUpdate() {
+                var any = document.getElementById("anyColor").checked;
+                document.getElementById("yellow").checked = true; // always
+                document.getElementById("white").checked = any;
+                document.getElementById("red").checked = any;
+                document.getElementById("orange").checked = any;
+                document.getElementById("green").checked = any;
+                document.getElementById("blue").checked = any;
+                settingsUpdate();
+            }
+
+            function settingsAnyCaseUpdate() {
+                var any = document.getElementById("anyCase").checked;
+                document.getElementById("s").checked = true; // always
+                document.getElementById("as").checked = any;
+                document.getElementById("l").checked = any;
+                document.getElementById("u").checked = any;
+                document.getElementById("t").checked = any;
+                document.getElementById("pi").checked = any;
+                document.getElementById("h").checked = any;
+                settingsUpdate();
             }
         </script>
     </head>
@@ -92,8 +93,44 @@
         <h1>OCLL</h1>
         <div id="status"></div>
         <button id="giiker" onclick="Ui.giiker()">Connect</button>
-        <button onclick="refresh()">Refresh</button>
-        <button onclick="next()">Next</button>
-        <div id="ll" style="width: 150px"></div>
+        <button id="retry" onclick="Ui.retry()" disabled="disabled">Retry</button>
+        <button onclick="Ui.next()">Next</button>
+        <div id="ll"></div>
+        <fieldset>
+            <legend>Method</legend>
+            <select id="method" onchange="settingsUpdate()">
+                <option value="cfop">CFOP</option>
+                <option value="roux" selected="selected">Roux</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <legend>Up Color</legend>
+            <input id="anyColor" type="checkbox" value="anyColor" onchange="settingsAnyColorUpdate()"><label for="anyColor">Any</label>
+            <hr style="border-color:#222;" />
+            <input id="yellow" type="checkbox" value="yellow" checked="checked" onchange="settingsUpdate()"><label for="yellow">Yellow</label><br />
+            <input id="white" type="checkbox" value="white" onchange="settingsUpdate()"><label for="white">White</label><br />
+            <input id="red" type="checkbox" value="red" onchange="settingsUpdate()"><label for="red">Red</label><br />
+            <input id="orange" type="checkbox" value="orange" onchange="settingsUpdate()"><label for="orange">Orange</label><br />
+            <input id="green" type="checkbox" value="green" onchange="settingsUpdate()"><label for="green">Green</label><br />
+            <input id="blue" type="checkbox" value="blue" onchange="settingsUpdate()"><label for="blue">Blue</label><br />
+        </fieldset>
+        <fieldset>
+            <legend>Miscellaneous</legend>
+            <input id="auf" type="checkbox" value="auf" checked="checked" onchange="settingsUpdate()"><label for="auf">Random AUF</label><br />
+        </fieldset>
+        <fieldset>
+            <legend>Cases</legend>
+            <input id="anyCase" type="checkbox" value="anyCase" onchange="settingsAnyCaseUpdate()"><label for="anyCase">Any</label>
+            <hr style="border-color:#222;" />
+            <input id="s" type="checkbox" value="R U R' U R U2 R'" checked="checked" onchange="settingsUpdate()"><label for="s">Sune</label><br />
+            <input id="as" type="checkbox" value="R' U' R U' R' U2 R" onchange="settingsUpdate()"><label for="as">Anti-Sune</label><br />
+            <input id="l" type="checkbox" value="R U2 R' U' R U R' U' R U R' U' R U' R'" onchange="settingsUpdate()">L case (bow tie, triple-sune)<label for="l"></label><br />
+            <input id="u" type="checkbox" value="F R U R' U' F'" onchange="settingsUpdate()"><label for="u">U case (headlights)</label><br />
+            <input id="t" type="checkbox" value="R U R' U' R' F R F'" onchange="settingsUpdate()"><label for="t">T case (blinkers, chameleon)</label><br />
+            <input id="pi" type="checkbox" value="F R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="pi">Pi case (bruno)</label><br />
+            <input id="h" type="checkbox" value="F R U R' U' R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="h">H case (double-headlights, double-sune)</label><br />
+        </fieldset>
+        <hr />
+        <button onclick="Ui.twist(prompt('Twists'))">SimTwists</button>
     </body>
 </html>
