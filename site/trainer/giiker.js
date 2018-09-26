@@ -57,7 +57,6 @@ var Giiker = (function () {
     }
 
     function connected() {
-        alert("CONNECTED? " + device);
         return device ? true : false;
     }
 
@@ -103,6 +102,7 @@ var Giiker = (function () {
 
       return {
           connect: connect,
+          connected: connected,
           disconnect: disconnect
       };
 }());

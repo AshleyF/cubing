@@ -271,9 +271,30 @@ var Cube = (function () {
             case "z'": return map(z, map(z, map(z, cube)));
         }
     }
+    
+    function reverseAlg(twists) {
+        var rev = twists.reverse();
+        for (var i = 0; i < rev.length; i++) {
+            var r = rev[i];
+            var m = r.length - 1;
+            switch (r[m]) {
+                case "'":
+                    twists[i] = r.substr(0, m);
+                    break;
+                case "2":
+                    twists[i] = r;
+                    break;
+                default:
+                    twists[i] = r + "'";
+                    break;
+            }
+        }
+        return twists;
+    }
 
-    function alg(alg, cube) {
+    function alg(alg, cube, reverse) {
         var twists = alg.split(' ');
+        if (reverse) twists = reverseAlg(twists);
         for (var t in twists) {
             cube = twist(twists[t], cube);
         }
