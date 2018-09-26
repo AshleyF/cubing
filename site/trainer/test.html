@@ -96,7 +96,7 @@
             function load() {
                 tests();
                 // displayAlg("S'");
-                function delay() { refresh(); }
+                function delay() { next(); }
                 window.setTimeout(delay, 1);
             }
 
@@ -169,10 +169,6 @@
             }
 
             function next() {
-                refresh(); // TODO
-            }
-
-            function refresh() {
                 alg = "";
                 challenge(
                     "R U R' U R U2 R'",
@@ -191,6 +187,13 @@
                     });
                 update(instance);
                 document.getElementById("status").innerText = "Good luck!";
+                document.body.style.backgroundColor = "black";
+            }
+
+            function refresh() {
+                alg = "";
+                update(instance);
+                document.getElementById("status").innerText = "Try again";
                 document.body.style.backgroundColor = "black";
             }
 
@@ -213,6 +216,7 @@
         <button onclick="twist(prompt('Twists'))">SimTwists</button>
         <hr />
         <button onclick="refresh()">Refresh</button>
+        <button onclick="next()">Next</button>
         <div id="ll" style="width: 150px"></div>
         <div id="cube" style="width: 350px"></div>
         <div id="uf" style="width: 150px"></div>
