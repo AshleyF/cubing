@@ -9,6 +9,7 @@
         <script src="cube.js"></script>
         <script src="display.js"></script>
         <script src="giiker.js"></script>
+        <script src="ui.js"></script>
         <script>
             function tests() {
                 var results = "";
@@ -74,17 +75,6 @@
                 document.getElementById("results").innerHTML = results;
             }
 
-            function displayAlg(alg) {
-                var cube = Cube.alg(alg, Cube.solved);
-                document.getElementById("debug").innerText = Cube.toString(cube);
-                function delay() {
-                    Display.display3DCube(Cube.faces(cube), "cube");
-                    Display.displayLL(Cube.faces(cube), "ll");
-                    Display.displayUF(Cube.faces(cube), "uf");
-                }
-                window.setTimeout(delay, 1);
-            }
-
             var instance = Cube.solved;
 
             function update(cube) {
@@ -95,7 +85,7 @@
 
             function load() {
                 tests();
-                // displayAlg("S'");
+                // Ui.displayAlg("S'");
                 function delay() { next(); }
                 window.setTimeout(delay, 1);
             }
@@ -111,61 +101,12 @@
                     // apply rotation, alg, inverse rotation
                     var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
                     if (verify(result)) {
-                        update(result);
                         document.getElementById("status").innerText = "Well done!";
                         document.body.style.backgroundColor = "green";
                         window.setTimeout(next, 3000);
                         return true;
                     }
                 }
-            }
-
-            function twist(t) {
-                if (t == "") return;
-                alg += t + ' ';
-                var result = Cube.alg(alg, instance);
-                // update(result);
-                var len = alg.split(' ').length;
-                var progress = "";
-                for (var i = 1; i < len; i++) {
-                    progress += "&bull; ";
-                }
-                document.getElementById("status").innerHTML = progress;
-                document.body.style.backgroundColor = "#333";
-                check();
-            }
-
-            function connected() {
-                var btn = document.getElementById("giiker");
-                btn.disabled = false;
-                btn.innerText = "Disconnect";
-            }
-
-            function giiker() {
-                var btn = document.getElementById("giiker");
-                if (Giiker.connected()) {
-                    btn.disabled = false;
-                    btn.innerText = "Connect";
-                    Giiker.disconnect();
-                } else {
-                    btn.disabled = true;
-                    btn.innerText = "Connecting...";
-                    Giiker.connect(connected, twist, error);
-                }
-            }
-
-            function disconnect() {
-                var btn = document.getElementById("giiker");
-                btn.disabled = false;
-                btn.innerText = "Connect";
-                Giiker.disconnect();
-            }
-
-            function error(ex) {
-                var btn = document.getElementById("giiker");
-                btn.disabled = false;
-                btn.innerText = "Connect";
-                alert("Error: " + ex.message);
             }
 
             function next() {
@@ -205,6 +146,12 @@
                 // instance = Cube.random(["x", "x'", "x2", "y", "y'", "y2", "z", "z'", "z2"], 100, instance);
                 instance = Cube.alg("x", instance);
                 instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
+                var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
+                var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
+                for (var i = 0; i < 10; i++) {
+                    instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
+                    instance = Cube.random([jperm_b, yperm], 1, instance);
+                }
                 instance = Cube.alg(solution, instance, true);
             }
         </script>
@@ -212,8 +159,8 @@
     <body onload="load()" style="background: black">
         <h1>Tests v0.16</h1>
         <div id="status">Welcome</div>
-        <button id="giiker" onclick="giiker()">Connect</button>
-        <button onclick="twist(prompt('Twists'))">SimTwists</button>
+        <button id="giiker" onclick="Ui.giiker()">Connect</button>
+        <button onclick="Ui.twist(prompt('Twists'))">SimTwists</button>
         <hr />
         <button onclick="refresh()">Refresh</button>
         <button onclick="next()">Next</button>
