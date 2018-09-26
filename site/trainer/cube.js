@@ -272,10 +272,14 @@ var Cube = (function () {
         }
     }
     
-    function reverseAlg(twists) {
+    function inverseAlg(twists) {
         var rev = twists.reverse();
         for (var i = 0; i < rev.length; i++) {
             var r = rev[i];
+            if (r == "") {
+                twists[i] = "";
+                continue;
+            }
             var m = r.length - 1;
             switch (r[m]) {
                 case "'":
@@ -292,9 +296,9 @@ var Cube = (function () {
         return twists;
     }
 
-    function alg(alg, cube, reverse) {
+    function alg(alg, cube, inverse) {
         var twists = alg.split(' ');
-        if (reverse) twists = reverseAlg(twists);
+        if (inverse) twists = inverseAlg(twists);
         for (var t in twists) {
             cube = twist(twists[t], cube);
         }

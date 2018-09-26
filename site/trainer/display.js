@@ -45,7 +45,7 @@ var Display = (function () {
             '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
                 'width="600" height="600"' +
                 'viewBox="-0.9 -0.9 1.8 1.8">' +
-                '<rect fill="#000" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
+                '<rect fill="transparent" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
                 '<g style="stroke-width:0.1;stroke-linejoin:round;opacity:1">' +
                     '<polygon fill="#000000" stroke="#000000" points="-0.522222222222,-0.522222222222 0.522222222222,-0.522222222222 0.522222222222,0.522222222222 -0.522222222222,0.522222222222"/>' +
                 '</g>' +
@@ -82,7 +82,7 @@ var Display = (function () {
             '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"' +
                 'width="600" height="600"' +
                 'viewBox="-0.9 -0.9 1.8 1.8">' +
-                '<rect fill="#000" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
+                '<rect fill="transparent" x="-0.9" y="-0.9" width="1.8" height="1.8"/>' +
                 '<g style="stroke-width:0.1;stroke-linejoin:round;opacity:1">' +
                     '<polygon fill="#000" stroke="#000000" points="-0.547416364726,6.07754252175E-17 0.547416364726,6.07754252175E-17 0.47,0.664680374315 -0.47,0.664680374315"/>' +
                     '<polygon fill="#000" stroke="#000000" points="-0.47,-0.664680374315 0.47,-0.664680374315 0.547416364726,6.07754252175E-17 -0.547416364726,6.07754252175E-17"/>' +
