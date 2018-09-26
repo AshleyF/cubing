@@ -110,9 +110,10 @@
             function check() {
                 var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
                 for (var i = 0; i < rotations.length; i++) {
-                    var result = Cube.alg(rotations[i] + ' ' + alg, instance);
+                    var rot = rotations[i];
+                    var result = Cube.alg(rot + ' ' + alg, instance);
                     if (Cube.same(result, Cube.solved)) {
-                        update(result);
+                        update(Cube.alg(rot, result, true));
                         alert("Well done!");
                     }
                 }
