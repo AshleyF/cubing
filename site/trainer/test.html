@@ -114,6 +114,7 @@
                         update(result);
                         document.getElementById("status").innerText = "Well done!";
                         document.body.style.backgroundColor = "green";
+                        window.setTimeout(next, 3000);
                         return true;
                     }
                 }
@@ -130,7 +131,7 @@
                     progress += "&bull; ";
                 }
                 document.getElementById("status").innerHTML = progress;
-                document.body.style.backgroundColor = "#222";
+                document.body.style.backgroundColor = "#333";
                 check();
             }
 
@@ -165,6 +166,10 @@
                 btn.disabled = false;
                 btn.innerText = "Connect";
                 alert("Error: " + ex.message);
+            }
+
+            function next() {
+                refresh(); // TODO
             }
 
             function refresh() {
