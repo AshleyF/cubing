@@ -16,9 +16,15 @@ var Ui = (function () {
         switch (status) {
             case "correct":
                 document.body.style.backgroundColor = "green";
-                document.getElementById("retry").disabled = true;
+                document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
-                waiting = true;
+                window.setTimeout(function () { waiting = true; }, 500);
+                break;
+            case "incorrect":
+                document.body.style.backgroundColor = "darkred";
+                document.getElementById("retry").disabled = false;
+                document.getElementById("next").disabled = false;
+                window.setTimeout(function () { waiting = true; }, 500);
                 break;
             case "progress":
                 document.body.style.backgroundColor = "#333";
@@ -26,17 +32,19 @@ var Ui = (function () {
                 document.getElementById("next").disabled = false;
                 waiting = false;
                 break;
-            case "waiting":
+            case "init":
                 document.getElementById("status").innerHTML = "&nbsp;";
                 document.body.style.backgroundColor = "black";
                 document.getElementById("retry").disabled = true;
                 document.getElementById("next").disabled = false;
+                waiting = false;
                 break;
             case "error":
                 document.getElementById("status").innerHTML = "&nbsp;";
                 document.body.style.backgroundColor = "black";
                 document.getElementById("retry").disabled = true;
                 document.getElementById("next").disabled = true;
+                waiting = false;
                 break;
         }
     }
@@ -75,6 +83,11 @@ var Ui = (function () {
     }
 
     function twist(t) {
+        if (waiting) {
+            // retry/next with X/X'
+            if (t.endsWith("'")) retry(); else next();
+            return;
+        }
         function check() {
             var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
             for (var i = 0; i < rotations.length; i++) {
@@ -198,7 +211,7 @@ var Ui = (function () {
         alg = "";
         if (settings.cases.length > 0) {
             challenge(randomElement(settings.cases));
-            setStatus("waiting");
+            setStatus("init");
         } else {
             instance = Cube.solved;
             setStatus("error");
@@ -209,7 +222,7 @@ var Ui = (function () {
     function retry() {
         alg = "";
         update(instance);
-        setStatus("waiting");
+        setStatus("init");
     }
 
     return {

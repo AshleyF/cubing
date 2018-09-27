@@ -7,6 +7,4 @@ The Giiker may be held in any orientation (I even took the stickers off mine!). 
 ## TODO
 
 * Disconnect button is broken
-* Countdown on timeouts
-* Move-based advancing
 * Roofpig-less (optimization)
