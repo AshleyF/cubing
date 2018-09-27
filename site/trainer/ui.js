@@ -76,10 +76,10 @@ var Ui = (function () {
                 var pat;
                 switch (Ui.settings.method) {
                     case "cfop":
-                        pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
+                        pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBBB.B"; // whole first two layers
                         break;
                     case "roux":
-                        pat = "U.U...U.U..LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.B...";
+                        pat = "U.U...U.UL.LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.BB.B"; // M-slice free
                         break;
                     default: throw "Unknown method: " + Ui.settings.method;
                 }
