@@ -410,10 +410,15 @@ var Cube = (function () {
     function matchPattern(pattern, cube) {
         // compare all (24) orientations
         var state = toString(cube);
+        var mapping = {};
         for (var i in pattern) {
             var p = pattern[i];
-            if (p != '.' && p != state[i]) {
-                return false;
+            if (p != '.') {
+                if (!mapping[p]) {
+                    mapping[p] = state[i];
+                    continue;
+                }
+                if (mapping[p] != state[i]) return false;
             }
         }
         return true;
