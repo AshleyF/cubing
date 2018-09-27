@@ -115,7 +115,8 @@ var Ui = (function () {
         var len = alg.split(' ').length;
         var progress = "";
         for (var i = 1; i < len; i++) {
-            progress += "&bull; ";
+            // progress += "&bull; ";
+            progress = alg; // debugging
         }
         document.getElementById("status").innerHTML = progress;
         setStatus("progress");
