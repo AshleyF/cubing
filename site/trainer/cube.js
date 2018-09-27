@@ -114,33 +114,32 @@ var Cube = (function () {
         return { c: cs, e: es, v: vs };
     }
 
-    var orientations = [
-        [0, 1, 2, 3, 4, 5], // YR
-        [4, 5, 3, 2, 0, 1], // RY
-        [0, 1, 4, 5, 3, 2], // YG
-        [3, 2, 5, 4, 0, 1], // GY
-        [0, 1, 3, 2, 5, 4], // YO
-        [5, 4, 2, 3, 0, 1], // OY
-        [0, 1, 5, 4, 2, 3], // YB
-        [2, 3, 4, 5, 0, 1], // BY
-        [3, 2, 0, 1, 4, 5], // GR
-        [4, 5, 1, 0, 3, 2], // RG
-        [5, 4, 0, 1, 3, 2], // OG
-        [3, 2, 1, 0, 5, 4], // GO
-        [2, 3, 0, 1, 5, 4], // BO
-        [5, 4, 1, 0, 2, 3], // OB
-        [4, 5, 0, 1, 2, 3], // RB
-        [2, 3, 1, 0, 4, 5], // BR
-        [1, 0, 3, 2, 4, 5], // WR
-        [4, 5, 2, 3, 1, 0], // RW
-        [1, 0, 4, 5, 2, 3], // WB
-        [2, 3, 5, 4, 1, 0], // BW
-        [1, 0, 2, 3, 5, 4], // WO
-        [5, 4, 3, 2, 1, 0], // OW
-        [1, 0, 5, 4, 3, 2], // WG
-        [3, 2, 4, 5, 1, 0]] // GW
-
     function same(cube0, cube1) {
+        var orientations = [
+            [0, 1, 2, 3, 4, 5], // YR
+            [4, 5, 3, 2, 0, 1], // RY
+            [0, 1, 4, 5, 3, 2], // YG
+            [3, 2, 5, 4, 0, 1], // GY
+            [0, 1, 3, 2, 5, 4], // YO
+            [5, 4, 2, 3, 0, 1], // OY
+            [0, 1, 5, 4, 2, 3], // YB
+            [2, 3, 4, 5, 0, 1], // BY
+            [3, 2, 0, 1, 4, 5], // GR
+            [4, 5, 1, 0, 3, 2], // RG
+            [5, 4, 0, 1, 3, 2], // OG
+            [3, 2, 1, 0, 5, 4], // GO
+            [2, 3, 0, 1, 5, 4], // BO
+            [5, 4, 1, 0, 2, 3], // OB
+            [4, 5, 0, 1, 2, 3], // RB
+            [2, 3, 1, 0, 4, 5], // BR
+            [1, 0, 3, 2, 4, 5], // WR
+            [4, 5, 2, 3, 1, 0], // RW
+            [1, 0, 4, 5, 2, 3], // WB
+            [2, 3, 5, 4, 1, 0], // BW
+            [1, 0, 2, 3, 5, 4], // WO
+            [5, 4, 3, 2, 1, 0], // OW
+            [1, 0, 5, 4, 3, 2], // WG
+            [3, 2, 4, 5, 1, 0]] // GW
         // compare all (24) orientations
         for (o in orientations) {
             if (compare(map({ v: orientations[o] }, cube0), cube1)) return true;
@@ -410,19 +409,14 @@ var Cube = (function () {
 
     function matchPattern(pattern, cube) {
         // compare all (24) orientations
-        for (o in orientations) {
-            var state = toString(map({ v: orientations[o] }, cube));
-            var matched = true;
-            for (var i in pattern) {
-                var p = pattern[i];
-                if (p != '.' && p != state[i]) {
-                    matched = false;
-                    break;
-                }
+        var state = toString(cube);
+        for (var i in pattern) {
+            var p = pattern[i];
+            if (p != '.' && p != state[i]) {
+                return false;
             }
-            if (matched) return true;
         }
-        return false;
+        return true;
     }
 
     return {
