@@ -1,6 +1,4 @@
 
-body { background-color: black; color: white; }
-
+body { background-color: black; color: white; font-family: sans-serif; }
 a { color: white; }
-
-body { font-family: sans-serif }
+#status, #controls, h1 { text-align: center; }

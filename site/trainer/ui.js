@@ -10,6 +10,70 @@ var Ui = (function () {
         window.setTimeout(delay, 1);
     }
 
+    var waiting = false;
+
+    function setStatus(status) {
+        switch (status) {
+            case "correct":
+                document.body.style.backgroundColor = "green";
+                document.getElementById("retry").disabled = true;
+                document.getElementById("next").disabled = false;
+                waiting = true;
+                break;
+            case "progress":
+                document.body.style.backgroundColor = "#333";
+                document.getElementById("retry").disabled = false;
+                document.getElementById("next").disabled = false;
+                waiting = false;
+                break;
+            case "waiting":
+                document.getElementById("status").innerHTML = "&nbsp;";
+                document.body.style.backgroundColor = "black";
+                document.getElementById("retry").disabled = true;
+                document.getElementById("next").disabled = false;
+                break;
+            case "error":
+                document.getElementById("status").innerHTML = "&nbsp;";
+                document.body.style.backgroundColor = "black";
+                document.getElementById("retry").disabled = true;
+                document.getElementById("next").disabled = true;
+                break;
+        }
+    }
+
+    function verify(result) {
+        switch (kind) {
+            case "ocll":
+                var pat;
+                switch (Ui.settings.method) {
+                    case "cfop":
+                        pat = "U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
+                        break;
+                    case "roux":
+                        pat = "U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B..."; // M-slice free
+                        break;
+                    default: throw "Unknown method: " + Ui.settings.method;
+                }
+                return Cube.matchPattern(pat, result);
+            case "pcll":
+                var pat;
+                switch (Ui.settings.method) {
+                    case "cfop":
+                        pat = "U.U...U.UL.LLLLLLLF.FFFFFFFR.RRRRRRRDDDDDDDDDBBBBBB..."; // whole first two layers
+                        break;
+                    case "roux":
+                        pat = "U.U...U.U..LLLLLLLF.FF.FF.FR.RRRRRRRD.DD.DD.DB.BB.B...";
+                        break;
+                    default: throw "Unknown method: " + Ui.settings.method;
+                }
+                if (Cube.matchPattern(pat, result)) return true;
+                if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
+                if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
+                return false;
+        }
+    }
+
     function twist(t) {
         function check() {
             var rotations = ["", "x", "x y", "x y'", "x y2", "x z", "x z'", "x z2", "x'", "x' y", "x' y'", "x' z", "x' z'", "x2", "x2 y", "x2 y'", "x2 z", "x2 z'", "y", "y'", "y2", "z", "z'", "z2"];
@@ -18,10 +82,7 @@ var Ui = (function () {
                 // apply rotation, alg, inverse rotation
                 var result = Cube.alg(rot, Cube.alg(alg, Cube.alg(rot, instance)), true);
                 if (verify(result)) {
-                    document.getElementById("status").innerText = "Well done!";
-                    document.body.style.backgroundColor = "green";
-                    document.getElementById("retry").disabled = true;
-                    window.setTimeout(next, 3000);
+                    setStatus("correct");
                     return true;
                 }
             }
@@ -35,8 +96,7 @@ var Ui = (function () {
             progress += "&bull; ";
         }
         document.getElementById("status").innerHTML = progress;
-        document.body.style.backgroundColor = "#333";
-        document.getElementById("retry").disabled = false;
+        setStatus("progress");
         check();
     }
 
@@ -77,16 +137,16 @@ var Ui = (function () {
     var instance = Cube.solved;
     var alg = "";
     var solution = "";
-    var verify;
+    var kind;
 
     function next() {
         function randomElement(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
-        function challenge(alg, expected) {
-            verify = expected;
+        function challenge(cas) {
+            kind = cas.kind;
             var auf = settings.auf ? randomElement(["", "U ", "U' ", "U2 "]) : "";
-            solution = auf + alg;
+            solution = auf + cas.alg;
             instance = Cube.solved;
             // up color
             var rot = [];
@@ -97,41 +157,59 @@ var Ui = (function () {
             if (settings.green) rot.push("z'");
             if (settings.blue) rot.push("z");
             instance = Cube.random(rot, 1, instance);
-            if (settings.method == "roux") {
-                var upColor = Cube.faceColor("U", Cube.faces(instance));
-                // scramble M-slice with U-layer
-                instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                var numColors = (settings.yellow ? 1 : 0) + (settings.white ? 1 : 0) + (settings.red ? 1 : 0) + (settings.orange ? 1 : 0) + (settings.green ? 1 : 0) + (settings.blue ? 1 : 0);
-                if (numColors > 1) {
-                    // adjust M-slite so center top indicates color (too confusing otherwise!)
-                    while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
-                        instance = Cube.alg("M", instance);
+            switch (settings.method) {
+                case "cfop": break; // nothing extra
+                case "roux":
+                    var upColor = Cube.faceColor("U", Cube.faces(instance));
+                    // scramble M-slice with U-layer
+                    instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
+                    var numColors = (settings.yellow ? 1 : 0) + (settings.white ? 1 : 0) + (settings.red ? 1 : 0) + (settings.orange ? 1 : 0) + (settings.green ? 1 : 0) + (settings.blue ? 1 : 0);
+                    if (numColors > 1) {
+                        switch (kind) {
+                            case "ocll":
+                                // adjust M-slice so center top indicates color (too confusing otherwise!)
+                                while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
+                                    instance = Cube.alg("M", instance);
+                                }
+                                break;
+                            case "pcll": break; // nothing extra
+                            default: throw "Unknown alg kind: " + kind;
+                        }
                     }
-                }
+                    break;
+                default: throw "Unknown method: " + Ui.settings.method;
+                
             }
-            // scramble corners and edges
-            var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
-            var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
-            for (var i = 0; i < 10; i++) {
-                instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
-                instance = Cube.random([jperm_b, yperm], 1, instance);
+            switch (kind) {
+                case "ocll":
+                    // scramble corners and edges
+                    var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
+                    var yperm = "F R U' R' U' R U R' F' R U R' U' R' F R F'";
+                    for (var i = 0; i < 10; i++) {
+                        instance = Cube.random(["", "U", "U'", "U2"], 1, instance);
+                        instance = Cube.random([jperm_b, yperm], 1, instance);
+                    }
+                    break;
+                case "pcll": break; // nothing extra
+                default: throw "Unknown alg kind: " + kind;
             }
             instance = Cube.alg(solution, instance, true);
         }
         alg = "";
-        challenge(randomElement(settings.algs), verifyCornersOriented);
+        if (settings.cases.length > 0) {
+            challenge(randomElement(settings.cases));
+            setStatus("waiting");
+        } else {
+            instance = Cube.solved;
+            setStatus("error");
+        }
         update(instance);
-        document.getElementById("status").innerText = "Have fun!";
-        document.body.style.backgroundColor = "black";
-        document.getElementById("retry").disabled = true;
     }
 
     function retry() {
         alg = "";
         update(instance);
-        document.getElementById("status").innerText = "Try again";
-        document.body.style.backgroundColor = "black";
-        document.getElementById("retry").disabled = true;
+        setStatus("waiting");
     }
 
     return {

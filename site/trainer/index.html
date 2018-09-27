@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang=en>
     <head>
-        <title>Orient Corners of Last Layer (OCLL)</title>
+        <title>LL Trainer</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" href="styles.css">
         <script src="jquery.min.js"></script>
@@ -20,20 +20,12 @@
                 window.setTimeout(delay, 1);
             }
 
-            function verifyCornersOriented(result) {
-                if (Ui.settings.method == "cfop") {
-                    return Cube.matchPattern("U.U...U.U...LLLLLL...FFFFFF...RRRRRRDDDDDDDDDBBBBBB...", result); // whole first two layers
-                } else {
-                    return Cube.matchPattern("U.U...U.U...LLLLLL...F.FF.F...RRRRRRD.DD.DD.DB.BB.B...", result); // M-slice free
-                }
-            }
-
             function settingsUpdate() {
-                function addAlgIfChecked(name) {
+                function addAlgIfChecked(name, kind) {
                     var cb = document.getElementById(name);
-                    if (cb.checked) {
-                        Ui.settings.algs.push(cb.value);
-                    }
+                    if (!cb.checked) return false;
+                    Ui.settings.cases.push({ alg: cb.value, kind: kind });
+                    return true;
                 }
                 Ui.settings.method = document.getElementById("method").value;
                 Ui.settings.yellow = document.getElementById("yellow").checked;
@@ -49,19 +41,23 @@
                 }
                 document.getElementById("anyColor").checked = (Ui.settings.yellow && Ui.settings.white && Ui.settings.red && Ui.settings.orange && Ui.settings.green && Ui.settings.blue);
                 Ui.settings.auf = document.getElementById("auf").checked;
-                Ui.settings.algs = [];
-                addAlgIfChecked("s");
-                addAlgIfChecked("as");
-                addAlgIfChecked("l");
-                addAlgIfChecked("u");
-                addAlgIfChecked("t");
-                addAlgIfChecked("pi");
-                addAlgIfChecked("h");
-                if (Ui.settings.algs.length == 0) {
-                    document.getElementById("s").checked = true;
-                    addAlgIfChecked("s");
+                Ui.settings.cases = [];
+                // OCLL
+                var ocllCases = ["ocll_s", "ocll_as", "ocll_l", "ocll_u", "ocll_t", "ocll_pi", "ocll_h"];
+                var c = 0;
+                for (var i = 0; i < ocllCases.length; i++) {
+                    c += addAlgIfChecked(ocllCases[i], "ocll");
                 }
-                document.getElementById("anyCase").checked = (Ui.settings.algs.length == 7);
+                document.getElementById("anyOcllCase").checked = (c == ocllCases.length);
+                // PCLL
+                var pcllCases = ["pcll_a", "pcll_d"];
+                c = 0;
+                for (var i = 0; i < pcllCases.length; i++) {
+                    c += addAlgIfChecked(pcllCases[i], "pcll");
+                }
+                document.getElementById("anyPcllCase").checked = (c == pcllCases.length);
+                // test
+                addAlgIfChecked("test", "ocll");
                 Ui.next();
             }
 
@@ -76,25 +72,34 @@
                 settingsUpdate();
             }
 
-            function settingsAnyCaseUpdate() {
-                var any = document.getElementById("anyCase").checked;
-                document.getElementById("s").checked = true; // always
-                document.getElementById("as").checked = any;
-                document.getElementById("l").checked = any;
-                document.getElementById("u").checked = any;
-                document.getElementById("t").checked = any;
-                document.getElementById("pi").checked = any;
-                document.getElementById("h").checked = any;
+            function settingsAnyOcllCaseUpdate() {
+                var any = document.getElementById("anyOcllCase").checked;
+                document.getElementById("ocll_s").checked = any; // always
+                document.getElementById("ocll_as").checked = any;
+                document.getElementById("ocll_l").checked = any;
+                document.getElementById("ocll_u").checked = any;
+                document.getElementById("ocll_t").checked = any;
+                document.getElementById("ocll_pi").checked = any;
+                document.getElementById("ocll_h").checked = any;
+                settingsUpdate();
+            }
+
+            function settingsAnyPcllCaseUpdate() {
+                var any = document.getElementById("anyPcllCase").checked;
+                document.getElementById("pcll_a").checked = any; // always
+                document.getElementById("pcll_d").checked = any;
                 settingsUpdate();
             }
         </script>
     </head>
     <body onload="load()" style="background: black">
-        <h1>OCLL</h1>
-        <div id="status"></div>
-        <button id="giiker" onclick="Ui.giiker()">Connect</button>
-        <button id="retry" onclick="Ui.retry()" disabled="disabled">Retry</button>
-        <button onclick="Ui.next()">Next</button>
+        <h1>LL Trainer</h1>
+        <div id="status">&nbsp;foo</div>
+        <div id="controls">
+            <button id="giiker" onclick="Ui.giiker()">Connect</button>
+            <button id="retry" onclick="Ui.retry()" disabled="disabled">Retry</button>
+            <button id="next" onclick="Ui.next()">Next</button>
+        </div>
         <div id="ll"></div>
         <fieldset>
             <legend>Method</legend>
@@ -119,16 +124,27 @@
             <input id="auf" type="checkbox" value="auf" checked="checked" onchange="settingsUpdate()"><label for="auf">Random AUF</label><br />
         </fieldset>
         <fieldset>
-            <legend>Cases</legend>
-            <input id="anyCase" type="checkbox" value="anyCase" onchange="settingsAnyCaseUpdate()"><label for="anyCase">Any</label>
+            <legend>OCLL</legend>
+            <input id="anyOcllCase" type="checkbox" value="anyOcllCase" onchange="settingsAnyOcllCaseUpdate()"><label for="anyOcllCase">Any</label>
             <hr style="border-color:#222;" />
-            <input id="s" type="checkbox" value="R U R' U R U2 R'" checked="checked" onchange="settingsUpdate()"><label for="s">Sune</label><br />
-            <input id="as" type="checkbox" value="R' U' R U' R' U2 R" onchange="settingsUpdate()"><label for="as">Anti-Sune</label><br />
-            <input id="l" type="checkbox" value="R U2 R' U' R U R' U' R U R' U' R U' R'" onchange="settingsUpdate()">L case (bow tie, triple-sune)<label for="l"></label><br />
-            <input id="u" type="checkbox" value="F R U R' U' F'" onchange="settingsUpdate()"><label for="u">U case (headlights)</label><br />
-            <input id="t" type="checkbox" value="R U R' U' R' F R F'" onchange="settingsUpdate()"><label for="t">T case (blinkers, chameleon)</label><br />
-            <input id="pi" type="checkbox" value="F R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="pi">Pi case (bruno)</label><br />
-            <input id="h" type="checkbox" value="F R U R' U' R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="h">H case (double-headlights, double-sune)</label><br />
+            <input id="ocll_s" type="checkbox" value="R U R' U R U2 R'" onchange="settingsUpdate()"><label for="ocll_s">Sune</label><br />
+            <input id="ocll_as" type="checkbox" value="R' U' R U' R' U2 R" onchange="settingsUpdate()"><label for="ocll_as">Anti-Sune</label><br />
+            <input id="ocll_l" type="checkbox" value="R U2 R' U' R U R' U' R U R' U' R U' R'" onchange="settingsUpdate()">L case (bow tie, triple-sune)<label for="ocll_l"></label><br />
+            <input id="ocll_u" type="checkbox" value="F R U R' U' F'" onchange="settingsUpdate()"><label for="ocll_u">U case (headlights)</label><br />
+            <input id="ocll_t" type="checkbox" value="R U R' U' R' F R F'" onchange="settingsUpdate()"><label for="ocll_t">T case (blinkers, chameleon)</label><br />
+            <input id="ocll_pi" type="checkbox" value="F R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="ocll_pi">Pi case (bruno)</label><br />
+            <input id="ocll_h" type="checkbox" value="F R U R' U' R U R' U' R U R' U' F'" onchange="settingsUpdate()"><label for="ocll_h">H case (double-headlights, double-sune)</label><br />
+        </fieldset>
+        <fieldset>
+            <legend>PCLL</legend>
+            <input id="anyPcllCase" type="checkbox" value="anyPcllCase" onchange="settingsAnyPcllCaseUpdate()"><label for="anyPcllCase">Any</label>
+            <hr style="border-color:#222;" />
+            <input id="pcll_a" type="checkbox" value="R U R' F' R U R' U' R' F R2 U' R'" onchange="settingsUpdate()"><label for="pcll_a">Adjacent</label><br />
+            <input id="pcll_d" type="checkbox" value="F R U' R' U' R U R' F' R U R' U' R' F R F'" onchange="settingsUpdate()"><label for="pcll_d">Diagonal</label><br />
+        </fieldset>
+        <fieldset>
+            <legend>Test</legend>
+            <input id="test" type="checkbox" value="F R" onchange="settingsUpdate()"><label for="test">Test</label><br />
         </fieldset>
         <hr />
         <button onclick="Ui.twist(prompt('Twists'))">SimTwists</button>
