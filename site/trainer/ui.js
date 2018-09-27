@@ -10,27 +10,36 @@ var Ui = (function () {
         window.setTimeout(delay, 1);
     }
 
+    var timer;
+    function checkProgress() {
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(function () { if (lastStatus == "progress") setStatus("incorrect"); }, 3000);
+    }
+
+    var lastStatus = "init";
     var waiting = false;
 
     function setStatus(status) {
+        lastStatus = status;
         switch (status) {
             case "correct":
                 document.body.style.backgroundColor = "green";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
-                window.setTimeout(function () { waiting = true; }, 500);
+                window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                 break;
             case "incorrect":
                 document.body.style.backgroundColor = "darkred";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
-                window.setTimeout(function () { waiting = true; }, 500);
+                window.setTimeout(function () { if (lastStatus == "incorrect") waiting = true; }, 500);
                 break;
             case "progress":
                 document.body.style.backgroundColor = "#333";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
                 waiting = false;
+                checkProgress();
                 break;
             case "init":
                 document.getElementById("status").innerHTML = "&nbsp;";
