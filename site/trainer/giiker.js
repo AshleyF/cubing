@@ -53,7 +53,6 @@ var Giiker = (function () {
 
     function disconnected() {
         device = null;
-        this("Giiker Disconnected"); // disconnected callback
     }
 
     function connected() {
