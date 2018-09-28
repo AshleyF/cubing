@@ -88,6 +88,18 @@ var Ui = (function () {
                 if (Cube.matchPattern(pat, Cube.alg("U", result))) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U'", result))) return true;
                 if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
+                if (Ui.settings.method == "roux") {
+                    // try flipping M-slice too because some algs (with wide moves) flip this
+                    if (Cube.matchPattern(pat, Cube.alg("U M2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U' M2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U2 M2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U M", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U' M", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U2 M", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U M'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U' M'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("U2 M'", result))) return true;
+                }
                 return false;
         }
     }
@@ -112,7 +124,6 @@ var Ui = (function () {
         }
         if (t == "") return;
         alg += t + ' ';
-        var result = Cube.alg(alg, instance);
         var len = alg.split(' ').length;
         var progress = "";
         for (var i = 1; i < len; i++) {
