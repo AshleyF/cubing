@@ -116,12 +116,12 @@
     </head>
     <body onload="load()" style="background: black">
         <h1 id="status">LL Trainer v0.3</h1>
+        <div id="ll"></div>
         <div id="controls">
             <button id="giiker" onclick="Ui.giiker()">Connect</button>
             <button id="retry" onclick="Ui.retry()" disabled="disabled">Retry</button>
             <button id="next" onclick="Ui.next()">Next</button>
         </div>
-        <div id="ll"></div>
         <fieldset>
             <legend>Method</legend>
             <select id="method" onchange="settingsUpdate()">
@@ -193,8 +193,6 @@
             <input id="cmll_l_back_commutator" type="checkbox" value="R' U2 R' D' R U2 R' D R2" onchange="settingsUpdate()"><label for="cmll_l_back_commutator">L - Back Commutator</label><br />
             <p>Algs are from <a target="_blank" href="https://sites.google.com/view/kianroux/cmllAny">Kian Mansour's site</a>.</p>
         </fieldset>
-    </body>
-</html>
         <fieldset>
             <legend>OCLL</legend>
             <input id="anyOcllCase" type="checkbox" value="anyOcllCase" onchange="settingsAnyOcllCaseUpdate()"><label for="anyOcllCase">Any</label>

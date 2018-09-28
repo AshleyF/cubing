@@ -90,15 +90,15 @@ var Ui = (function () {
                 if (Cube.matchPattern(pat, Cube.alg("U2", result))) return true;
                 if (Ui.settings.method == "roux") {
                     // try flipping M-slice too because some algs (with wide moves) flip this
-                    if (Cube.matchPattern(pat, Cube.alg("U M2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U' M2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U2 M2", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U M", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U' M", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U2 M", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U M'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U' M'", result))) return true;
-                    if (Cube.matchPattern(pat, Cube.alg("U2 M'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L L R R U", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L L R R U'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L L R R U2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L' R U", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L' R U'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L' R U2", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L R' U", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L R' U'", result))) return true;
+                    if (Cube.matchPattern(pat, Cube.alg("L R' U2", result))) return true;
                 }
                 return false;
         }
