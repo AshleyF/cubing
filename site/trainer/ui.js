@@ -72,6 +72,7 @@ var Ui = (function () {
                     default: throw "Unknown method: " + Ui.settings.method;
                 }
                 return Cube.matchPattern(pat, result);
+            case "cmll":
             case "pcll":
                 var pat;
                 switch (Ui.settings.method) {
@@ -115,8 +116,7 @@ var Ui = (function () {
         var len = alg.split(' ').length;
         var progress = "";
         for (var i = 1; i < len; i++) {
-            // progress += "&bull; ";
-            progress = alg; // debugging
+            progress += "&bull; ";
         }
         document.getElementById("status").innerHTML = progress;
         setStatus("progress");
@@ -180,30 +180,19 @@ var Ui = (function () {
             if (settings.green) rot.push("z'");
             if (settings.blue) rot.push("z");
             instance = Cube.random(rot, 1, instance);
+            instance = Cube.random(["", "y", "y'", "y2"], 1, instance); // random orientation around y-axis
+            var upColor = Cube.faceColor("U", Cube.faces(instance));
             switch (settings.method) {
                 case "cfop": break; // nothing extra
                 case "roux":
-                    var upColor = Cube.faceColor("U", Cube.faces(instance));
                     // scramble M-slice with U-layer
                     instance = Cube.random(["U", "U'", "U2", "M", "M'", "M2"], 100, instance);
-                    var numColors = (settings.yellow ? 1 : 0) + (settings.white ? 1 : 0) + (settings.red ? 1 : 0) + (settings.orange ? 1 : 0) + (settings.green ? 1 : 0) + (settings.blue ? 1 : 0);
-                    if (numColors > 1) {
-                        switch (kind) {
-                            case "ocll":
-                                // adjust M-slice so center top indicates color (too confusing otherwise!)
-                                while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
-                                    instance = Cube.alg("M", instance);
-                                }
-                                break;
-                            case "pcll": break; // nothing extra
-                            default: throw "Unknown alg kind: " + kind;
-                        }
-                    }
                     break;
                 default: throw "Unknown method: " + Ui.settings.method;
                 
             }
             switch (kind) {
+                case "cmll": break; // nothing extra
                 case "ocll":
                     // scramble corners and edges
                     var jperm_b = "R U R' F' R U R' U' R' F R2 U' R' U'";
@@ -216,7 +205,28 @@ var Ui = (function () {
                 case "pcll": break; // nothing extra
                 default: throw "Unknown alg kind: " + kind;
             }
+            // apply solution
             instance = Cube.alg(solution, instance, true);
+            switch (settings.method) {
+                case "cfop": break; // nothing extra
+                case "roux":
+                    var numColors = (settings.yellow ? 1 : 0) + (settings.white ? 1 : 0) + (settings.red ? 1 : 0) + (settings.orange ? 1 : 0) + (settings.green ? 1 : 0) + (settings.blue ? 1 : 0);
+                    if (numColors > 1) {
+                        switch (kind) {
+                            case "cmll":
+                            case "ocll":
+                                // adjust M-slice so center top indicates color (too confusing otherwise!)
+                                while (Cube.faceColor("U", Cube.faces(instance)) != upColor) {
+                                    instance = Cube.alg("M", instance);
+                                }
+                                break;
+                            case "pcll": break; // nothing extra
+                            default: throw "Unknown alg kind: " + kind;
+                        }
+                    }
+                    break;
+                default: throw "Unknown method: " + Ui.settings.method;
+            }
         }
         alg = "";
         if (settings.cases.length > 0) {
