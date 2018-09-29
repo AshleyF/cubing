@@ -19,16 +19,23 @@ var Ui = (function () {
     var lastStatus = "init";
     var waiting = false;
 
+    var incorrect = new Audio("incorrect.wav");
+    incorrect.load();
+    var correct = new Audio("correct.wav");
+    correct.load();
+
     function setStatus(status) {
         lastStatus = status;
         switch (status) {
             case "correct":
+                correct.play();
                 document.body.style.backgroundColor = "green";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
                 window.setTimeout(function () { if (lastStatus == "correct") waiting = true; }, 500);
                 break;
             case "incorrect":
+                incorrect.play();
                 document.body.style.backgroundColor = "darkred";
                 document.getElementById("retry").disabled = false;
                 document.getElementById("next").disabled = false;
