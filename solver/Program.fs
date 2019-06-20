@@ -86,7 +86,12 @@ let patterns = [
     "BringDLBtoURB", "W...........................B.....G.OB..B.....O.W..B..", ["B' U"]
     "BringDLBtoURB", "..O.........................B.....G..B..B...W.O.W....B", ["R'"]
     "BringDLBtoURB", "......O..B........W.........B.....G..B..B.....O.W.....", ["U2 R"; "B2 R'"]
+    // Insert LB pair
+    // "InsertLBPair", "O..O.......................BB.....G.BB..........W..W..", [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoURB)
+    "InsertLBPair", "........B..O..............W.B.....G..B..B.....O.W.....", ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]
     ]
+
+
 
 let genRoux () =
     printfn "Scrambling %i cubes" numCubes
@@ -114,6 +119,12 @@ let genRoux () =
     printfn "Bring DLB corner to URB"
     let caseDLBtoURB c = caseLBtoFD c && look Face.U Sticker.UR c = Color.O && look Face.R Sticker.UR c = Color.W && look Face.B Sticker.DR c = Color.B
     let solutions = genCasesAndSolutions patterns false true true solvedLBtoFD caseDLBtoURB "BringDLBtoURB"
+    let solvedDLBtoURB = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Pair and insert LB pair"
+    let caseInsertLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
+    let solutions = genCasesAndSolutions patterns false true true solvedDLBtoURB caseInsertLBPair "InsertLBPair"
     distinctCases solutions
 
     // THIS TAKES TOO LONG!

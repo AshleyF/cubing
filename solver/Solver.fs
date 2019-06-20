@@ -107,9 +107,8 @@ let solve includeRotations includeMoves includeSliceMoves check cube =
                     yield! recurse (Move Move.E2) }
     let rec iterativeDeepening depth = seq { // TODO: something more efficient (breadth-first)
         let solutions = solve' depth 0 [] cube |> List.ofSeq
-        if Seq.length solutions = 0
-        then yield! iterativeDeepening (depth + 1)
-        else yield! solutions }
+        yield! solutions
+        if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
     iterativeDeepening 0 |> List.ofSeq
 
 let hybridSolve (hints: ((Step list) list) list) (patterns : (string * string * string list) seq) includeRotations includeMoves includeSliceMoves goal stage cube =
