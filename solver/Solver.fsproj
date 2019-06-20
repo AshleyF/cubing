@@ -14,10 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="readme.md" />
     <Compile Include="Cube.fs" />
-    <Compile Include="Solver.fs" />
     <Compile Include="Render.fs" />
+    <Compile Include="Solver.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
 </Project>

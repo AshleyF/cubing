@@ -214,7 +214,7 @@ let moveToString = function
     | B2  -> "B2"
     | BW  -> "b"
     | BW' -> "b'"
-    | BW2 -> "bw"
+    | BW2 -> "b2"
     | M   -> "M"
     | M'  -> "M'"
     | M2  -> "M2"
@@ -271,7 +271,7 @@ let stringToStep = function
     | "B2" -> Move B2
     | "b"  -> Move BW
     | "b'" -> Move BW'
-    | "bw" -> Move BW2
+    | "b2" -> Move BW2
     | "M"  -> Move M
     | "M'" -> Move M'
     | "M2" -> Move M2
