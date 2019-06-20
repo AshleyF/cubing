@@ -47,3 +47,8 @@ We've started with Roux. The following stages are used:
 - EO - Edge orientation (orient 6 remaining edges)
 - LR - Left/Right upper edges
 - L4E - Last four edges
+
+# TODO
+
+- Define goals in pattern language rather than `look Face.FOO Sticker.BAR cube` expressions
+- Discover FB/SB cases by *deconstruction* from solved state

@@ -112,43 +112,35 @@ let solve includeRotations includeMoves includeSliceMoves check cube =
     iterativeDeepening 0 |> List.ofSeq
 
 let hybridSolve (hints: ((Step list) list) list) (patterns : (string * string * string list) seq) includeRotations includeMoves includeSliceMoves goal stage cube =
-    printf "?"
     let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c) p c
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
-        printf "P"
         match algs with
         | a :: _ -> [a.Split(' ') |> Seq.map stringToStep |> List.ofSeq]
         | [] -> [] // skip
     | None ->
-        printf "S"
         let tryHint h = 
             match Seq.tryHead h with
             | Some h' -> cube |> executeSteps h' |> goal
             | None -> false
         match hints |> Seq.filter tryHint |> Seq.tryHead with
-        | Some solution ->
-            printf "H"
-            solution
-        | None ->
-            printf "!"
-            solve includeRotations includeMoves includeSliceMoves goal cube
+        | Some solution -> solution
+        | None -> solve includeRotations includeMoves includeSliceMoves goal cube
 
 let genCasesAndSolutions patterns includeRotations includeMoves includeSliceMoves cubes goal stage =
-    printf "G"
     let rec gen cases (hints : ((Step list) list) list) = function
         | cube :: remaining ->
             let solutions = hybridSolve hints patterns includeRotations includeMoves includeSliceMoves goal stage cube
-            let algs = String.Join(" | ", Seq.map stepsToString solutions)
+            let algs = Seq.map stepsToString solutions
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
-            let key = if skip then "skip" else solutions |> Seq.map stepsToString |> Seq.sort |> Seq.head
+            let key = if skip then "" else algs |> Seq.sort |> Seq.head
             // printfn "Key: %s" key
             match Map.tryFind key cases with
             | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) hints remaining
             | None ->
                 printfn ""
-                printfn "New case: %s (%s)" algs (cubeToString cube)
+                printfn "New case: %i [\"%s\"] (%s)" (key.GetHashCode()) (String.Join("\"; \"", algs)) (cubeToString cube)
                 let cube' = if skip then cube else executeSteps (Seq.head solutions) cube
                 let hints' = if skip then hints else solutions :: hints
                 gen (Map.add key [cube, solutions, cube'] cases) hints' remaining
@@ -163,5 +155,5 @@ let distinctCases solutions =
         String.Concat(Seq.init (9 * 6) commonNth)
     let cases = solutions |> Map.toList |> List.map snd |> List.map (List.map (fun (c, _, _) -> cubeToString c)) |> List.map common
     let algs = solutions |> Map.toList |> List.map fst
-    List.zip cases algs |> Seq.iter (fun (c, a) -> c |> stringToCube |> render; printfn "Algs: %s" a; printfn "Cube: %s" c)
+    List.zip cases algs |> Seq.iter (fun (c, a) -> c |> stringToCube |> render; printfn "Algs: %s (%i)" a (a.GetHashCode()); printfn "Cube: \"%s\"" c)
 

@@ -89,14 +89,42 @@ let patterns = [
     // Insert LB pair
     // "InsertLBPair", "O..O.......................BB.....G.BB..........W..W..", [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoURB)
     "InsertLBPair", "........B..O..............W.B.....G..B..B.....O.W.....", ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]
+    // Tuck LF to BD
+    "TuckLFtoBD", "OB.O.......................BB.....G.BB..........W..WR.", [] // skip
+    "TuckLFtoBD", "O..O............R.....B....BB.....G.BB..........W..W..", ["r2"; "M2"]
+    "TuckLFtoBD", "O..O.......................BB...RBG.BB..........W..W..", ["F r'"; "F M"]
+    "TuckLFtoBD", "O..O.......................BBBR...G.BB..........W..W..", ["F' r'"; "F' M"]
+    "TuckLFtoBD", "O..O........R......B.......BB.....G.BB..........W..W..", ["U' r2"; "U' M2"]
+    "TuckLFtoBD", "O..O...R..B................BB.....G.BB..........W..W..", ["r"; "M'"]
+    "TuckLFtoBD", "O..O.......................BB.....G.BB.....B....W.RW..", ["L D L'"; "L2 D L2"; "l D L'"; "l2 D L2"; "R F r'"; "R F M"; "R2 U r2"; "R2 U M2"; "r F r'"; "r F M"; "r2 U r2"; "r2 U M2"]
+    "TuckLFtoBD", "OR.O.......................BB.....G.BB..........W..WB.", ["r F2 r2"; "r F2 M2"; "r' U2 r2"; "r' U2 M2"; "r2 U2 r"; "r2 U2 M'"; "r2 F2 r'"; "r2 F2 M"; "M U2 r2"; "M U2 M2"; "M' F2 r2"; "M' F2 M2"; "M2 U2 r"; "M2 U2 M'"; "M2 F2 r'"; "M2 F2 M"]
+    "TuckLFtoBD", "O..O.......................BB...BRG.BB..........W..W..", ["F' r2"; "F' M2"]
+    "TuckLFtoBD", "O..O.......................BB.....G.BB.....R....W.BW..", ["R F' r2"; "R F' M2"; "R2 U' r"; "R2 U' M'"; "r F' r2"; "r F' M2"; "r2 U' r"; "r2 U' M'"]
+    "TuckLFtoBD", "O..O............B.....R....BB.....G.BB..........W..W..", ["U2 r"; "U2 M'"; "F2 r'"; "F2 M"]
+    "TuckLFtoBD", "O..O.......................BB.....G.BB..B.....R.W..W..", ["F2 r2"; "F2 M2"]
+    "TuckLFtoBD", "O..O..........B..........R.BB.....G.BB..........W..W..", ["U' r"; "U' M'"]
+    "TuckLFtoBD", "O..O.......................BBRB...G.BB..........W..W..", ["F r2"; "F M2"]
+    "TuckLFtoBD", "O..O.B.....................BB.....GRBB..........W..W..", ["L' B' L"; "L2 B' L2"; "l' B' L"; "l2 B' L2"; "R' U' r"; "R' U' M'"; "R2 F' r2"; "R2 F' M2"; "r' U' r"; "r' U' M'"; "r2 F' r2"; "r2 F' M2"]
+    "TuckLFtoBD", "O..O........B......R.......BB.....G.BB..........W..W..", ["U r"; "U M'"]
+    "TuckLFtoBD", "O..O..........R..........B.BB.....G.BB..........W..W..", ["U r2"; "U M2"]
+    "TuckLFtoBD", "O..O.......................BB.....G.BB..R.....B.W..W..", ["r'"; "M"]
+    "TuckLFtoBD", "O..O.R.....................BB.....GBBB..........W..W..", ["R' U r2"; "R' U M2"; "R2 F r'"; "R2 F M"; "r' U r2"; "r' U M2"; "r2 F r'"; "r2 F M"]
+    "TuckLFtoBD", "O..O...B..R................BB.....G.BB..........W..W..", ["U2 r2"; "U2 M2"]
     ]
 
-
+let solveCase name id case includeRotations scrambled =
+    printfn "Case: %s" name
+    let includeMoves = not includeRotations
+    let includeSlice = not includeRotations
+    let solutions = genCasesAndSolutions patterns includeRotations includeMoves includeSlice scrambled case id
+    let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    solved, distinctCases solutions
 
 let genRoux () =
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
+
 
     printfn "Solve DL edge (during inspection)"
     let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
@@ -125,6 +153,13 @@ let genRoux () =
     printfn "Pair and insert LB pair"
     let caseInsertLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
     let solutions = genCasesAndSolutions patterns false true true solvedDLBtoURB caseInsertLBPair "InsertLBPair"
+    let solvedInsertLBPair = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    distinctCases solutions
+
+    printfn "Tuck LF to BD"
+    let caseLFtoBD c = caseInsertLBPair c && look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R
+    let solutions = genCasesAndSolutions patterns false true true solvedInsertLBPair caseLFtoBD "TuckLFtoBD"
+    let solvedLFtoBD = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     distinctCases solutions
 
     // THIS TAKES TOO LONG!
