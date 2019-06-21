@@ -40,78 +40,23 @@ let scramble =
     let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
     scrambleWithMoves moves
 
-let solve includeRotations includeMoves includeSliceMoves check cube =
+let solveWithSteps includedSteps check cube =
     let mutable count = 0
     let rec solve' max depth steps cube = seq {
         count <- count + 1
-        if count % 100 = 0 then printf "."
-        let recurse s = seq { yield! solve'  max (depth + 1) (s :: steps) (step s cube) }
+        if count % 1000 = 0 then printf "."
+        let recurse s = seq { yield! solve' max (depth + 1) (s :: steps) (step s cube) }
         if check cube then yield Seq.rev steps |> Seq.toList
         elif depth < max then
-            if includeRotations then
-                yield! recurse (Rotate X)
-                yield! recurse (Rotate X')
-                yield! recurse (Rotate X2)
-                yield! recurse (Rotate Y)
-                yield! recurse (Rotate Y')
-                yield! recurse (Rotate Y2)
-                yield! recurse (Rotate Z)
-                yield! recurse (Rotate Z')
-                yield! recurse (Rotate Z2)
-            if includeMoves then
-                yield! recurse (Move Move.U)
-                yield! recurse (Move Move.U')
-                yield! recurse (Move Move.U2)
-                yield! recurse (Move Move.UW)
-                yield! recurse (Move Move.UW')
-                yield! recurse (Move Move.UW2)
-                yield! recurse (Move Move.D)
-                yield! recurse (Move Move.D')
-                yield! recurse (Move Move.D2)
-                yield! recurse (Move Move.DW)
-                yield! recurse (Move Move.DW')
-                yield! recurse (Move Move.DW2)
-                yield! recurse (Move Move.L)
-                yield! recurse (Move Move.L')
-                yield! recurse (Move Move.L2)
-                yield! recurse (Move Move.LW)
-                yield! recurse (Move Move.LW')
-                yield! recurse (Move Move.LW2)
-                yield! recurse (Move Move.R)
-                yield! recurse (Move Move.R')
-                yield! recurse (Move Move.R2)
-                yield! recurse (Move Move.RW)
-                yield! recurse (Move Move.RW')
-                yield! recurse (Move Move.RW2)
-                yield! recurse (Move Move.F)
-                yield! recurse (Move Move.F')
-                yield! recurse (Move Move.F2)
-                yield! recurse (Move Move.FW)
-                yield! recurse (Move Move.FW')
-                yield! recurse (Move Move.FW2)
-                yield! recurse (Move Move.B)
-                yield! recurse (Move Move.B')
-                yield! recurse (Move Move.B2)
-                yield! recurse (Move Move.BW)
-                yield! recurse (Move Move.BW')
-                yield! recurse (Move Move.BW2)
-                if includeSliceMoves then
-                    yield! recurse (Move Move.M)
-                    yield! recurse (Move Move.M')
-                    yield! recurse (Move Move.M2)
-                    yield! recurse (Move Move.S)
-                    yield! recurse (Move Move.S')
-                    yield! recurse (Move Move.S2)
-                    yield! recurse (Move Move.E)
-                    yield! recurse (Move Move.E')
-                    yield! recurse (Move Move.E2) }
+            for s in includedSteps do
+                yield! recurse s }
     let rec iterativeDeepening depth = seq { // TODO: something more efficient (breadth-first)
         let solutions = solve' depth 0 [] cube |> List.ofSeq
         yield! solutions
         if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
     iterativeDeepening 0 |> List.ofSeq
 
-let hybridSolve (hints: ((Step list) list) list) (patterns : (string * string * string list) seq) includeRotations includeMoves includeSliceMoves goal stage cube =
+let hybridSolve steps (hints: ((Step list) list) list) (patterns : (string * string * string list) seq) goal stage cube =
     let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c) p c
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
@@ -125,12 +70,12 @@ let hybridSolve (hints: ((Step list) list) list) (patterns : (string * string * 
             | None -> false
         match hints |> Seq.filter tryHint |> Seq.tryHead with
         | Some solution -> solution
-        | None -> solve includeRotations includeMoves includeSliceMoves goal cube
+        | None -> solveWithSteps steps goal cube
 
-let genCasesAndSolutions patterns includeRotations includeMoves includeSliceMoves cubes goal stage =
+let genCasesAndSolutions patterns steps cubes goal stage =
     let rec gen cases (hints : ((Step list) list) list) = function
         | cube :: remaining ->
-            let solutions = hybridSolve hints patterns includeRotations includeMoves includeSliceMoves goal stage cube
+            let solutions = hybridSolve steps hints patterns goal stage cube
             let algs = Seq.map stepsToString solutions
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
@@ -139,7 +84,6 @@ let genCasesAndSolutions patterns includeRotations includeMoves includeSliceMove
             match Map.tryFind key cases with
             | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) hints remaining
             | None ->
-                printfn ""
                 printfn "New case: %i [\"%s\"] (%s)" (key.GetHashCode()) (String.Join("\"; \"", algs)) (cubeToString cube)
                 let cube' = if skip then cube else executeSteps (Seq.head solutions) cube
                 let hints' = if skip then hints else solutions :: hints
@@ -155,5 +99,10 @@ let distinctCases solutions =
         String.Concat(Seq.init (9 * 6) commonNth)
     let cases = solutions |> Map.toList |> List.map snd |> List.map (List.map (fun (c, _, _) -> cubeToString c)) |> List.map common
     let algs = solutions |> Map.toList |> List.map fst
-    List.zip cases algs |> Seq.iter (fun (c, a) -> c |> stringToCube |> render; printfn "Algs: %s (%i)" a (a.GetHashCode()); printfn "Cube: \"%s\"" c)
+    List.zip cases algs |> Seq.iter (fun (c, a) -> (* c |> stringToCube |> render; *) printfn "Algs: %s (%i) \"%s\"" a (a.GetHashCode()) c)
 
+let solveCase patterns steps name id case scrambled =
+    printfn "\nCase: %s" name
+    let solutions = genCasesAndSolutions patterns steps scrambled case id
+    distinctCases solutions
+    solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)

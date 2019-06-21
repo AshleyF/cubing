@@ -3,8 +3,6 @@ open Cube
 open Solver
 open Render
 
-let numCubes = 1000
-
 let patterns = [
     // Solving DL edge (during inspection) [24 cases]
     "DLEdge",  ".....................................B..........W.....", [] // skip
@@ -39,6 +37,7 @@ let patterns = [
     "LCenter", ".............G.......................B..........WB....", ["r u"; "r E'"; "r' u'"; "r' E"; "M u'"; "M E"; "M' u"; "M' E'"]
     "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"];
     // Tuck LB edge to FD [22 cases]
+    (*
     "TuckLBtoFD", "............................B.....G..B..B.....O.W.....", [] // skip
     "TuckLBtoFD", "...O.......................BB.....G..B..........W.....", ["B r"; "B M'"]
     "TuckLBtoFD", ".....B......................B.....GO.B..........W.....", ["R2 F"; "r2 F"; "B r2"; "B M2"]
@@ -61,7 +60,7 @@ let patterns = [
     "TuckLBtoFD", "..............O..........B..B.....G..B..........W.....", ["U F2"; "U' r2"; "U' M2"]
     "TuckLBtoFD", "............O......B........B.....G..B..........W.....", ["U r2"; "U M2"; "U' F2"]
     "TuckLBtoFD", "............B......O........B.....G..B..........W.....", ["U' r'"; "U' M"]
-    // Bring DLB corner to URB
+    // Bring DLB corner to URB [24 cases]
     "BringDLBtoURB", "........B..O..............W.B.....G..B..B.....O.W.....", [] // skip
     "BringDLBtoURB", "..B.........................B.....G..B..B...O.O.W....W", ["B"]
     "BringDLBtoURB", "...............W....BO......B.....G..B..B.....O.W.....", ["U B'"]
@@ -86,10 +85,10 @@ let patterns = [
     "BringDLBtoURB", "W...........................B.....G.OB..B.....O.W..B..", ["B' U"]
     "BringDLBtoURB", "..O.........................B.....G..B..B...W.O.W....B", ["R'"]
     "BringDLBtoURB", "......O..B........W.........B.....G..B..B.....O.W.....", ["U2 R"; "B2 R'"]
-    // Insert LB pair
+    // Insert LB pair [1 case]
     // "InsertLBPair", "O..O.......................BB.....G.BB..........W..W..", [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoURB)
     "InsertLBPair", "........B..O..............W.B.....G..B..B.....O.W.....", ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]
-    // Tuck LF to BD
+    // Tuck LF to BD [20 cases]
     "TuckLFtoBD", "OB.O.......................BB.....G.BB..........W..WR.", [] // skip
     "TuckLFtoBD", "O..O............R.....B....BB.....G.BB..........W..W..", ["r2"; "M2"]
     "TuckLFtoBD", "O..O.......................BB...RBG.BB..........W..W..", ["F r'"; "F M"]
@@ -110,232 +109,183 @@ let patterns = [
     "TuckLFtoBD", "O..O.......................BB.....G.BB..R.....B.W..W..", ["r'"; "M"]
     "TuckLFtoBD", "O..O.R.....................BB.....GBBB..........W..W..", ["R' U r2"; "R' U M2"; "R2 F r'"; "R2 F M"; "r' U r2"; "r' U M2"; "r2 F r'"; "r2 F M"]
     "TuckLFtoBD", "O..O...B..R................BB.....G.BB..........W..W..", ["U2 r2"; "U2 M2"]
-    ]
+    // Bring DLF corner to URF [21 cases]
+    "BringDLFtoURF", "OB.O.............R.....BW..BB.....G.BB..........W..WR.", [] // skip
+    "BringDLFtoURF", "OBRO.......................BB.....G.BB......B...W..WRW", ["R' U"]
+    "BringDLFtoURF", "OB.O..R..W........B........BB.....G.BB..........W..WR.", ["U' F"]
+    "BringDLFtoURF", "OB.O...........W....RB.....BB.....G.BB..........W..WR.", ["F"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BBBR.....W..W..WR.", ["F' R"]
+    "BringDLFtoURF", "OB.O.............B.....WR..BB.....G.BB..........W..WR.", ["U' R'"; "R' F'"; "F' U'"]
+    "BringDLFtoURF", "OBBO.......................BB.....G.BB......W...W..WRR", ["R2"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BB...WB....RW..WR.", ["R2 U"; "F2 U'"]
+    "BringDLFtoURF", "OB.O.............W.....RB..BB.....G.BB..........W..WR.", ["U F"; "R U"; "F R"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BB...BR....WW..WR.", ["F'"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BBRW.....B..W..WR.", ["F U'"]
+    "BringDLFtoURF", "OB.O..B..R........W........BB.....G.BB..........W..WR.", ["U2"]
+    "BringDLFtoURF", "OB.O...........R....BW.....BB.....G.BB..........W..WR.", ["U'"]
+    "BringDLFtoURF", "OBWO.......................BB.....G.BB......R...W..WRB", ["R F'"]
+    "BringDLFtoURF", "OB.O...........B....WR.....BB.....G.BB..........W..WR.", ["U2 R'"; "F2 R"]
+    "BringDLFtoURF", "OB.O..W..B........R........BB.....G.BB..........W..WR.", ["U R'"]
+    "BringDLFtoURF", "OB.O....R..B..............WBB.....G.BB..........W..WR.", ["R'"]
+    "BringDLFtoURF", "OB.O....W..R..............BBB.....G.BB..........W..WR.", ["U"]
+    "BringDLFtoURF", "OB.O....B..W..............RBB.....G.BB..........W..WR.", ["U2 F"; "R2 F'"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BB...RW....BW..WR.", ["R"]
+    "BringDLFtoURF", "OB.O.......................BB.....G.BBWB.....R..W..WR.", ["F2"]
+    // Pair and insert LF pair (complete FB) [1 case]
+    "InsertLFPair", "OB.O.............R.....BW..BB.....G.BB..........W..WR.", ["R' M' F"; "R2 r F"; "r R2 F"; "r' M2 F"; "M' R' F"; "M2 r' F"]
+    // Solve DR edge [18 cases] (restricted to U, R/r, F, B, M)
+    "DREdge", "O..O.......................BBBR...G.BBBR...G.W..W.WW..", [] // skip
+    "DREdge", "O..O...W..G................BBBR...G.BBBR.....W..W..W..", ["r' U' R2"; "r' U' r2"; "B' R B"; "M U' R2"; "M U' r2"]
+    "DREdge", "O..O..........W..........G.BBBR...G.BBBR.....W..W..W..", ["R2"; "r2"]
+    "DREdge", "O..O............W.....G....BBBR...G.BBBR.....W..W..W..", ["U' R2"; "U' r2"]
+    "DREdge", "O..O........G......W.......BBBR...G.BBBR.....W..W..W..", ["U r' U' R2"; "U r' U' r2"; "U B' R B"; "U M U' R2"; "U M U' r2"; "U' r U R2"; "U' r U r2"; "U' F R' F'"; "U' M' U R2"; "U' M' U r2"; "F' U' F R'"; "F' U' F r'"; "B U B' R"; "B U B' r"]
+    "DREdge", "O..O.......................BBBR...G.BBBRW....WG.W..W..", ["r U' R2"; "r U' r2"; "M' U' R2"; "M' U' r2"]
+    "DREdge", "O..O.W.....................BBBR...GGBBBR.....W..W..W..", ["R"; "r"]
+    "DREdge", "O..O.......................BBBR...G.BBBRG....WW.W..W..", ["r2 U R2"; "r2 U r2"; "M2 U R2"; "M2 U r2"]
+    "DREdge", "O..O.G.....................BBBR...GWBBBR.....W..W..W..", ["B U B' R2"; "B U B' r2"]
+    "DREdge", "OG.O.......................BBBR...G.BBBR.....W..W..WW.", ["r2 U' R2"; "r2 U' r2"; "M2 U' R2"; "M2 U' r2"]
+    "DREdge", "O..O............G.....W....BBBR...G.BBBR.....W..W..W..", ["r U R2"; "r U r2"; "F R' F'"; "M' U R2"; "M' U r2"]
+    "DREdge", "O..O.......................BBBR.GWG.BBBR.....W..W..W..", ["F' U' F R2"; "F' U' F r2"]
+    "DREdge", "O..O..........G..........W.BBBR...G.BBBR.....W..W..W..", ["U r U R2"; "U r U r2"; "U F R' F'"; "U M' U R2"; "U M' U r2"; "U' r' U' R2"; "U' r' U' r2"; "U' B' R B"; "U' M U' R2"; "U' M U' r2"; "F' U F R'"; "F' U F r'"; "B U' B' R"; "B U' B' r"]
+    "DREdge", "O..O........W......G.......BBBR...G.BBBR.....W..W..W..", ["U2 R2"; "U2 r2"]
+    "DREdge", "O..O.......................BBBR...G.BBBR...W.W..W.GW..", ["R F' U' F R2"; "R F' U' F r2"; "R' B U B' R2"; "R' B U B' r2"; "R2 U r U R2"; "R2 U r U r2"; "R2 U F R' F'"; "R2 U M' U R2"; "R2 U M' U r2"; "R2 U' r' U' R2"; "R2 U' r' U' r2"; "R2 U' B' R B"; "R2 U' M U' R2"; "R2 U' M U' r2"; "R2 F' U F R'"; "R2 F' U F r'"; "R2 B U' B' R"; "R2 B U' B' r"; "r F' U' F R2"; "r F' U' F r2"; "r' B U B' R2"; "r' B U B' r2"; "r2 U r U R2"; "r2 U r U r2"; "r2 U F R' F'"; "r2 U M' U R2"; "r2 U M' U r2"; "r2 U' r' U' R2"; "r2 U' r' U' r2"; "r2 U' B' R B"; "r2 U' M U' R2"; "r2 U' M U' r2"; "r2 F' U F R'"; "r2 F' U F r'"; "r2 B U' B' R"; "r2 B U' B' r"; "F R F' U' R2"; "F R F' U' r2"; "B' R' B U R2"; "B' R' B U r2"]
+    "DREdge", "OW.O.......................BBBR...G.BBBR.....W..W..WG.", ["r' U R2"; "r' U r2"; "M U R2"; "M U r2"]
+    "DREdge", "O..O.......................BBBR.WGG.BBBR.....W..W..W..", ["R'"; "r'"]
+    "DREdge", "O..O...G..W................BBBR...G.BBBR.....W..W..W..", ["U R2"; "U r2"]
+    // Tuck RB to FD [16 cases] (restricted to U, R/r, F, B, M)
+    "TuckRBtoFD", "O..O.......................BBBR...G.BBBRG..G.WO.W.WW..", [] // skip
+    "TuckRBtoFD", "O..O.......................BBBR...G.BBBRO..G.WG.W.WW..", ["M' U2 M2"; "M2 U2 M"]
+    "TuckRBtoFD", "O..O...O..G................BBBR...G.BBBR...G.W..W.WW..", ["U2 M"]
+    "TuckRBtoFD", "O..O.G.....................BBBR...GOBBBR...G.W..W.WW..", ["R' U R M"; "R' U R2 r'"; "R' U r M2"; "R' U r' R2"; "R' U M R"; "R' U M2 r"; "r' U R M"; "r' U R2 r'"; "r' U r M2"; "r' U r' R2"; "r' U M R"; "r' U M2 r"]
+    "TuckRBtoFD", "OO.O.......................BBBR...G.BBBR...G.W..W.WWG.", ["M'"]
+    "TuckRBtoFD", "O..O...G..O................BBBR...G.BBBR...G.W..W.WW..", ["M2"]
+    "TuckRBtoFD", "O..O............G.....O....BBBR...G.BBBR...G.W..W.WW..", ["M"]
+    "TuckRBtoFD", "O..O.......................BBBR.OGG.BBBR...G.W..W.WW..", ["R U' R r2"; "R U' R' M2"look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R; "R U' r' M"; "R U' r2 R"; "R U' M r'"; "R U' M2 R'"; "r U' R r2"; "r U' R' M2"; "r U' r' M"; "r U' r2 R"; "r U' M r'"; "r U' M2 R'"]
+    "TuckRBtoFD", "O..O........O......G.......BBBR...G.BBBR...G.W..W.WW..", ["U M2"]
+    "TuckRBtoFD", "O..O........G......O.......BBBR...G.BBBR...G.W..W.WW..", ["U' M"]
+    "TuckRBtoFD", "O..O.O.....................BBBR...GGBBBR...G.W..W.WW..", ["R' U' R M2"; "R' U' R' r2"; "R' U' r M'"; "R' U' r2 R'"; "R' U' M' r"; "R' U' M2 R"; "r' U' R M2"; "r' U' R' r2"; "r' U' r M'"; "r' U' r2 R'"; "r' U' M' r"; "r' U' M2 R"; "B U2 B' M"]
+    "TuckRBtoFD", "O..O.......................BBBR.GOG.BBBR...G.W..W.WW..", ["R U r'"; "r U r'"]
+    "TuckRBtoFD", "O..O..........O..........G.BBBR...G.BBBR...G.W..W.WW..", ["U' M2"]
+    "TuckRBtoFD", "OG.O.......................BBBR...G.BBBR...G.W..W.WWO.", ["M U2 M"; "M2 U2 M2"]
+    "TuckRBtoFD", "O..O..........G..........O.BBBR...G.BBBR...G.W..W.WW..", ["U M"]
+    "TuckRBtoFD", "O..O............O.....G....BBBR...G.BBBR...G.W..W.WW..", ["U2 M2"]
+    // Bring DRB to ULB [18 cases] (restricted to U, R/r, F, B, M)
+    "BringDRBtoULB", "O..O..G..O........W........BBBR...G.BBBRG..G.WO.W.WW..", [] // skip
+    "BringDRBtoULB", "O..O.......................BBBR...G.BBBRGWGG.WOOW.WW..", ["R2 B' R' B R'"; "F R2 F' R2 U'"]
+    "BringDRBtoULB", "O.WO.......................BBBR...G.BBBRG..GOWO.W.WW.G", ["R' U R U'"; "r' U r U'"; "B U B' U2"; "B U2 B' U"]
+    "BringDRBtoULB", "O..O.............G.....WO..BBBR...G.BBBRG..G.WO.W.WW..", ["F' U F"]
+    "BringDRBtoULB", "O..O.......................BBBR...G.BBBRGOWG.WOGW.WW..", ["R U2 R'"]
+    "BringDRBtoULB", "O..O....O..G..............WBBBR...G.BBBRG..G.WO.W.WW..", ["R' U2 R"; "r' U2 r"]
+    "BringDRBtoULB", "O..O...........O....GW.....BBBR...G.BBBRG..G.WO.W.WW..", ["U"]
+    "BringDRBtoULB", "O..O...........G....WO.....BBBR...G.BBBRG..G.WO.W.WW..", ["U' F' U F"; "U2 R' U2 R"; "U2 r' U2 r"; "R U2 R' U2"; "B U B' U'"]
+    "BringDRBtoULB", "O..O....G..W..............OBBBR...G.BBBRG..G.WO.W.WW..", ["U R U' R'"; "R2 B' R2 B"; "F' U2 F U2"; "B U' B' U"; "B U2 B' U2"]
+    "BringDRBtoULB", "O.OO.......................BBBR...G.BBBRG..GGWO.W.WW.W", ["R' U' R"; "r' U' r"]
+    "BringDRBtoULB", "O..O..W..G........O........BBBR...G.BBBRG..G.WO.W.WW..", ["U R' U2 R"; "U r' U2 r"; "U2 F' U F"; "R U R' U2"]
+    "BringDRBtoULB", "O..O...........W....OG.....BBBR...G.BBBRG..G.WO.W.WW..", ["U' R U' R'"; "R' U' R U'"; "r' U' r U'"]
+    "BringDRBtoULB", "O..O..O..W........G........BBBR...G.BBBRG..G.WO.W.WW..", ["U2 R U' R'"; "R' U2 R U'"; "r' U2 r U'"; "F' U' F U2"]
+    "BringDRBtoULB", "O.GO.......................BBBR...G.BBBRG..GWWO.W.WW.O", ["B' R2 B R2 U2"]
+    "BringDRBtoULB", "O..O.............W.....OG..BBBR...G.BBBRG..G.WO.W.WW..", ["R U' R'"]
+    "BringDRBtoULB", "O..O....W..O..............GBBBR...G.BBBRG..G.WO.W.WW..", ["U'"]
+    "BringDRBtoULB", "O..O.............O.....GW..BBBR...G.BBBRG..G.WO.W.WW..", ["U2"]
+    "BringDRBtoULB", "O..O.......................BBBR...G.BBBRGGOG.WOWW.WW..", ["F' U2 F"]
+    // Pair and insert RB pair [1 case] (restricted to U, R/r, F, B, M)
+    "InsertRBPair", "O..O..G..O........W........BBBR...G.BBBRG..G.WO.W.WW..", ["R r2 U R"; "R r2 U r"; "R' M2 U R"; "R' M2 U r"; "r' M U R"; "r' M U r"; "r2 R U R"; "r2 R U r"; "M r' U R"; "M r' U r"; "M2 R' U R"; "M2 R' U r"]
+    // Tuck RF to BD [14 cases] (restricted to U, R/r, F, B, M)
+    "TuckRFtoBD", "OGOO.O.....................BBBR...GGBBBR...GGW..W.WWRW", [] // skip
+    "TuckRFtoBD", "O.OO.O.G..R................BBBR...GGBBBR...GGW..W.WW.W", ["U2 M2"]
+    "TuckRFtoBD", "O.OO.O.....................BBBR.RGGGBBBR...GGW..W.WW.W", ["R U R r2"; "R U R' M2"; "R U r' M"; "R U r2 R"; "R U M r'"; "R U M2 R'"; "r U R r2"; "r U R' M2"; "r U r' M"; "r U r2 R"; "r U M r'"; "r U M2 R'"; "F' U2 F M'"]
+    "TuckRFtoBD", "O.OO.O.R..G................BBBR...GGBBBR...GGW..W.WW.W", ["M'"]
+    "TuckRFtoBD", "O.OO.O..........R.....G....BBBR...GGBBBR...GGW..W.WW.W", ["M2"]
+    "TuckRFtoBD", "OROO.O.....................BBBR...GGBBBR...GGW..W.WWGW", ["M U2 M2"; "M2 U2 M'"]
+    "TuckRFtoBD", "O.OO.O........R..........G.BBBR...GGBBBR...GGW..W.WW.W", ["U M2"]
+    "TuckRFtoBD", "O.OO.O......G......R.......BBBR...GGBBBR...GGW..W.WW.W", ["U M'"]
+    "TuckRFtoBD", "O.OO.O......R......G.......BBBR...GGBBBR...GGW..W.WW.W", ["U' M2"]
+    "TuckRFtoBD", "O.OO.O........G..........R.BBBR...GGBBBR...GGW..W.WW.W", ["U' M'"]
+    "TuckRFtoBD", "O.OO.O.....................BBBR.GRGGBBBR...GGW..W.WW.W", ["R U' R' M'"; "R U' R2 r"; "R U' r R2"; "R U' r' M2"; "R U' M' R'"; "R U' M2 r'"; "r U' R' M'"; "r U' R2 r"; "r U' r R2"; "r U' r' M2"; "r U' M' R'"; "r U' M2 r'"]
+    "TuckRFtoBD", "O.OO.O..........G.....R....BBBR...GGBBBR...GGW..W.WW.W", ["U2 M'"]
+    "TuckRFtoBD", "O.OO.O.....................BBBR...GGBBBRR..GGWG.W.WW.W", ["M"]
+    "TuckRFtoBD", "O.OO.O.....................BBBR...GGBBBRG..GGWR.W.WW.W", ["M' U2 M'"; "M2 U2 M2"]
+    *)
+]
 
-let solveCase name id case includeRotations scrambled =
-    printfn "Case: %s" name
-    let includeMoves = not includeRotations
-    let includeSlice = not includeRotations
-    let solutions = genCasesAndSolutions patterns includeRotations includeMoves includeSlice scrambled case id
-    let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    solved, distinctCases solutions
+let solve = solveCase patterns
 
 let genRoux () =
+    let numCubes = 1000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
 
+    // First Block (FB)
 
-    printfn "Solve DL edge (during inspection)"
-    let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
-    let solutions = genCasesAndSolutions patterns true false false scrambled caseDLD "DLEdge"
-    let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    // DL
+    let caseDL c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
+    let rotations = [Rotate X; Rotate X'; Rotate X2; Rotate Y; Rotate Y'; Rotate Y2; Rotate Z; Rotate Z'; Rotate Z2]
+    let solvedDL = solve rotations "Solve DL edge (during inspection)" "DLEdge" caseDL scrambled
 
-    printfn "Solve L center"
-    let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
-    let solutions = genCasesAndSolutions patterns false true true solvedDL caseLC "LCenter"
-    let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    // center
+    let caseLC c = caseDL c && look Face.L Sticker.C c = Color.B
+    let moves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.UW; Move Move.UW'; Move Move.UW2
+                 Move Move.D; Move Move.D'; Move Move.D2; Move Move.DW; Move Move.DW'; Move Move.DW2
+                 Move Move.L; Move Move.L'; Move Move.L2; Move Move.LW; Move Move.LW'; Move Move.LW2
+                 Move Move.R; Move Move.R'; Move Move.R2; Move Move.RW; Move Move.RW'; Move Move.RW2
+                 Move Move.F; Move Move.F'; Move Move.F2; Move Move.FW; Move Move.FW'; Move Move.FW2
+                 Move Move.B; Move Move.B'; Move Move.B2; Move Move.BW; Move Move.BW'; Move Move.BW2
+                 Move Move.M; Move Move.M'; Move Move.M2;
+                 Move Move.S; Move Move.S'; Move Move.S2;
+                 Move Move.E; Move Move.E'; Move Move.E2]
+    let solvedLC = solve moves "Solve L center" "LCenter" caseLC solvedDL
 
-    printfn "Tuck LB to FD"
+    // LB pair
     let caseLBtoFD c = caseLC c && look Face.F Sticker.D c = Color.B && look Face.D Sticker.U c = Color.O
-    let solutions = genCasesAndSolutions patterns false true true solvedLC caseLBtoFD "TuckLBtoFD"
-    let solvedLBtoFD = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD solvedLC
 
-    printfn "Bring DLB corner to URB"
     let caseDLBtoURB c = caseLBtoFD c && look Face.U Sticker.UR c = Color.O && look Face.R Sticker.UR c = Color.W && look Face.B Sticker.DR c = Color.B
-    let solutions = genCasesAndSolutions patterns false true true solvedLBtoFD caseDLBtoURB "BringDLBtoURB"
-    let solvedDLBtoURB = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoURB" caseDLBtoURB solvedLBtoFD
 
-    printfn "Pair and insert LB pair"
-    let caseInsertLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
-    let solutions = genCasesAndSolutions patterns false true true solvedDLBtoURB caseInsertLBPair "InsertLBPair"
-    let solvedInsertLBPair = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    let caseLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
+    let solvedLBPair = solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedDLBtoURB
 
-    printfn "Tuck LF to BD"
-    let caseLFtoBD c = caseInsertLBPair c && look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R
-    let solutions = genCasesAndSolutions patterns false true true solvedInsertLBPair caseLFtoBD "TuckLFtoBD"
-    let solvedLFtoBD = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    // LF pair
+    let caseLFtoBD c = caseLBPair c && look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R
+    let solvedLFtoBD = solve moves "Tuck LF to BD" "TuckLFtoBD" caseLFtoBD solvedLBPair
 
-    // THIS TAKES TOO LONG!
-    // printfn "Pairing R/B edge and corner in upper layer"
-    // let caseBRPaired c = caseLC c && (look Face.U Sticker.D c = Color.R && look Face.U Sticker.DR c = Color.R && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.U c = Color.B && look Face.F Sticker.UR c = Color.B)
-    // let solutions = genCasesAndSolutions patterns false true true solvedLC caseBRPaired "R/BEdgeAndCorner"
-    // let solvedBRPaired = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    // distinctCases solutions
+    let caseDLFtoURF c = caseLFtoBD c && look Face.U Sticker.DR c = Color.R && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.UR c = Color.B
+    let solvedDLFtoURF = solve moves "Bring DLF corner to URF" "BringDLFtoURF" caseDLFtoURF solvedLFtoBD
 
-    (*
-    printfn "Placing FL edge in DF (R facing)"
-    let caseFLtoDFR c = caseLC c && (look Face.D Sticker.U c = Color.B && look Face.F Sticker.D c = Color.R)
-    let solutions = genCasesAndSolutions patterns false true true solvedLC caseFLtoDFR "FLEdgeInDF-R"
-    let solvedFTtoDFR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    let caseSolvedFB c = caseLBPair c && look Face.L Sticker.R c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.F Sticker.DL c = Color.R && look Face.F Sticker.L c = Color.R && look Face.D Sticker.UL c = Color.W
+    let solvedFB = solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedDLFtoURF
 
-    printfn "Placing FL edge in DF (B facing)"
-    let caseFLtoDFB c = caseLC c && (look Face.D Sticker.U c = Color.R && look Face.F Sticker.D c = Color.B)
-    let solutions = genCasesAndSolutions patterns false true true solvedLC caseFLtoDFB "FLEdgeInDF-B"
-    let solvedFTtoDFB = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    // Second Block (SB)
 
-    printfn "Placing FL edge in DB (R facing)"
-    let caseFLtoDBR c = caseLC c && (look Face.D Sticker.D c = Color.B && look Face.B Sticker.U c = Color.R)
-    let solutions = genCasesAndSolutions patterns false true true solvedLC caseFLtoDBR "FLEdgeInDB-R"
-    let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
+    // DR (center done)
+    let caseDR c = caseSolvedFB c && look Face.R Sticker.D c = Color.G && look Face.D Sticker.R c = Color.W
+    let sbMoves = [Move Move.U; Move Move.U'; Move Move.U2
+                   Move Move.R; Move Move.R'; Move Move.R2; Move Move.RW; Move Move.RW'; Move Move.RW2
+                   Move Move.F; Move Move.F'
+                   Move Move.B; Move Move.B'
+                   Move Move.M; Move Move.M'; Move Move.M2]
+    let solvedDR = solve sbMoves "Solve DR edge" "DREdge" caseDR solvedFB
 
-    printfn "Placing FL edge in DB (B facing)"
-    let caseFLtoDBB c = caseLC c && (look Face.D Sticker.D c = Color.R && look Face.B Sticker.U c = Color.B)
-    let solutions = genCasesAndSolutions patterns false true true solvedLC caseFLtoDBB "FLEdgeInDB-B"
-    let solvedFTtoDBR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
-    *)
+    // RB pair
+    let caseRBtoFD c = caseDR c && look Face.F Sticker.D c = Color.G && look Face.D Sticker.U c = Color.O
+    let solvedRBtoFD = solve sbMoves "Tuck RB to FD" "TuckRBtoFD" caseRBtoFD solvedDR
 
-    // printfn "Moving DLF corner to top with R/B up"
-    // let caseNoWUp c0 c1 c2 = (c0 = Color.B && c1 = Color.R && c2 = Color.W) || (c0 = Color.R && c1 = Color.W && c2 = Color.B)
-    // let caseDLFtoULF c = caseNoWUp (look Face.U Sticker.DL c) (look Face.F Sticker.UL c) (look Face.L Sticker.UR c)
-    // let caseDLFtoURF c = caseNoWUp (look Face.U Sticker.DR c) (look Face.R Sticker.UL c) (look Face.F Sticker.UR c)
-    // let caseDLFtoULB c = caseNoWUp (look Face.U Sticker.UL c) (look Face.L Sticker.UL c) (look Face.B Sticker.DL c)
-    // let caseDLFtoURB c = caseNoWUp (look Face.U Sticker.UR c) (look Face.B Sticker.DR c) (look Face.R Sticker.UR c)
-    // let caseDLFTopWithRBUp c = caseFLtoDF c && (caseDLFtoULF c || caseDLFtoURF c || caseDLFtoULB c ||caseDLFtoURB c)
-    // let solutions = genCasesAndSolutions patterns false true true solvedFTtoDF caseDLFTopWithRBUp "DLFToTopWithR/BUp"
-    // let solvedDLFTOpWithRBUp = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    // distinctCases solutions
+    let caseDRBtoULB c = caseRBtoFD c && look Face.U Sticker.UL c = Color.O && look Face.L Sticker.UL c = Color.W && look Face.B Sticker.DL c = Color.G
+    let solvedDRBtoULB = solve sbMoves "Bring DRB to ULB" "BringDRBtoULB" caseDRBtoULB solvedRBtoFD
+
+    let caseRBPair c = caseDR c && look Face.R Sticker.R c = Color.G && look Face.R Sticker.DR c = Color.G && look Face.B Sticker.UR c = Color.O && look Face.B Sticker.R c = Color.O && look Face.D Sticker.DR c = Color.W
+    let solvedRBPair = solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair solvedDRBtoULB
+
+    // RF pair
+    let caseRFtoBD c = caseRBPair c && look Face.B Sticker.U c = Color.G && look Face.D Sticker.D c = Color.R
+    let solvedRFtoBD = solve sbMoves "Tuck RF to BD" "TuckRFtoBD" caseRFtoBD solvedRBPair
+
+    let caseDRFtoULF c = caseRFtoBD c && look Face.U Sticker.DL c = Color.R && look Face.L Sticker.UR c = Color.W && look Face.F Sticker.UL c = Color.G
+    let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD
 
     pause ()
 genRoux ()
 
-(*
-let genPaired () =
-    printfn "Scrambling %i cubes" numCubes
-    let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
-    printfn ""
-
-    printfn "Solving DL edge (during inspection)"
-    let caseDLD c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
-    let solutions = genCasesAndSolutions patterns true false false scrambled caseDLD "DLEdge"
-    let solvedDL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
-
-    printfn "Solving L center"
-    let caseLC c = caseDLD c && look Face.L Sticker.C c = Color.B
-    let solutions = genCasesAndSolutions patterns false true true solvedDL caseLC "LCenter"
-    let solvedLC = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
-
-    // SLOW! try full slotting!
-    printfn "Full slotting BL"
-    let caseFullBL c = caseLC c && (look Face.B Sticker.L c = Color.O && look Face.B Sticker.UL c = Color.O && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.D Sticker.DL c = Color.W)
-    let solutions = genCasesAndSolutions patterns false true true 20 solvedLC caseFullBL "SlotBL"
-    let solvedFullBL = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    distinctCases solutions
-
-    // printfn "Pairing BWR"
-    // let casePairedBWR c = (look Face.F Sticker.DL c = Color.R && look Face.L Sticker.D c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.D Sticker.UL c = Color.W && look Face.D Sticker.L c = Color.W)
-    // let solutions = genCasesAndSolutions patterns false true true solvedDL casePairedBWR "PairBWR"
-    // let solvedPairedBWR = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    // distinctCases solutions
-genPaired ()
-*)
-
-(*
-let genRouxL4E () =
-    printfn "Scrambling %i cubes" numCubes
-    let scrambled = List.init numCubes (fun _ -> printf "."; scrambleRouxL4E 20 |> fst) |> List.map (fun c -> if look Face.R Sticker.U c = Color.B then moveU2 c else c)
-    printfn ""
-
-    printfn "Solving L4E"
-    let caseSolved c = c = solved
-    let solutions = genCasesAndSolutions patterns false true true scrambled caseSolved "L4ESolved"
-    distinctCases solutions
-genRouxL4E ()
-*)
-
-(*
-Console.BackgroundColor <- ConsoleColor.Black
-Console.ForegroundColor <- ConsoleColor.Gray
-Console.Clear()
-
-let hilitePieces () =
-    for c in [Center.U; D; L; R; F; B] do
-        let stickers = centerToFaceSticker c
-        renderWithHighlights [stickers] solved
-        printfn "Center: %A" c
-        pause ()
-    for e in [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR] do
-        let stickers = edgeToFaceStickers e
-        renderWithHighlights stickers solved
-        printfn "Edge: %A" e
-        pause ()
-    for c in [ULF; ULB; URF; URB; DLF; DLB; DRF; DRB] do
-        let stickers = cornerToFaceStickers c
-        renderWithHighlights stickers solved
-        printfn "Corner: %A" c
-        pause ()
-
-let testSolver () =
-    let checkDLEdge cube = look Face.L Sticker.D cube = Color.B && look Face.D Sticker.L cube = Color.W
-    let checkLC cube = checkDLEdge cube && look Face.L Sticker.C cube = Color.B
-    let c, s = scramble 20
-    render c
-    printfn "Scramble: %s                  " (movesToString s)
-    let solutions = solve true false false 3 checkDLEdge c |> List.ofSeq
-    printfn "Number of solutions (DL edge): %i" (Seq.length solutions)
-    pause ()
-    for s in solutions do
-        let c = executeSteps s c
-        render c
-        printfn "Solution (DL edge): %s" (stepsToString s)
-        let sols = solve false true true 3 checkLC c |> List.ofSeq
-        printfn "Number of solutions (LC): %i" (Seq.length solutions)
-        pause ()
-        for s in sols do
-            let c = executeSteps s c
-            render c
-            printfn "Solution (LC): %s" (stepsToString s)
-            pause ()
-
-// while true do testSolver ()
-
-render solved
-pause ()
-
-let test = solved |> moveM' |> moveD' |> moveU' |> moveL2 |> moveLW
-render test
-pause ()
-
-renderWithHighlights [Face.U, Sticker.C; Face.U, Sticker.L; Face.U, Sticker.R] test
-pause ()
-*)
-
-(*
-
-TODO:
-- Formalize edge and corner orientations in search
-- Search centers/corners/edges by "ease" (T/F then L/R then D then B
-- Gather metrics (moves, rotations, turns [half/quarter], looks [batch and individual stickers])
-    - By phase (inspections rotations, cross/LR blocks, PLL, ...)
-- Algorithm search
-- Rank algorithms by "ease" (R, L, U, F, D, B, ... combinations, finger tricks, ...)
-    - Maybe with user input or video analysis
-- Better scramble algorithm (reducing "useless" moves)
-- Idea: Sub-steps defined by steps to completed state (skip all sub-steps if complete)
-- Function to rotate/mirror algorithms (also relative to fixed points? e.g. pair edge with corner vs. corner with edge)
-
-Long term:
-- Video analysis
-- Program synthesis for block-building steps
-*)
-
 printfn "DONE!"
-Console.ReadLine() |> ignore
-
-printfn "DONE!!"
-Console.ReadLine() |> ignore
-
-printfn "DONE!!!"
 Console.ReadLine() |> ignore

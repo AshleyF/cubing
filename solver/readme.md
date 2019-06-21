@@ -52,3 +52,17 @@ We've started with Roux. The following stages are used:
 
 - Define goals in pattern language rather than `look Face.FOO Sticker.BAR cube` expressions
 - Discover FB/SB cases by *deconstruction* from solved state
+- Formalize edge and corner orientations in search
+- Search centers/corners/edges by "ease" (T/F then L/R then D then B
+- Gather metrics (moves, rotations, turns [half/quarter], looks [batch and individual stickers])
+    - By phase (inspections rotations, cross/LR blocks, PLL, ...)
+- Algorithm search
+- Rank algorithms by "ease" (R, L, U, F, D, B, ... combinations, finger tricks, ...)
+    - Maybe with user input or video analysis
+- Better scramble algorithm (reducing "useless" moves)
+- Idea: Sub-steps defined by steps to completed state (skip all sub-steps if complete)
+- Function to rotate/mirror algorithms (also relative to fixed points? e.g. pair edge with corner vs. corner with edge)
+
+Long term:
+- Video analysis
+- Program synthesis for block-building steps
