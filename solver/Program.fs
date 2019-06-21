@@ -37,7 +37,6 @@ let patterns = [
     "LCenter", ".............G.......................B..........WB....", ["r u"; "r E'"; "r' u'"; "r' E"; "M u'"; "M E"; "M' u"; "M' E'"]
     "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"];
     // Tuck LB edge to FD [22 cases]
-    (*
     "TuckLBtoFD", "............................B.....G..B..B.....O.W.....", [] // skip
     "TuckLBtoFD", "...O.......................BB.....G..B..........W.....", ["B r"; "B M'"]
     "TuckLBtoFD", ".....B......................B.....GO.B..........W.....", ["R2 F"; "r2 F"; "B r2"; "B M2"]
@@ -160,7 +159,7 @@ let patterns = [
     "TuckRBtoFD", "OO.O.......................BBBR...G.BBBR...G.W..W.WWG.", ["M'"]
     "TuckRBtoFD", "O..O...G..O................BBBR...G.BBBR...G.W..W.WW..", ["M2"]
     "TuckRBtoFD", "O..O............G.....O....BBBR...G.BBBR...G.W..W.WW..", ["M"]
-    "TuckRBtoFD", "O..O.......................BBBR.OGG.BBBR...G.W..W.WW..", ["R U' R r2"; "R U' R' M2"look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R; "R U' r' M"; "R U' r2 R"; "R U' M r'"; "R U' M2 R'"; "r U' R r2"; "r U' R' M2"; "r U' r' M"; "r U' r2 R"; "r U' M r'"; "r U' M2 R'"]
+    "TuckRBtoFD", "O..O.......................BBBR.OGG.BBBR...G.W..W.WW..", ["R U' R r2"; "R U' R' M2"; "R U' r' M"; "R U' r2 R"; "R U' M r'"; "R U' M2 R'"; "r U' R r2"; "r U' R' M2"; "r U' r' M"; "r U' r2 R"; "r U' M r'"; "r U' M2 R'"]
     "TuckRBtoFD", "O..O........O......G.......BBBR...G.BBBR...G.W..W.WW..", ["U M2"]
     "TuckRBtoFD", "O..O........G......O.......BBBR...G.BBBR...G.W..W.WW..", ["U' M"]
     "TuckRBtoFD", "O..O.O.....................BBBR...GGBBBR...G.W..W.WW..", ["R' U' R M2"; "R' U' R' r2"; "R' U' r M'"; "R' U' r2 R'"; "R' U' M' r"; "R' U' M2 R"; "r' U' R M2"; "r' U' R' r2"; "r' U' r M'"; "r' U' r2 R'"; "r' U' M' r"; "r' U' M2 R"; "B U2 B' M"]
@@ -205,7 +204,26 @@ let patterns = [
     "TuckRFtoBD", "O.OO.O..........G.....R....BBBR...GGBBBR...GGW..W.WW.W", ["U2 M'"]
     "TuckRFtoBD", "O.OO.O.....................BBBR...GGBBBRR..GGWG.W.WW.W", ["M"]
     "TuckRFtoBD", "O.OO.O.....................BBBR...GGBBBRG..GGWR.W.WW.W", ["M' U2 M'"; "M2 U2 M2"]
-    *)
+    // Bring DRF to ULF [15 cases] (restricted to U, R/r, F, B, M)
+    "BringDRFtoULF", "OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", [] // skip
+    "BringDRFtoULF", "OGOO.OR..G........W........BBBR...GGBBBR...GGW..W.WWRW", ["U2 R U2 R'"; "U2 r U2 r'"; "F' U' F U"]
+    "BringDRFtoULF", "OGOO.O..R..W..............GBBBR...GGBBBR...GGW..W.WWRW", ["R' F R F'"]
+    "BringDRFtoULF", "OGOO.O.....................BBBR...GGBBBR.WRGGW.GW.WWRW", ["R U' R' U"; "r U' r' U"; "F' U' F U2"; "F' U2 F U'"]
+    "BringDRFtoULF", "OGOO.O...........R.....WG..BBBR...GGBBBR...GGW..W.WWRW", ["U"]
+    "BringDRFtoULF", "OGOO.O..G..R..............WBBBR...GGBBBR...GGW..W.WWRW", ["U2"]
+    "BringDRFtoULF", "OGOO.O..W..G..............RBBBR...GGBBBR...GGW..W.WWRW", ["U R U2 R'"; "U r U2 r'"; "F R' F' R"; "F' U2 F U"]
+    "BringDRFtoULF", "OGOO.O.........G....RW.....BBBR...GGBBBR...GGW..W.WWRW", ["U' R U2 R'"; "U' r U2 r'"]
+    "BringDRFtoULF", "OGOO.O.....................BBBR...GGBBBR.RGGGW.WW.WWRW", ["R U R'"; "r U r'"]
+    "BringDRFtoULF", "OGOO.OW..R........G........BBBR...GGBBBR...GGW..W.WWRW", ["U'"]
+    "BringDRFtoULF", "OGOO.O.........W....GR.....BBBR...GGBBBR...GGW..W.WWRW", ["R U2 R' U"; "r U2 r' U"]
+    "BringDRFtoULF", "OGOO.O...........W.....GR..BBBR...GGBBBR...GGW..W.WWRW", ["F' U F U'"; "F' U2 F U2"]
+    "BringDRFtoULF", "OGOO.OG..W........R........BBBR...GGBBBR...GGW..W.WWRW", ["R U R' U"; "r U r' U"]
+    "BringDRFtoULF", "OGOO.O.....................BBBR...GGBBBR.GWGGW.RW.WWRW", ["R U' B U' B' R'"; "R B U2 B' R' U"; "R2 B' R' B U' R'"; "R2 B' R' B R' U'"; "r U' B U' B' r'"; "r B U2 B' r' U"; "r2 B r2 B' U2 B"; "F U2 F U2 F' U2"; "F R' F' R2 U2 R'"; "F' U F R U2 R'"; "F' U F r U2 r'"; "B r2 B r2 B' U2"]
+    "BringDRFtoULF", "OGOO.O...........G.....RW..BBBR...GGBBBR...GGW..W.WWRW", ["R U2 R'"; "r U2 r'"]
+    // Pair and insert RF pair (complete SB)
+    "InsertRFPair", "OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", ["R M2 U' R'"; "R M2 U' r'"; "R' r2 U' R'"; "R' r2 U' r'"; "r M' U' R'"; "r M' U' r'"; "r2 R' U' R'"; "r2 R' U' r'"; "M' r U' R'"; "M' r U' r'"; "M2 R U' R'"; "M2 R U' r'"]
+    // Orient corners (CO)
+    // "OrientCorners", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
 ]
 
 let solve = solveCase patterns
@@ -283,6 +301,13 @@ let genRoux () =
 
     let caseDRFtoULF c = caseRFtoBD c && look Face.U Sticker.DL c = Color.R && look Face.L Sticker.UR c = Color.W && look Face.F Sticker.UL c = Color.G
     let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD
+
+    let caseSolvedSB c = caseRBPair c && look Face.R Sticker.L c = Color.G && look Face.R Sticker.DL c = Color.G && look Face.F Sticker.DR c = Color.R && look Face.F Sticker.R c = Color.R && look Face.D Sticker.UR c = Color.W
+    let solvedSB = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF
+
+    // Orient corners (CO)
+    let caseCO c = caseSolvedSB c && look Face.U Sticker.UL c = Color.Y && look Face.U Sticker.UR c = Color.Y && look Face.U Sticker.DL c = Color.Y && look Face.U Sticker.DR c = Color.Y
+    let colvedCO = solve moves "Orient corners (CO)" "OrientCorners" caseCO solvedSB
 
     pause ()
 genRoux ()
