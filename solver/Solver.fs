@@ -64,6 +64,7 @@ let hybridSolve steps (hints: ((Step list) list) list) (patterns : (string * str
         | a :: _ -> [a.Split(' ') |> Seq.map stringToStep |> List.ofSeq]
         | [] -> [] // skip
     | None ->
+        printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
             match Seq.tryHead h with
             | Some h' -> cube |> executeSteps h' |> goal
@@ -105,4 +106,7 @@ let solveCase patterns steps name id case scrambled =
     printfn "\nCase: %s" name
     let solutions = genCasesAndSolutions patterns steps scrambled case id
     distinctCases solutions
-    solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    for s in solved do
+        if not (case s) then failwith "Authored pattern did not solve case"
+    solved

@@ -3,6 +3,25 @@ open Cube
 open Solver
 open Render
 
+// single-alg CO
+let sune = "R U R' U R U2 R'"
+let coH = sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune // 38 twists (5 sunes)
+let coPi = sune + " U2 " + sune + " U' " + sune + " U2 " + sune // 31 twists (4 sunes)
+let coU = sune + " U' " + sune + " U2 " + sune // 23 twists (3 sunes)
+let coT = sune + " U " + sune + " U2 " + sune // 23 twists (3 sunes)
+let coS = sune // 7 twists (1 sune)
+let coAs = sune + " U2 " + sune // 15 twists (2 sunes)
+let coL = sune + " " + sune + " U2 " + sune // 22 twists (3 sunes)
+
+// single-alg CP
+let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
+// *)
+
+(* seven-alg CO
+let sexy = "R U R' U'"
+let coH = "F " + sexy + " " + sexy + " " + sexy + " F'" // 14 twists
+// *)
+
 let patterns = [
     // Solving DL edge (during inspection) [24 cases]
     "DLEdge",  ".....................................B..........W.....", [] // skip
@@ -220,10 +239,66 @@ let patterns = [
     "BringDRFtoULF", "OGOO.OG..W........R........BBBR...GGBBBR...GGW..W.WWRW", ["R U R' U"; "r U r' U"]
     "BringDRFtoULF", "OGOO.O.....................BBBR...GGBBBR.GWGGW.RW.WWRW", ["R U' B U' B' R'"; "R B U2 B' R' U"; "R2 B' R' B U' R'"; "R2 B' R' B R' U'"; "r U' B U' B' r'"; "r B U2 B' r' U"; "r2 B r2 B' U2 B"; "F U2 F U2 F' U2"; "F R' F' R2 U2 R'"; "F' U F R U2 R'"; "F' U F r U2 r'"; "B r2 B r2 B' U2"]
     "BringDRFtoULF", "OGOO.O...........G.....RW..BBBR...GGBBBR...GGW..W.WWRW", ["R U2 R'"; "r U2 r'"]
-    // Pair and insert RF pair (complete SB)
+    // Pair and insert RF pair (complete SB) [1 case] (restricted to U, R/r, F, B, M)
     "InsertRFPair", "OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", ["R M2 U' R'"; "R M2 U' r'"; "R' r2 U' R'"; "R' r2 U' r'"; "r M' U' R'"; "r M' U' r'"; "r2 R' U' R'"; "r2 R' U' r'"; "M' r U' R'"; "M' r U' r'"; "M2 R U' R'"; "M2 R U' r'"]
-    // Orient corners (CO)
-    // "OrientCorners", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+    // Orient corners (CO) - hand authored patterns [27 cases] - single-alg (sune)
+    "CornerOrientation", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+    "CornerOrientation", "O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coH] // H
+    "CornerOrientation", "O.OO.O............Y.Y...Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coH] // (AUF U/U')
+    "CornerOrientation", "O.OO.OY..............Y..Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coPi] // Pi
+    "CornerOrientation", "O.OO.OY.Y...........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coPi]
+    "CornerOrientation", "O.OO.O..Y.........Y.Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coPi]
+    "CornerOrientation", "O.OO.O............Y..Y.Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coPi]
+    "CornerOrientation", "O.OO.O...Y.Y.........Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coU] // U
+    "CornerOrientation", "O.OO.O...Y.....Y........Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coU]
+    "CornerOrientation", "O.OO.OY.Y......Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coU]
+    "CornerOrientation", "O.OO.O.....Y.....YY.Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coU]
+    "CornerOrientation", "O.OO.OY....Y.....Y...Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coT] // T
+    "CornerOrientation", "O.OO.O...Y.Y........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coT]
+    "CornerOrientation", "O.OO.O..YY.....Y.......Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coT]
+    "CornerOrientation", "O.OO.O.........Y.YY.......YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coT]
+    "CornerOrientation", "O.OO.OY........Y.......Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coS] // sune
+    "CornerOrientation", "O.OO.OY..........Y..Y.....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coS]
+    "CornerOrientation", "O.OO.OY....Y........Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coS]
+    "CornerOrientation", "O.OO.O...Y..........Y..Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coS]
+    "CornerOrientation", "O.OO.O..Y......Y..Y.....Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coAs] // anti-sune
+    "CornerOrientation", "O.OO.O..Y........YY..Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coAs]
+    "CornerOrientation", "O.OO.O.....Y......Y..Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coAs]
+    "CornerOrientation", "O.OO.O..YY...........Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coAs]
+    "CornerOrientation", "O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coL] // L
+    "CornerOrientation", "O.OO.OY....Y...Y........Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coL]
+    "CornerOrientation", "O.OO.O..YY.......Y..Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coL]
+    "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coL]
+    // Permute corners (CP) - hand authored patterns [20 + 4 cases] - single-alg (jperm) [final AUF is unnecessary]
+    "CornerPermutation", "O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+    "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U"] // skip
+    "CornerPermutation", "O.OO.OR.RY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2"] // skip
+    "CornerPermutation", "O.OO.OB.BY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U'"] // skip
+    "CornerPermutation", "O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm] // O
+    "CornerPermutation", "O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm]
+    "CornerPermutation", "O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm]
+    "CornerPermutation", "O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm]
+    "CornerPermutation", "O.OO.OR.BY.Y...Y.YG.GO.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U"] // G
+    "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.RG.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U"]
+    "CornerPermutation", "O.OO.OB.OY.Y...Y.YR.OB.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U"]
+    "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.BR.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U"]
+    "CornerPermutation", "O.OO.OB.OY.Y...Y.YR.RG.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U2"] // R
+    "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.BR.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U2"]
+    "CornerPermutation", "O.OO.OO.GY.Y...Y.YB.GO.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U2"]
+    "CornerPermutation", "O.OO.OR.RY.Y...Y.YG.OB.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U2"]
+    "CornerPermutation", "O.OO.OO.GY.Y...Y.YB.BR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U'"] // B
+    "CornerPermutation", "O.OO.OR.OY.Y...Y.YG.OB.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U'"]
+    "CornerPermutation", "O.OO.OG.RY.Y...Y.YO.RG.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U'"]
+    "CornerPermutation", "O.OO.OB.BY.Y...Y.YR.GO.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U'"]
+    "CornerPermutation", "O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm] // diag
+    "CornerPermutation", "O.OO.OB.GY.Y...Y.YR.OB.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U"]
+    "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U2"]
+    "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U'"]
+    // Orient center - hand authored patterns [4 cases]
+    "CenterOrientation", "O.OO.OO.OY.Y.Y.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+    "CenterOrientation", "O.OO.OO.OY.Y.W.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+    "CenterOrientation", "O.OO.OO.OY.Y.R.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["M"] // or M'
+    "CenterOrientation", "O.OO.OO.OY.Y.O.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["M"] // or M'
 ]
 
 let solve = solveCase patterns
@@ -305,9 +380,41 @@ let genRoux () =
     let caseSolvedSB c = caseRBPair c && look Face.R Sticker.L c = Color.G && look Face.R Sticker.DL c = Color.G && look Face.F Sticker.DR c = Color.R && look Face.F Sticker.R c = Color.R && look Face.D Sticker.UR c = Color.W
     let solvedSB = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF
 
-    // Orient corners (CO)
+    // Orient corners (CO) - hand authored patterns
     let caseCO c = caseSolvedSB c && look Face.U Sticker.UL c = Color.Y && look Face.U Sticker.UR c = Color.Y && look Face.U Sticker.DL c = Color.Y && look Face.U Sticker.DR c = Color.Y
-    let colvedCO = solve moves "Orient corners (CO)" "OrientCorners" caseCO solvedSB
+    let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB
+
+    // Permute corners (CP) - hand authored patterns
+    let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
+    let lookCornerFaceStickers sticker0 sticker1 face col c = look face sticker0 c = col && look face sticker1 c = col
+    let lookCornerFace = lookCornerFaceStickers Sticker.UL Sticker.UR
+    let lookB = lookCornerFaceStickers Sticker.DL Sticker.DR Face.B
+    let lookL = lookCornerFace Face.L
+    let lookR = lookCornerFace Face.R
+    let lookF = lookCornerFace Face.F
+    let caseCP c =
+        let caseCP0 = lookB Color.O c && lookF Color.R c && lookL Color.B c && lookR Color.G c
+        let caseCP1 = lookB Color.B c && lookF Color.G c && lookL Color.R c && lookR Color.O c
+        let caseCP2 = lookB Color.R c && lookF Color.O c && lookL Color.G c && lookR Color.B c
+        let caseCP3 = lookB Color.G c && lookF Color.B c && lookL Color.O c && lookR Color.R c
+        caseCO c && (caseCP0 || caseCP1 || caseCP2 || caseCP3)
+    let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO
+
+    // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
+    let mMoves = [Move Move.M; Move Move.M'; Move Move.M2]
+    let caseCenterO c = caseCP c && (look Face.U Sticker.C c = Color.W || look Face.U Sticker.C c = Color.Y)
+    let solvedCenterO = solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedCP
+
+    // Orient edges (EO) (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
+    let mud2Moves = mMoves @ [Move Move.U; Move Move.U'; Move Move.U2; Move Move.D2]
+    let caseEO c = caseCenterO c &&
+                   (look Face.U Sticker.L c = Color.W || look Face.U Sticker.L c = Color.Y) &&
+                   (look Face.U Sticker.U c = Color.W || look Face.U Sticker.U c = Color.Y) &&
+                   (look Face.U Sticker.R c = Color.W || look Face.U Sticker.R c = Color.Y) &&
+                   (look Face.U Sticker.D c = Color.W || look Face.U Sticker.D c = Color.Y) &&
+                   (look Face.D Sticker.U c = Color.W || look Face.D Sticker.U c = Color.Y) &&
+                   (look Face.D Sticker.D c = Color.W || look Face.D Sticker.D c = Color.Y)
+    let solvedEO = solve mud2Moves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO
 
     pause ()
 genRoux ()
