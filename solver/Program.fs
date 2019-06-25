@@ -22,6 +22,8 @@ let sexy = "R U R' U'"
 let coH = "F " + sexy + " " + sexy + " " + sexy + " F'" // 14 twists
 // *)
 
+let mum = "M' U' M'"
+
 let patterns = [
     // Solving DL edge (during inspection) [24 cases]
     "DLEdge",  ".....................................B..........W.....", [] // skip
@@ -295,10 +297,56 @@ let patterns = [
     "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U2"]
     "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U'"]
     // Orient center - hand authored patterns [4 cases]
-    "CenterOrientation", "O.OO.OO.OY.Y.Y.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
-    "CenterOrientation", "O.OO.OO.OY.Y.W.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
-    "CenterOrientation", "O.OO.OO.OY.Y.R.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["M"] // or M'
-    "CenterOrientation", "O.OO.OO.OY.Y.O.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["M"] // or M'
+    "CenterOrientation", "O.OO.OO.OY.Y.E.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWEWW.W", [] // skip
+    "CenterOrientation", "O.OO.OO.OY.Y.P.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWPWW.W", ["M"] // or M'
+    // Orient edges (EO) - hand authored patterns (TODO: corner AUF should not be required)
+    "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
+    "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " + mum + " " + mum + " U' " + mum + " U"] // 2-up horizontal
+    "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [        mum + " " + mum + " U' " + mum] // 2-up vertical
+    "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 " +  mum + " " + mum + " U' " + mum] // 2-down
+    "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " +  mum + " U2 " + mum + " U"] // 2-up L (SE)
+    "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U2 " +  mum + " U2 " + mum + " U2"] // 2-up L (SW)
+    "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U "  +  mum + " U2 " + mum + " U'"] // 2-up L (NW)
+    "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [         mum + " U2 " + mum] // 2-up L (NE)
+    "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/B
+    "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/B
+    "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U'"] // 2 B/B
+    "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum] // 2 R/B
+    "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/F
+    "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/F
+    "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U " + mum + " U' " + mum + " U'"] // 2 B/F
+    "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U " + mum + " U' " + mum] // 2 R/F
+    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [mum + " U' " + mum + " U " + mum + " U' " + mum + " U"] // 4 up
+    "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U"] // arrow F/F
+    "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U2"] // arrow L/F
+    "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U'"] // arrow B/F
+    "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum] // arrow R/F
+    "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " U' " + mum + " U2 " + mum + " U2"] // arrow F/B
+    "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " U' " + mum + " U2 " + mum + " U'"] // arrow L/B
+    "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " U' " + mum + " U2 " + mum] // arrow B/B
+    "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " U' " + mum + " U2 " + mum + " U"] // arrow R/B
+    "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U2 " + mum + " U2 " + mum + " U'"] // 2-up/2-down horizontal (special case - leave horizontal)
+    "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U2 " + mum + " U2 " + mum] // 2-up/2-down vertical (special case - make horizontal)
+    "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U' " + mum] // 2-up L (SE)/2-down
+    "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U2 " + mum + " U' " + mum + " U"] // 2-up L (SW)/2-down
+    "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U "  + mum + " U' " + mum + " U2"] // 2-up L (NW)/2-down
+    "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U' " + mum + " U'"] // 2-up L (NE)/2-down
+    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"] // 6-flip
+    // L edge to DF
+    "LToDF", "OPOO.OOPOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRBRGGGWEWWEWWEW", [] // skip
+    "LToDF", "OPOO.OOPOYEYEEEYEYBBBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["U M2 U'"]
+    "LToDF", "OPOO.OOPOYEYEEEYEYBPBRBRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["U2 M2 U2"]
+    "LToDF", "OPOO.OOBOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["M2"]
+    "LToDF", "OBOO.OOPOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["M U2 M U2"; "M2 U2 M2 U2"; "U2 M U2 M"; "U2 M2 U2 M2"]
+    "LToDF", "OPOO.OOPOYEYEEEYEYBPBRPRGBGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["U' M2 U"]
+    // LR edges to bottom
+    "LREdgesBottom", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", [] // skip
+    "LREdgesBottom", "OPOO.OOPOYEYEEEYEYBGBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M U2 M' U"]
+    "LREdgesBottom", "OPOO.OOPOYEYEEEYEYBPBR.RGGGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U' M U2 M' U'"]
+    "LREdgesBottom", "OPOO.OOGOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["M U2 M' U2"]
+    "LREdgesBottom", "OPOO.OOPOYEYEEEYEYBPBRGRGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U2 M U2 M'"]
+    // LR solved
+    "LREdges", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M2 U'"]
 ]
 
 let solve = solveCase patterns
@@ -386,18 +434,8 @@ let genRoux () =
 
     // Permute corners (CP) - hand authored patterns
     let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
-    let lookCornerFaceStickers sticker0 sticker1 face col c = look face sticker0 c = col && look face sticker1 c = col
-    let lookCornerFace = lookCornerFaceStickers Sticker.UL Sticker.UR
-    let lookB = lookCornerFaceStickers Sticker.DL Sticker.DR Face.B
-    let lookL = lookCornerFace Face.L
-    let lookR = lookCornerFace Face.R
-    let lookF = lookCornerFace Face.F
-    let caseCP c =
-        let caseCP0 = lookB Color.O c && lookF Color.R c && lookL Color.B c && lookR Color.G c
-        let caseCP1 = lookB Color.B c && lookF Color.G c && lookL Color.R c && lookR Color.O c
-        let caseCP2 = lookB Color.R c && lookF Color.O c && lookL Color.G c && lookR Color.B c
-        let caseCP3 = lookB Color.G c && lookF Color.B c && lookL Color.O c && lookR Color.R c
-        caseCO c && (caseCP0 || caseCP1 || caseCP2 || caseCP3)
+    // let caseCP c = caseCO c && (look Face.L Sticker.UL c = look Face.L Sticker.UR c) && (look Face.R Sticker.UL c = look Face.R Sticker.UR c) // check left/right "pairs"
+    let caseCP c = caseCO c && (look Face.L Sticker.UL c = Color.B && look Face.L Sticker.UR c = Color.B) && (look Face.R Sticker.UL c = Color.G && look Face.R Sticker.UR c = Color.G) // check left/right colors
     let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
@@ -406,7 +444,7 @@ let genRoux () =
     let solvedCenterO = solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedCP
 
     // Orient edges (EO) (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
-    let mud2Moves = mMoves @ [Move Move.U; Move Move.U'; Move Move.U2; Move Move.D2]
+    let muMoves = mMoves @ [Move Move.U; Move Move.U'; Move Move.U2]
     let caseEO c = caseCenterO c &&
                    (look Face.U Sticker.L c = Color.W || look Face.U Sticker.L c = Color.Y) &&
                    (look Face.U Sticker.U c = Color.W || look Face.U Sticker.U c = Color.Y) &&
@@ -414,7 +452,26 @@ let genRoux () =
                    (look Face.U Sticker.D c = Color.W || look Face.U Sticker.D c = Color.Y) &&
                    (look Face.D Sticker.U c = Color.W || look Face.D Sticker.U c = Color.Y) &&
                    (look Face.D Sticker.D c = Color.W || look Face.D Sticker.D c = Color.Y)
-    let solvedEO = solve mud2Moves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO
+    let solvedEO = solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO
+
+    // Left/right edges (LR)
+
+    // L edge to DF
+    let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
+    let solvedLtoDF = solve muMoves "L edge to DF" "LToDF" caseLtoDF solvedEO
+
+    // LR edges to bottom
+    let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G
+    let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF
+
+    // LR edges solved
+    let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G
+    let solvedLR = solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
+
+    // Last 4 edges (L4E)
+    let mud2Moves = [Move Move.M; Move Move.M'; Move Move.M2; Move Move.U2; Move Move.D2]
+    let caseSolved = (=) Solver.solved
+    let solved = solve mud2Moves "Solved!" "Solved" caseSolved solvedLR
 
     pause ()
 genRoux ()

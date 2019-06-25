@@ -56,15 +56,16 @@ let solveWithSteps includedSteps check cube =
         if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
     iterativeDeepening 0 |> List.ofSeq
 
-let hybridSolve steps (hints: ((Step list) list) list) (patterns : (string * string * string list) seq) goal stage cube =
-    let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c) p c
+let hybridSolve steps hints patterns goal stage cube =
+    let split (s: string) (c: char) = s.Split(c)
+    let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c || (p = 'P' && c <> 'W' && c <> 'Y') || (p = 'E' && (c = 'W' || c = 'Y'))) p c // assumes W/Y Up/Down
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
         match algs with
-        | a :: _ -> [a.Split(' ') |> Seq.map stringToStep |> List.ofSeq]
+        | a :: _ -> [split a ' ' |> Seq.map stringToStep |> List.ofSeq]
         | [] -> [] // skip
     | None ->
-        printfn "UNMATCHED: %s" (cubeToString cube)
+        // printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
             match Seq.tryHead h with
             | Some h' -> cube |> executeSteps h' |> goal
@@ -108,5 +109,7 @@ let solveCase patterns steps name id case scrambled =
     distinctCases solutions
     let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
     for s in solved do
-        if not (case s) then failwith "Authored pattern did not solve case"
+        if not (case s) then
+            printfn "UNSOLVED: %s" (cubeToString s)
+            failwith "Authored pattern did not solve case"
     solved
