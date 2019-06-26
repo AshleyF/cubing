@@ -25,7 +25,7 @@ let coH = "F " + sexy + " " + sexy + " " + sexy + " F'" // 14 twists
 let mum = "M' U' M'"
 let mu2 = "M' U2"
 
-let patterns = [
+let dlEdgePatterns = [
     // Solving DL edge (during inspection) [24 cases]
     "DLEdge",  ".....................................B..........W.....", [] // skip
     "DLEdge",  "...W.......................B..........................", ["x"]
@@ -50,14 +50,18 @@ let patterns = [
     "DLEdge",  "...........................................B......W...", ["y2"]
     "DLEdge",  "...........................................W......B...", ["z"]
     "DLEdge",  "............B......W..................................", ["z'"]
-    "DLEdge",  "..............W..........B............................", ["z2"]
+    "DLEdge",  "..............W..........B............................", ["z2"]]
+
+let lCenterPatterns = [
     // Solve left center [6 cases]
     "LCenter", "............................B.....G..B..........W.....", [] // skip
     "LCenter", "....B..........................G.....B..........W.....", ["E"; "u'"]
     "LCenter", "....G..........................B.....B..........W.....", ["u"; "E'"]
     "LCenter", "............................G.....B..B..........W.....", ["u2"; "E2"]
     "LCenter", ".............G.......................B..........WB....", ["r u"; "r E'"; "r' u'"; "r' E"; "M u'"; "M E"; "M' u"; "M' E'"]
-    "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"];
+    "LCenter", ".............B.......................B..........WG....", ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"]]
+
+let lbPairPatterns = [
     // Tuck LB edge to FD [22 cases]
     "TuckLBtoFD", "............................B.....G..B..B.....O.W.....", [] // skip
     "TuckLBtoFD", "...O.......................BB.....G..B..........W.....", ["B r"; "B M'"]
@@ -108,7 +112,9 @@ let patterns = [
     "BringDLBtoURB", "......O..B........W.........B.....G..B..B.....O.W.....", ["U2 R"; "B2 R'"]
     // Insert LB pair [1 case]
     // "InsertLBPair", "O..O.......................BB.....G.BB..........W..W..", [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoURB)
-    "InsertLBPair", "........B..O..............W.B.....G..B..B.....O.W.....", ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]
+    "InsertLBPair", "........B..O..............W.B.....G..B..B.....O.W.....", ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]]
+
+let lfPairPatterns = [
     // Tuck LF to BD [20 cases]
     "TuckLFtoBD", "OB.O.......................BB.....G.BB..........W..WR.", [] // skip
     "TuckLFtoBD", "O..O............R.....B....BB.....G.BB..........W..W..", ["r2"; "M2"]
@@ -153,7 +159,11 @@ let patterns = [
     "BringDLFtoURF", "OB.O.......................BB.....G.BB...RW....BW..WR.", ["R"]
     "BringDLFtoURF", "OB.O.......................BB.....G.BBWB.....R..W..WR.", ["F2"]
     // Pair and insert LF pair (complete FB) [1 case]
-    "InsertLFPair", "OB.O.............R.....BW..BB.....G.BB..........W..WR.", ["R' M' F"; "R2 r F"; "r R2 F"; "r' M2 F"; "M' R' F"; "M2 r' F"]
+    "InsertLFPair", "OB.O.............R.....BW..BB.....G.BB..........W..WR.", ["R' M' F"; "R2 r F"; "r R2 F"; "r' M2 F"; "M' R' F"; "M2 r' F"]]
+
+let fbPatterns = dlEdgePatterns @ lCenterPatterns @ lbPairPatterns @ lfPairPatterns
+
+let drEdgePatterns = [
     // Solve DR edge [18 cases] (restricted to U, R/r, F, B, M)
     "DREdge", "O..O.......................BBBR...G.BBBR...G.W..W.WW..", [] // skip
     "DREdge", "O..O...W..G................BBBR...G.BBBR.....W..W..W..", ["r' U' R2"; "r' U' r2"; "B' R B"; "M U' R2"; "M U' r2"]
@@ -172,7 +182,9 @@ let patterns = [
     "DREdge", "O..O.......................BBBR...G.BBBR...W.W..W.GW..", ["R F' U' F R2"; "R F' U' F r2"; "R' B U B' R2"; "R' B U B' r2"; "R2 U r U R2"; "R2 U r U r2"; "R2 U F R' F'"; "R2 U M' U R2"; "R2 U M' U r2"; "R2 U' r' U' R2"; "R2 U' r' U' r2"; "R2 U' B' R B"; "R2 U' M U' R2"; "R2 U' M U' r2"; "R2 F' U F R'"; "R2 F' U F r'"; "R2 B U' B' R"; "R2 B U' B' r"; "r F' U' F R2"; "r F' U' F r2"; "r' B U B' R2"; "r' B U B' r2"; "r2 U r U R2"; "r2 U r U r2"; "r2 U F R' F'"; "r2 U M' U R2"; "r2 U M' U r2"; "r2 U' r' U' R2"; "r2 U' r' U' r2"; "r2 U' B' R B"; "r2 U' M U' R2"; "r2 U' M U' r2"; "r2 F' U F R'"; "r2 F' U F r'"; "r2 B U' B' R"; "r2 B U' B' r"; "F R F' U' R2"; "F R F' U' r2"; "B' R' B U R2"; "B' R' B U r2"]
     "DREdge", "OW.O.......................BBBR...G.BBBR.....W..W..WG.", ["r' U R2"; "r' U r2"; "M U R2"; "M U r2"]
     "DREdge", "O..O.......................BBBR.WGG.BBBR.....W..W..W..", ["R'"; "r'"]
-    "DREdge", "O..O...G..W................BBBR...G.BBBR.....W..W..W..", ["U R2"; "U r2"]
+    "DREdge", "O..O...G..W................BBBR...G.BBBR.....W..W..W..", ["U R2"; "U r2"]]
+
+let rbPairPatterns = [
     // Tuck RB to FD [16 cases] (restricted to U, R/r, F, B, M)
     "TuckRBtoFD", "O..O.......................BBBR...G.BBBRG..G.WO.W.WW..", [] // skip
     "TuckRBtoFD", "O..O.......................BBBR...G.BBBRO..G.WG.W.WW..", ["M' U2 M2"; "M2 U2 M"]
@@ -210,7 +222,9 @@ let patterns = [
     "BringDRBtoULB", "O..O.............O.....GW..BBBR...G.BBBRG..G.WO.W.WW..", ["U2"]
     "BringDRBtoULB", "O..O.......................BBBR...G.BBBRGGOG.WOWW.WW..", ["F' U2 F"]
     // Pair and insert RB pair [1 case] (restricted to U, R/r, F, B, M)
-    "InsertRBPair", "O..O..G..O........W........BBBR...G.BBBRG..G.WO.W.WW..", ["R r2 U R"; "R r2 U r"; "R' M2 U R"; "R' M2 U r"; "r' M U R"; "r' M U r"; "r2 R U R"; "r2 R U r"; "M r' U R"; "M r' U r"; "M2 R' U R"; "M2 R' U r"]
+    "InsertRBPair", "O..O..G..O........W........BBBR...G.BBBRG..G.WO.W.WW..", ["R r2 U R"; "R r2 U r"; "R' M2 U R"; "R' M2 U r"; "r' M U R"; "r' M U r"; "r2 R U R"; "r2 R U r"; "M r' U R"; "M r' U r"; "M2 R' U R"; "M2 R' U r"]]
+
+let rfPairPatterns = [
     // Tuck RF to BD [14 cases] (restricted to U, R/r, F, B, M)
     "TuckRFtoBD", "OGOO.O.....................BBBR...GGBBBR...GGW..W.WWRW", [] // skip
     "TuckRFtoBD", "O.OO.O.G..R................BBBR...GGBBBR...GGW..W.WW.W", ["U2 M2"]
@@ -243,7 +257,11 @@ let patterns = [
     "BringDRFtoULF", "OGOO.O.....................BBBR...GGBBBR.GWGGW.RW.WWRW", ["R U' B U' B' R'"; "R B U2 B' R' U"; "R2 B' R' B U' R'"; "R2 B' R' B R' U'"; "r U' B U' B' r'"; "r B U2 B' r' U"; "r2 B r2 B' U2 B"; "F U2 F U2 F' U2"; "F R' F' R2 U2 R'"; "F' U F R U2 R'"; "F' U F r U2 r'"; "B r2 B r2 B' U2"]
     "BringDRFtoULF", "OGOO.O...........G.....RW..BBBR...GGBBBR...GGW..W.WWRW", ["R U2 R'"; "r U2 r'"]
     // Pair and insert RF pair (complete SB) [1 case] (restricted to U, R/r, F, B, M)
-    "InsertRFPair", "OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", ["R M2 U' R'"; "R M2 U' r'"; "R' r2 U' R'"; "R' r2 U' r'"; "r M' U' R'"; "r M' U' r'"; "r2 R' U' R'"; "r2 R' U' r'"; "M' r U' R'"; "M' r U' r'"; "M2 R U' R'"; "M2 R U' r'"]
+    "InsertRFPair", "OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", ["R M2 U' R'"; "R M2 U' r'"; "R' r2 U' R'"; "R' r2 U' r'"; "r M' U' R'"; "r M' U' r'"; "r2 R' U' R'"; "r2 R' U' r'"; "M' r U' R'"; "M' r U' r'"; "M2 R U' R'"; "M2 R U' r'"]]
+
+let sbPatterns = drEdgePatterns @ rbPairPatterns @ rfPairPatterns
+
+let coPatterns = [
     // Orient corners (CO) - hand authored patterns [27 cases] - single-alg (sune)
     "CornerOrientation", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
     "CornerOrientation", "O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coH] // H
@@ -271,7 +289,9 @@ let patterns = [
     "CornerOrientation", "O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coL] // L
     "CornerOrientation", "O.OO.OY....Y...Y........Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coL]
     "CornerOrientation", "O.OO.O..YY.......Y..Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coL]
-    "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coL]
+    "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coL]]
+
+let cpPatterns = [
     // Permute corners (CP) - hand authored patterns [20 + 4 cases] - single-alg (jperm) [final AUF is unnecessary]
     "CornerPermutation", "O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
     "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U"] // skip
@@ -296,10 +316,16 @@ let patterns = [
     "CornerPermutation", "O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm] // diag
     "CornerPermutation", "O.OO.OB.GY.Y...Y.YR.OB.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U"]
     "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U2"]
-    "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U'"]
+    "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U'"]]
+
+let cmllPatterns = coPatterns @ cpPatterns
+
+let centerOrientationPatterns = [
     // Orient center - hand authored patterns [4 cases]
     "CenterOrientation", "O.OO.OO.OY.Y.E.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWEWW.W", [] // skip
-    "CenterOrientation", "O.OO.OO.OY.Y.P.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWPWW.W", ["M"] // or M'
+    "CenterOrientation", "O.OO.OO.OY.Y.P.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWPWW.W", ["M"]] // or M'
+
+let edgeOrientationPatters = [
     // Orient edges (EO) - hand authored patterns (TODO: corner AUF should not be required)
     "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
     "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " + mum + " " + mum + " U' " + mum + " U"] // 2-up horizontal
@@ -332,7 +358,11 @@ let patterns = [
     "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U2 " + mum + " U' " + mum + " U"] // 2-up L (SW)/2-down
     "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U "  + mum + " U' " + mum + " U2"] // 2-up L (NW)/2-down
     "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U' " + mum + " U'"] // 2-up L (NE)/2-down
-    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"] // 6-flip
+    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"]] // 6-flip
+
+let eoPatterns = centerOrientationPatterns @ edgeOrientationPatters
+
+let lrPatterns = [
     // L edge to DF
     "LToDF", "OPOO.OOPOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRBRGGGWEWWEWWEW", [] // skip
     "LToDF", "OPOO.OOPOYEYEEEYEYBBBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", ["U M2 U'"]
@@ -347,7 +377,11 @@ let patterns = [
     "LREdgesBottom", "OPOO.OOGOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["M U2 M' U2"]
     "LREdgesBottom", "OPOO.OOPOYEYEEEYEYBPBRGRGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U2 M U2 M'"]
     // LR solved
-    "LREdges", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M2 U'"]
+    "LREdges", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M2 U'"]]
+
+let eolrPatterns = eoPatterns @ lrPatterns
+
+let l4ePatterns = [
     // Last 4 edges -> Solved! - hand authored
     "L4E", "OOOOOOOOOYYYYYYYYYBBBRRRGGGBBBRRRGGGBBBRRRGGGWWWWWWWWW", [] // skip (solved!)
     "L4E", "OROOROOROYWYYWYYWYBBBRORGGGBBBRORGGGBBBRORGGGWYWWYWWYW", ["M2"]
@@ -372,10 +406,13 @@ let patterns = [
     "L4E", "OROOROOROYYYYWYYYYBBBRORGGGBBBRORGGGBBBRORGGGWWWWYWWWW", ["M U2 M2 U2 M'"] // vertical bars - happens to be best alg
     "L4E", "OOOOOOOOOYWYYYYYWYBBBRRRGGGBBBRRRGGGBBBRRRGGGWYWWWWWYW", ["M' U2 M2 U2 M'"] // vertical bars - happens to be best alg
     "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["E2 M E2 M"] // vertical bars - happens to be best alg
-    "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["E2 M E2 M'"]
-]
+    "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2]] // best alg: ["E2 M E2 M'"]
 
-let solve = solveCase patterns
+let lsePatterns = eolrPatterns @ l4ePatterns
+
+let beginnerRouxPatterns = fbPatterns @ sbPatterns @ cmllPatterns @ lsePatterns
+
+let solve = solveCase beginnerRouxPatterns
 
 let genRoux () =
     let numCubes = 10000
