@@ -65,7 +65,7 @@ let hybridSolve steps hints patterns goal stage cube =
         | a :: _ -> [split a ' ' |> Seq.map stringToStep |> List.ofSeq]
         | [] -> [] // skip
     | None ->
-        // printfn "UNMATCHED: %s" (cubeToString cube)
+        printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
             match Seq.tryHead h with
             | Some h' -> cube |> executeSteps h' |> goal

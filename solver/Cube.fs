@@ -288,7 +288,11 @@ let executeStep     cube s = step   s cube
 
 let executeRotations rs cube = Seq.fold executeRotation cube rs
 let executeMoves     ms cube = Seq.fold executeMove cube ms
-let executeSteps     ss cube = Seq.fold executeStep cube ss
+// let executeSteps     ss cube = Seq.fold executeStep cube ss
+let mutable twistCount = 0
+let executeSteps ss cube =
+    twistCount <- twistCount + Seq.length ss
+    Seq.fold executeStep cube ss
 
 type Center = U | D | L | R | F | B
 type Edge = UL | UR | UF | UB | DL | DR | DF | DB | FL | FR | BL | BR

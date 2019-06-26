@@ -23,6 +23,7 @@ let coH = "F " + sexy + " " + sexy + " " + sexy + " F'" // 14 twists
 // *)
 
 let mum = "M' U' M'"
+let mu2 = "M' U2"
 
 let patterns = [
     // Solving DL edge (during inspection) [24 cases]
@@ -347,12 +348,37 @@ let patterns = [
     "LREdgesBottom", "OPOO.OOPOYEYEEEYEYBPBRGRGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U2 M U2 M'"]
     // LR solved
     "LREdges", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M2 U'"]
+    // Last 4 edges -> Solved! - hand authored
+    "L4E", "OOOOOOOOOYYYYYYYYYBBBRRRGGGBBBRRRGGGBBBRRRGGGWWWWWWWWW", [] // skip (solved!)
+    "L4E", "OROOROOROYWYYWYYWYBBBRORGGGBBBRORGGGBBBRORGGGWYWWYWWYW", ["M2"]
+    "L4E", "OOOOROOROYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2] // happens to be best alg
+    "L4E", "OROOROOOOYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["U2 M U2 M"]
+    "L4E", "OROOOOOOOYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " M2"] // happens to be best alg
+    "L4E", "OOOOOOOROYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["U2 M U2 M'"]
+    "L4E", "OROOOOOOOYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"] // best alg: ["M U2 M' U2"]
+    "L4E", "OOOOOOOROYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"] // (could spot, bar earlier, but...) best alg: ["U2 M' U2 M"]
+    "L4E", "OOOOROOROYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"] // best alg: ["M U2 M' U2 M2"]
+    "L4E", "OROOROOOOYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2"] // best alg: ["U2 M' U2 M'"]
+    "L4E", "OOOOOOOROYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " U2 M2 U2"] // best alg: ["M' U2 M U2"]
+    "L4E", "OROOOOOOOYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"] // best alg: ["M2 U2 M U2 M"]
+    "L4E", "OROOROOOOYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"] // best alg: ["M' U2 M U2 M2"]
+    "L4E", "OOOOROOROYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"] // best alg: ["M2 U2 M U2 M'"]
+    "L4E", "OROOROOOOYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["M U2 M U2"]
+    "L4E", "OOOOROOROYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["M2 U2 M' U2 M"]
+    "L4E", "OOOOOOOROYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["M U2 M U2 M2"]
+    "L4E", "OROOOOOOOYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["M2 U2 M' U2 M'"]
+    "L4E", "OOOOROOOOYWYYWYYWYBBBRRRGGGBBBRORGGGBBBRRRGGGWYWWYWWYW", ["U2 M2 U2"] // horizontal bars - happens to be best alg
+    "L4E", "OROOOOOROYYYYYYYYYBBBRORGGGBBBRRRGGGBBBRORGGGWWWWWWWWW", ["U2 M2 U2 M2"] // horizontal bars - happens to be best alg
+    "L4E", "OROOROOROYYYYWYYYYBBBRORGGGBBBRORGGGBBBRORGGGWWWWYWWWW", ["M U2 M2 U2 M'"] // vertical bars - happens to be best alg
+    "L4E", "OOOOOOOOOYWYYYYYWYBBBRRRGGGBBBRRRGGGBBBRRRGGGWYWWWWWYW", ["M' U2 M2 U2 M'"] // vertical bars - happens to be best alg
+    "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["E2 M E2 M"] // vertical bars - happens to be best alg
+    "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["E2 M E2 M'"]
 ]
 
 let solve = solveCase patterns
 
 let genRoux () =
-    let numCubes = 1000
+    let numCubes = 10000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
@@ -470,8 +496,18 @@ let genRoux () =
 
     // Last 4 edges (L4E)
     let mud2Moves = [Move Move.M; Move Move.M'; Move Move.M2; Move Move.U2; Move Move.D2]
-    let caseSolved = (=) Solver.solved
-    let solved = solve mud2Moves "Solved!" "Solved" caseSolved solvedLR
+    let caseSolved cube =
+        let solved face color = Map.find face cube |> Map.forall (fun _ col -> col = color)
+        solved Face.F Color.R &&
+        solved Face.B Color.O &&
+        solved Face.L Color.B &&
+        solved Face.R Color.G &&
+        solved Face.U Color.Y &&
+        solved Face.D Color.W
+    let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR
+
+    let avgTwistCount = float Cube.twistCount / float numCubes;
+    printfn "Average Twists (STM): %f" avgTwistCount
 
     pause ()
 genRoux ()
