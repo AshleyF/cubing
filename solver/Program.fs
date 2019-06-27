@@ -5,25 +5,7 @@ open Render
 
 // single-alg CO
 let sune = "R U R' U R U2 R'"
-let coH = sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune // 38 twists (5 sunes)
-let coPi = sune + " U2 " + sune + " U' " + sune + " U2 " + sune // 31 twists (4 sunes)
-let coU = sune + " U' " + sune + " U2 " + sune // 23 twists (3 sunes)
-let coT = sune + " U " + sune + " U2 " + sune // 23 twists (3 sunes)
-let coS = sune // 7 twists (1 sune)
-let coAs = sune + " U2 " + sune // 15 twists (2 sunes)
-let coL = sune + " " + sune + " U2 " + sune // 22 twists (3 sunes)
-
-// single-alg CP
 let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
-// *)
-
-(* seven-alg CO
-let sexy = "R U R' U'"
-let coH = "F " + sexy + " " + sexy + " " + sexy + " F'" // 14 twists
-// *)
-
-let mum = "M' U' M'"
-let mu2 = "M' U2"
 
 let dlEdgePatterns = [
     // Solving DL edge (during inspection) [24 cases]
@@ -261,37 +243,81 @@ let rfPairPatterns = [
 
 let sbPatterns = drEdgePatterns @ rbPairPatterns @ rfPairPatterns
 
-let coPatterns = [
+let coBeginnerPatterns =
+    let coH = sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune // 38 twists (5 sunes) - easy to learn, but not best
+    let coPi = sune + " U2 " + sune + " U' " + sune + " U2 " + sune // 31 twists (4 sunes)
+    let coU = sune + " U' " + sune + " U2 " + sune // 23 twists (3 sunes)
+    let coT = sune + " U " + sune + " U2 " + sune // 23 twists (3 sunes)
+    let coS = sune // 7 twists (1 sune)
+    let coAs = sune + " U2 " + sune // 15 twists (2 sunes)
+    let coL = sune + " " + sune + " U2 " + sune // 22 twists (3 sunes)
     // Orient corners (CO) - hand authored patterns [27 cases] - single-alg (sune)
-    "CornerOrientation", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
-    "CornerOrientation", "O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coH] // H
-    "CornerOrientation", "O.OO.O............Y.Y...Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coH] // (AUF U/U')
-    "CornerOrientation", "O.OO.OY..............Y..Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coPi] // Pi
-    "CornerOrientation", "O.OO.OY.Y...........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coPi]
-    "CornerOrientation", "O.OO.O..Y.........Y.Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coPi]
-    "CornerOrientation", "O.OO.O............Y..Y.Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coPi]
-    "CornerOrientation", "O.OO.O...Y.Y.........Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coU] // U
-    "CornerOrientation", "O.OO.O...Y.....Y........Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coU]
-    "CornerOrientation", "O.OO.OY.Y......Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coU]
-    "CornerOrientation", "O.OO.O.....Y.....YY.Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coU]
-    "CornerOrientation", "O.OO.OY....Y.....Y...Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coT] // T
-    "CornerOrientation", "O.OO.O...Y.Y........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coT]
-    "CornerOrientation", "O.OO.O..YY.....Y.......Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coT]
-    "CornerOrientation", "O.OO.O.........Y.YY.......YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coT]
-    "CornerOrientation", "O.OO.OY........Y.......Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coS] // sune
-    "CornerOrientation", "O.OO.OY..........Y..Y.....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coS]
-    "CornerOrientation", "O.OO.OY....Y........Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coS]
-    "CornerOrientation", "O.OO.O...Y..........Y..Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coS]
-    "CornerOrientation", "O.OO.O..Y......Y..Y.....Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coAs] // anti-sune
-    "CornerOrientation", "O.OO.O..Y........YY..Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coAs]
-    "CornerOrientation", "O.OO.O.....Y......Y..Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coAs]
-    "CornerOrientation", "O.OO.O..YY...........Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coAs]
-    "CornerOrientation", "O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coL] // L
-    "CornerOrientation", "O.OO.OY....Y...Y........Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coL]
-    "CornerOrientation", "O.OO.O..YY.......Y..Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coL]
-    "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coL]]
+    ["CornerOrientation", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+     "CornerOrientation", "O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coH] // H
+     "CornerOrientation", "O.OO.O............Y.Y...Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coH] // (AUF U/U')
+     "CornerOrientation", "O.OO.OY..............Y..Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coPi] // Pi
+     "CornerOrientation", "O.OO.OY.Y...........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coPi]
+     "CornerOrientation", "O.OO.O..Y.........Y.Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coPi]
+     "CornerOrientation", "O.OO.O............Y..Y.Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coPi]
+     "CornerOrientation", "O.OO.O...Y.Y.........Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coU] // U
+     "CornerOrientation", "O.OO.O...Y.....Y........Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coU]
+     "CornerOrientation", "O.OO.OY.Y......Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coU]
+     "CornerOrientation", "O.OO.O.....Y.....YY.Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coU]
+     "CornerOrientation", "O.OO.OY....Y.....Y...Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coT] // T
+     "CornerOrientation", "O.OO.O...Y.Y........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coT]
+     "CornerOrientation", "O.OO.O..YY.....Y.......Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coT]
+     "CornerOrientation", "O.OO.O.........Y.YY.......YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coT]
+     "CornerOrientation", "O.OO.OY........Y.......Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coS] // sune
+     "CornerOrientation", "O.OO.OY..........Y..Y.....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coS]
+     "CornerOrientation", "O.OO.OY....Y........Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coS]
+     "CornerOrientation", "O.OO.O...Y..........Y..Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coS]
+     "CornerOrientation", "O.OO.O..Y......Y..Y.....Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", [coAs] // anti-sune
+     "CornerOrientation", "O.OO.O..Y........YY..Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coAs]
+     "CornerOrientation", "O.OO.O.....Y......Y..Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coAs]
+     "CornerOrientation", "O.OO.O..YY...........Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coAs]
+     "CornerOrientation", "O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [coL] // L
+     "CornerOrientation", "O.OO.OY....Y...Y........Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + coL]
+     "CornerOrientation", "O.OO.O..YY.......Y..Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + coL]
+     "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + coL]]
 
-let cpPatterns = [
+let coIntermediatePatterns =
+    let sexy = "R U R' U'"
+    let sexy2 = sexy + " " + sexy
+    let sexy3 = sexy2 + " " + sexy
+    let sledge = "R' F R F'"
+    let antiSune = "L' U' L U' L' U2 L"
+    let hCase = "R U2 R' U' " + sexy + " R U' R'"
+    let lCase = "F R' F' R U R U' R'"
+    // Orient corners (CO) - hand authored patterns [27 cases] - 7 algs (~13 STM better than beginner)
+    ["CornerOrientation", "O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+     "CornerOrientation", "O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [hCase] // H
+     "CornerOrientation", "O.OO.O............Y.Y...Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + hCase] // H
+     "CornerOrientation", "O.OO.OY..............Y..Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 F " + sexy2 + " F'"] // Pi
+     "CornerOrientation", "O.OO.OY.Y...........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' F " + sexy2 + " F'"]
+     "CornerOrientation", "O.OO.O..Y.........Y.Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [   "F " + sexy2 + " F'"]
+     "CornerOrientation", "O.OO.O............Y..Y.Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [ "U F " + sexy2 + " F'"]
+     "CornerOrientation", "O.OO.O...Y.Y.........Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", [ "U F " + sexy + " F'"] // U
+     "CornerOrientation", "O.OO.O...Y.....Y........Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 F " + sexy + " F'"]
+     "CornerOrientation", "O.OO.OY.Y......Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' F " + sexy + " F'"]
+     "CornerOrientation", "O.OO.O.....Y.....YY.Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", [   "F " + sexy + " F'"]
+     "CornerOrientation", "O.OO.OY....Y.....Y...Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", [        sexy + " " + sledge] // T
+     "CornerOrientation", "O.OO.O...Y.Y........Y...Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", [ "U " + sexy + " " + sledge]
+     "CornerOrientation", "O.OO.O..YY.....Y.......Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + sexy + " " + sledge]
+     "CornerOrientation", "O.OO.O.........Y.YY.......YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + sexy + " " + sledge]
+     "CornerOrientation", "O.OO.OY........Y.......Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [sune] // sune
+     "CornerOrientation", "O.OO.OY..........Y..Y.....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + sune]
+     "CornerOrientation", "O.OO.OY....Y........Y..Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + sune]
+     "CornerOrientation", "O.OO.O...Y..........Y..Y..YBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + sune]
+     "CornerOrientation", "O.OO.O..Y......Y..Y.....Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + antiSune] // anti-sune
+     "CornerOrientation", "O.OO.O..Y........YY..Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", [        antiSune]
+     "CornerOrientation", "O.OO.O.....Y......Y..Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", [ "U " + antiSune]
+     "CornerOrientation", "O.OO.O..YY...........Y..Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + antiSune]
+     "CornerOrientation", "O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", [lCase] // L
+     "CornerOrientation", "O.OO.OY....Y...Y........Y..BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + lCase]
+     "CornerOrientation", "O.OO.O..YY.......Y..Y......BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + lCase]
+     "CornerOrientation", "O.OO.O.....Y...Y..Y....Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + lCase]]
+
+let cpBeginnerPatterns = [
     // Permute corners (CP) - hand authored patterns [20 + 4 cases] - single-alg (jperm) [final AUF is unnecessary]
     "CornerPermutation", "O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
     "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U"] // skip
@@ -318,47 +344,77 @@ let cpPatterns = [
     "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U2"]
     "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U " + jperm + " U'"]]
 
-let cmllPatterns = coPatterns @ cpPatterns
+let cpIntermediatePatterns =
+    let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
+    // Permute corners (CP) - hand authored patterns [20 + 4 cases] - (two algs: jperm [same as beginner] and diagSwap) [final AUF is unnecessary]
+    ["CornerPermutation", "O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
+     "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U"] // skip
+     "CornerPermutation", "O.OO.OR.RY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2"] // skip
+     "CornerPermutation", "O.OO.OB.BY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U'"] // skip
+     "CornerPermutation", "O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm] // O
+     "CornerPermutation", "O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm]
+     "CornerPermutation", "O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm]
+     "CornerPermutation", "O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm]
+     "CornerPermutation", "O.OO.OR.BY.Y...Y.YG.GO.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U"] // G
+     "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.RG.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U"]
+     "CornerPermutation", "O.OO.OB.OY.Y...Y.YR.OB.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U"]
+     "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.BR.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U"]
+     "CornerPermutation", "O.OO.OB.OY.Y...Y.YR.RG.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U2"] // R
+     "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.BR.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U2"]
+     "CornerPermutation", "O.OO.OO.GY.Y...Y.YB.GO.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U2"]
+     "CornerPermutation", "O.OO.OR.RY.Y...Y.YG.OB.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U2"]
+     "CornerPermutation", "O.OO.OO.GY.Y...Y.YB.BR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", [jperm + " U'"] // B
+     "CornerPermutation", "O.OO.OR.OY.Y...Y.YG.OB.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U " + jperm + " U'"]
+     "CornerPermutation", "O.OO.OG.RY.Y...Y.YO.RG.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2 " + jperm + " U'"]
+     "CornerPermutation", "O.OO.OB.BY.Y...Y.YR.GO.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U' " + jperm + " U'"]
+     "CornerPermutation", "O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [diagSwap] // diag
+     "CornerPermutation", "O.OO.OB.GY.Y...Y.YR.OB.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", [diagSwap + " U"]
+     "CornerPermutation", "O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", [diagSwap + " U2"]
+     "CornerPermutation", "O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", [diagSwap + " U'"]]
+
+let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
+let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
 
 let centerOrientationPatterns = [
     // Orient center - hand authored patterns [4 cases]
     "CenterOrientation", "O.OO.OO.OY.Y.E.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWEWW.W", [] // skip
     "CenterOrientation", "O.OO.OO.OY.Y.P.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWPWW.W", ["M"]] // or M'
 
-let edgeOrientationPatters = [
+let edgeOrientationPatters =
+    let mum = "M' U' M'"
     // Orient edges (EO) - hand authored patterns (TODO: corner AUF should not be required)
-    "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
-    "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " + mum + " " + mum + " U' " + mum + " U"] // 2-up horizontal
-    "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [        mum + " " + mum + " U' " + mum] // 2-up vertical
-    "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 " +  mum + " " + mum + " U' " + mum] // 2-down
-    "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " +  mum + " U2 " + mum + " U"] // 2-up L (SE)
-    "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U2 " +  mum + " U2 " + mum + " U2"] // 2-up L (SW)
-    "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U "  +  mum + " U2 " + mum + " U'"] // 2-up L (NW)
-    "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [         mum + " U2 " + mum] // 2-up L (NE)
-    "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/B
-    "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/B
-    "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U'"] // 2 B/B
-    "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum] // 2 R/B
-    "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/F
-    "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/F
-    "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U " + mum + " U' " + mum + " U'"] // 2 B/F
-    "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U " + mum + " U' " + mum] // 2 R/F
-    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [mum + " U' " + mum + " U " + mum + " U' " + mum + " U"] // 4 up
-    "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U"] // arrow F/F
-    "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U2"] // arrow L/F
-    "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U'"] // arrow B/F
-    "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum] // arrow R/F
-    "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " U' " + mum + " U2 " + mum + " U2"] // arrow F/B
-    "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " U' " + mum + " U2 " + mum + " U'"] // arrow L/B
-    "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " U' " + mum + " U2 " + mum] // arrow B/B
-    "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " U' " + mum + " U2 " + mum + " U"] // arrow R/B
-    "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U2 " + mum + " U2 " + mum + " U'"] // 2-up/2-down horizontal (special case - leave horizontal)
-    "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U2 " + mum + " U2 " + mum] // 2-up/2-down vertical (special case - make horizontal)
-    "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U' " + mum] // 2-up L (SE)/2-down
-    "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U2 " + mum + " U' " + mum + " U"] // 2-up L (SW)/2-down
-    "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U "  + mum + " U' " + mum + " U2"] // 2-up L (NW)/2-down
-    "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U' " + mum + " U'"] // 2-up L (NE)/2-down
-    "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"]] // 6-flip
+    ["EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " + mum + " " + mum + " U' " + mum + " U"] // 2-up horizontal
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [        mum + " " + mum + " U' " + mum] // 2-up vertical
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 " +  mum + " " + mum + " U' " + mum] // 2-down
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' " +  mum + " U2 " + mum + " U"] // 2-up L (SE)
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U2 " +  mum + " U2 " + mum + " U2"] // 2-up L (SW)
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U "  +  mum + " U2 " + mum + " U'"] // 2-up L (NW)
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [         mum + " U2 " + mum] // 2-up L (NE)
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/B
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/B
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum + " U'"] // 2 B/B
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum] // 2 R/B
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U " + mum + " U' " + mum + " U"] // 2 F/F
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum + " U " + mum + " U' " + mum + " U2"] // 2 L/F
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U " + mum + " U' " + mum + " U'"] // 2 B/F
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U " + mum + " U' " + mum] // 2 R/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [mum + " U' " + mum + " U " + mum + " U' " + mum + " U"] // 4 up
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U"] // arrow F/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U2"] // arrow L/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U'"] // arrow B/F
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum] // arrow R/F
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " U' " + mum + " U2 " + mum + " U2"] // arrow F/B
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " U' " + mum + " U2 " + mum + " U'"] // arrow L/B
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " U' " + mum + " U2 " + mum] // arrow B/B
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U "  + mum + " U' " + mum + " U2 " + mum + " U"] // arrow R/B
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U2 " + mum + " U2 " + mum + " U'"] // 2-up/2-down horizontal (special case - leave horizontal)
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U2 " + mum + " U2 " + mum] // 2-up/2-down vertical (special case - make horizontal)
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U' " + mum + " U' " + mum] // 2-up L (SE)/2-down
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U2 " + mum + " U' " + mum + " U"] // 2-up L (SW)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["U "  + mum + " U' " + mum + " U2"] // 2-up L (NW)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U' " + mum + " U'"] // 2-up L (NE)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"]] // 6-flip
 
 let eoPatterns = centerOrientationPatterns @ edgeOrientationPatters
 
@@ -381,38 +437,69 @@ let lrPatterns = [
 
 let eolrPatterns = eoPatterns @ lrPatterns
 
-let l4ePatterns = [
+let l4eBeginnerPatterns =
+    let mu2 = "M' U2"
     // Last 4 edges -> Solved! - hand authored
+    ["L4E", "OOOOOOOOOYYYYYYYYYBBBRRRGGGBBBRRRGGGBBBRRRGGGWWWWWWWWW", [] // skip (solved!)
+     "L4E", "OROOROOROYWYYWYYWYBBBRORGGGBBBRORGGGBBBRORGGGWYWWYWWYW", ["M2"]
+     "L4E", "OOOOROOROYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2]
+     "L4E", "OROOROOOOYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2]
+     "L4E", "OROOOOOOOYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " M2"]
+     "L4E", "OOOOOOOROYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"]
+     "L4E", "OROOOOOOOYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"]
+     "L4E", "OOOOOOOROYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"] // (could spot, bar earlier, but...)
+     "L4E", "OOOOROOROYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"]
+     "L4E", "OROOROOOOYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2"]
+     "L4E", "OOOOOOOROYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " U2 M2 U2"]
+     "L4E", "OROOOOOOOYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"]
+     "L4E", "OROOROOOOYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"]
+     "L4E", "OOOOROOROYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"]
+     "L4E", "OROOROOOOYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"]
+     "L4E", "OOOOROOROYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"]
+     "L4E", "OOOOOOOROYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2]
+     "L4E", "OROOOOOOOYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2]
+     "L4E", "OOOOROOOOYWYYWYYWYBBBRRRGGGBBBRORGGGBBBRRRGGGWYWWYWWYW", ["U2 M2 U2"] // horizontal bars
+     "L4E", "OROOOOOROYYYYYYYYYBBBRORGGGBBBRRRGGGBBBRORGGGWWWWWWWWW", ["U2 M2 U2 M2"] // horizontal bars
+     "L4E", "OROOROOROYYYYWYYYYBBBRORGGGBBBRORGGGBBBRORGGGWWWWYWWWW", ["M U2 M2 U2 M'"] // vertical bars
+     "L4E", "OOOOOOOOOYWYYYYYWYBBBRRRGGGBBBRRRGGGBBBRRRGGGWYWWWWWYW", ["M' U2 M2 U2 M'"] // vertical bars
+     "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // dots
+     "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2]] // dots
+
+let l4ePatterns = [
+    // Last 4 edges -> Solved! - hand authored (~5 STM better than beginner)
     "L4E", "OOOOOOOOOYYYYYYYYYBBBRRRGGGBBBRRRGGGBBBRRRGGGWWWWWWWWW", [] // skip (solved!)
     "L4E", "OROOROOROYWYYWYYWYBBBRORGGGBBBRORGGGBBBRORGGGWYWWYWWYW", ["M2"]
-    "L4E", "OOOOROOROYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2] // happens to be best alg
-    "L4E", "OROOROOOOYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["U2 M U2 M"]
-    "L4E", "OROOOOOOOYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " M2"] // happens to be best alg
-    "L4E", "OOOOOOOROYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["U2 M U2 M'"]
-    "L4E", "OROOOOOOOYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"] // best alg: ["M U2 M' U2"]
-    "L4E", "OOOOOOOROYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"] // (could spot, bar earlier, but...) best alg: ["U2 M' U2 M"]
-    "L4E", "OOOOROOROYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", [mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"] // best alg: ["M U2 M' U2 M2"]
-    "L4E", "OROOROOOOYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2"] // best alg: ["U2 M' U2 M'"]
-    "L4E", "OOOOOOOROYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " U2 M2 U2"] // best alg: ["M' U2 M U2"]
-    "L4E", "OROOOOOOOYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M'"] // best alg: ["M2 U2 M U2 M"]
-    "L4E", "OROOROOOOYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + (* horizontal bars *) " U2 M2 U2 M2"] // best alg: ["M' U2 M U2 M2"]
-    "L4E", "OOOOROOROYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + (* vertical bars *) " M' U2 M2 U2 M"] // best alg: ["M2 U2 M U2 M'"]
-    "L4E", "OROOROOOOYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["M U2 M U2"]
-    "L4E", "OOOOROOROYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["M2 U2 M' U2 M"]
-    "L4E", "OOOOOOOROYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["M U2 M U2 M2"]
-    "L4E", "OROOOOOOOYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2] // best alg: ["M2 U2 M' U2 M'"]
-    "L4E", "OOOOROOOOYWYYWYYWYBBBRRRGGGBBBRORGGGBBBRRRGGGWYWWYWWYW", ["U2 M2 U2"] // horizontal bars - happens to be best alg
-    "L4E", "OROOOOOROYYYYYYYYYBBBRORGGGBBBRRRGGGBBBRORGGGWWWWWWWWW", ["U2 M2 U2 M2"] // horizontal bars - happens to be best alg
-    "L4E", "OROOROOROYYYYWYYYYBBBRORGGGBBBRORGGGBBBRORGGGWWWWYWWWW", ["M U2 M2 U2 M'"] // vertical bars - happens to be best alg
-    "L4E", "OOOOOOOOOYWYYYYYWYBBBRRRGGGBBBRRRGGGBBBRRRGGGWYWWWWWYW", ["M' U2 M2 U2 M'"] // vertical bars - happens to be best alg
-    "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " M2"] // best alg: ["E2 M E2 M"] // vertical bars - happens to be best alg
-    "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", [mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2 + " " + mu2]] // best alg: ["E2 M E2 M'"]
+    "L4E", "OOOOROOROYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", ["M' U2 M' U2"]
+    "L4E", "OROOROOOOYWYYWYYYYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", ["U2 M U2 M"]
+    "L4E", "OROOOOOOOYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", ["M' U2 M' U2 M2"]
+    "L4E", "OOOOOOOROYYYYYYYWYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", ["U2 M U2 M'"]
+    "L4E", "OROOOOOOOYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWWWWWWWYW", ["M U2 M' U2"]
+    "L4E", "OOOOOOOROYWYYYYYYYBBBRORGGGBBBRRRGGGBBBRRRGGGWYWWWWWWW", ["U2 M' U2 M"]
+    "L4E", "OOOOROOROYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWYWWYWWWW", ["M U2 M' U2 M2"]
+    "L4E", "OROOROOOOYYYYWYYWYBBBRRRGGGBBBRORGGGBBBRORGGGWWWWYWWYW", ["U2 M' U2 M'"]
+    "L4E", "OOOOOOOROYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", ["M' U2 M U2"]
+    "L4E", "OROOOOOOOYYYYYYYWYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", ["M2 U2 M U2 M"]
+    "L4E", "OROOROOOOYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", ["M' U2 M U2 M2"]
+    "L4E", "OOOOROOROYWYYWYYYYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", ["M2 U2 M U2 M'"]
+    "L4E", "OROOROOOOYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWYWWYWWWW", ["M U2 M U2"]
+    "L4E", "OOOOROOROYYYYWYYWYBBBRORGGGBBBRORGGGBBBRRRGGGWWWWYWWYW", ["M2 U2 M' U2 M"]
+    "L4E", "OOOOOOOROYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWWWWWWWYW", ["M U2 M U2 M2"]
+    "L4E", "OROOOOOOOYWYYYYYYYBBBRRRGGGBBBRRRGGGBBBRORGGGWYWWWWWWW", ["M2 U2 M' U2 M'"]
+    "L4E", "OOOOROOOOYWYYWYYWYBBBRRRGGGBBBRORGGGBBBRRRGGGWYWWYWWYW", ["U2 M2 U2"] // horizontal bars
+    "L4E", "OROOOOOROYYYYYYYYYBBBRORGGGBBBRRRGGGBBBRORGGGWWWWWWWWW", ["U2 M2 U2 M2"] // horizontal bars
+    "L4E", "OROOROOROYYYYWYYYYBBBRORGGGBBBRORGGGBBBRORGGGWWWWYWWWW", ["M U2 M2 U2 M'"] // vertical bars
+    "L4E", "OOOOOOOOOYWYYYYYWYBBBRRRGGGBBBRRRGGGBBBRRRGGGWYWWWWWYW", ["M' U2 M2 U2 M'"] // vertical bars
+    "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", ["E2 M E2 M"] // dots
+    "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", ["E2 M E2 M'"]] // dots
 
-let lsePatterns = eolrPatterns @ l4ePatterns
+let lseBeginnerPatterns = eolrPatterns @ l4eBeginnerPatterns
+let lseIntermediatePatterns = eolrPatterns @ l4ePatterns
 
-let beginnerRouxPatterns = fbPatterns @ sbPatterns @ cmllPatterns @ lsePatterns
+let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM
+let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP
 
-let solve = solveCase beginnerRouxPatterns
+// let solve = solveCase rouxBeginnerPatterns
+let solve = solveCase rouxIntermediatePatterns
 
 let genRoux () =
     let numCubes = 10000
