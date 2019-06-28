@@ -346,7 +346,7 @@ let cpBeginnerPatterns = [
 
 let cpIntermediatePatterns =
     let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
-    // Permute corners (CP) - hand authored patterns [20 + 4 cases] - (two algs: jperm [same as beginner] and diagSwap) [final AUF is unnecessary]
+    // Permute corners (CP) - hand authored patterns [20 + 4 cases] - (two algs: jperm [same as beginner] and diagSwap) [final AUF is unnecessary] (just diag swap, ~3 STM better than beginner)
     ["CornerPermutation", "O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", [] // skip
      "CornerPermutation", "O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U"] // skip
      "CornerPermutation", "O.OO.OR.RY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", ["U2"] // skip
@@ -380,7 +380,7 @@ let centerOrientationPatterns = [
     "CenterOrientation", "O.OO.OO.OY.Y.E.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWEWW.W", [] // skip
     "CenterOrientation", "O.OO.OO.OY.Y.P.Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WWPWW.W", ["M"]] // or M'
 
-let edgeOrientationPatters =
+let edgeBeginnerOrientationPatters =
     let mum = "M' U' M'"
     // Orient edges (EO) - hand authored patterns (TODO: corner AUF should not be required)
     ["EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
@@ -416,7 +416,45 @@ let edgeOrientationPatters =
      "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [        mum + " U' " + mum + " U'"] // 2-up L (NE)/2-down
      "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U2 " + mum + " U " + mum + " U' " + mum + " U2"]] // 6-flip
 
-let eoPatterns = centerOrientationPatterns @ edgeOrientationPatters
+let edgeIntermediateOrientationPatters =
+    let mum = "M' U' M'"
+    // Orient edges (EO) - hand authored patterns (~4 STM better than beginner) (TODO: corner AUF should not be required)
+    ["EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [] // skip
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["U' M' U M U' " + mum + " U2"] // 2-up horizontal
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [   "M' U M U' " + mum + " U"] // 2-up vertical
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [mum + " U M U' M' U"] // 2-down
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["M U M' U2 M U' M' U2"] // 2-up L (SE)
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["M U' M' U2 M U' M'"] // 2-up L (SW)
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["M' U M' U2 " + mum + " U2"] // 2-up L (NW)
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["M' U' M U2 " + mum] // 2-up L (NE)
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [        mum + " U' M U' M' U'"] // 2 F/B
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' " + mum + " U' M U' M'"] // 2 L/B
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 " + mum + " U' M U' M' U"] // 2 B/B
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [ "U " + mum + " U' M U' M' U2"] // 2 R/B
+     "EdgeOrientation", "O.OO.OO.OYEYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 M' U' M U' " + mum + " U"] // 2 F/F
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [ "U M' U' M U' " + mum + " U2"] // 2 L/F
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [   "M' U' M U' " + mum + " U'"] // 2 B/F
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' M' U' M U' " + mum] // 2 R/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", ["M' U2 M' U2 " + mum + " U"] // 4 up
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", [mum + " U' " + mum + " U " + mum + " U' " + mum + " U"] // 4 up
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", [        mum + " U"] // arrow F/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U' " + mum + " U2"] // arrow L/F
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U2 " + mum + " U'"] // arrow B/F
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", ["U "  + mum] // arrow R/F
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U2 M U' M' U'"] // arrow F/B (easy to learn, arrow from back - include in beginner?)
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [ "U M U' M'"] // arrow L/B (easy)
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", [   "M U' M' U"] // arrow B/B (easy)
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", ["U' M U' M' U2"] // arrow R/B (easy)
+     "EdgeOrientation", "O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [   "M' U2 M' U2 M U' M' U"] // 2-up/2-down horizontal (special case - leave horizontal)
+     "EdgeOrientation", "O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", [ "U M' U2 M' U2 M U' M'"] // 2-up/2-down vertical (special case - make horizontal)
+     "EdgeOrientation", "O.OO.OO.OYEYEEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 U' M U' M' U2"] // 2-up L (SE)/2-down
+     "EdgeOrientation", "O.OO.OO.OYEYPEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 U M U' M'"] // 2-up L (SW)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYPEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 U' " + mum + " U2"] // 2-up L (NW)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["M2 U " + mum] // 2-up L (NE)/2-down
+     "EdgeOrientation", "O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", ["R U' r' U' M' U r U r'"]] // 6-flip (fancy!)
+
+let eoBeginnerPatterns = centerOrientationPatterns @ edgeBeginnerOrientationPatters
+let eoIntermediatePatterns = centerOrientationPatterns @ edgeIntermediateOrientationPatters
 
 let lrPatterns = [
     // L edge to DF
@@ -435,7 +473,8 @@ let lrPatterns = [
     // LR solved
     "LREdges", "OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", ["U M2 U'"]]
 
-let eolrPatterns = eoPatterns @ lrPatterns
+let eolrBeginnerPatterns = eoBeginnerPatterns @ lrPatterns
+let eolrIntermediatePatterns = eoIntermediatePatterns @ lrPatterns
 
 let l4eBeginnerPatterns =
     let mu2 = "M' U2"
@@ -492,11 +531,11 @@ let l4ePatterns = [
     "L4E", "OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", ["E2 M E2 M"] // dots
     "L4E", "OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", ["E2 M E2 M'"]] // dots
 
-let lseBeginnerPatterns = eolrPatterns @ l4eBeginnerPatterns
-let lseIntermediatePatterns = eolrPatterns @ l4ePatterns
+let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eBeginnerPatterns
+let lseIntermediatePatterns = eolrIntermediatePatterns @ l4ePatterns
 
 let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM
-let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP
+let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO
 
 // let solve = solveCase rouxBeginnerPatterns
 let solve = solveCase rouxIntermediatePatterns
