@@ -58,7 +58,13 @@ let solveWithSteps includedSteps check cube =
 
 let hybridSolve steps hints patterns goal stage cube =
     let split (s: string) (c: char) = s.Split(c)
-    let matches (c: string) (p: string) = Seq.forall2 (fun p c -> p = '.' || p = c || (p = 'P' && c <> 'W' && c <> 'Y') || (p = 'E' && (c = 'W' || c = 'Y'))) p c // assumes W/Y Up/Down
+    let matches (cube: string) (pattern: string * bool) =
+        let mtch p c =
+            p = '.' || p = c || // wildcard or perfect match
+            (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge
+            (p = 'E' && (c = 'W' || c = 'Y')) // good edge
+        let pat, ignoreAuf = pattern
+        Seq.forall2 mtch pat cube // assumes W/Y Up/Down
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
         match algs with
