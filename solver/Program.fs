@@ -318,58 +318,22 @@ let coIntermediatePatterns =
 
 let cpBeginnerPatterns = [
     // Permute corners (CP) - hand authored patterns [20 + 4 cases] - single-alg (jperm) [final AUF is unnecessary]
-    "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-    "CornerPermutation", ("O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-    "CornerPermutation", ("O.OO.OR.RY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-    "CornerPermutation", ("O.OO.OB.BY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-    "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // O
-    "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-    "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-    "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-    "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.GO.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // G
-    "CornerPermutation", ("O.OO.OO.RY.Y...Y.YB.RG.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-    "CornerPermutation", ("O.OO.OB.OY.Y...Y.YR.OB.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-    "CornerPermutation", ("O.OO.OG.GY.Y...Y.YO.BR.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-    "CornerPermutation", ("O.OO.OB.OY.Y...Y.YR.RG.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // R
-    "CornerPermutation", ("O.OO.OG.BY.Y...Y.YO.BR.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-    "CornerPermutation", ("O.OO.OO.GY.Y...Y.YB.GO.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-    "CornerPermutation", ("O.OO.OR.RY.Y...Y.YG.OB.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-    "CornerPermutation", ("O.OO.OO.GY.Y...Y.YB.BR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // B
-    "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.OB.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-    "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.RG.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-    "CornerPermutation", ("O.OO.OB.BY.Y...Y.YR.GO.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-    "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm + " U " + jperm] // diag
-    "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.OB.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm + " U " + jperm]
-    "CornerPermutation", ("O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm + " U " + jperm]
-    "CornerPermutation", ("O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm + " U " + jperm]]
+    "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [] // skip (color neutral)
+    "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [jperm] // adjacent (color neutral)
+    "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U " + jperm]
+    "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U2 " + jperm]
+    "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U' " + jperm]
+    "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [jperm + " U " + jperm]] // diag (color neutral)
 
 let cpIntermediatePatterns =
     let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
     // Permute corners (CP) - hand authored patterns [20 + 4 cases] - (two algs: jperm [same as beginner] and diagSwap) [final AUF is unnecessary] (just diag swap, ~3 STM better than beginner)
-    ["CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-     "CornerPermutation", ("O.OO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-     "CornerPermutation", ("O.OO.OR.RY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-     "CornerPermutation", ("O.OO.OB.BY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [] // skip
-     "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // O
-     "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-     "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-     "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-     "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.GO.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // G
-     "CornerPermutation", ("O.OO.OO.RY.Y...Y.YB.RG.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-     "CornerPermutation", ("O.OO.OB.OY.Y...Y.YR.OB.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-     "CornerPermutation", ("O.OO.OG.GY.Y...Y.YO.BR.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-     "CornerPermutation", ("O.OO.OB.OY.Y...Y.YR.RG.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // R
-     "CornerPermutation", ("O.OO.OG.BY.Y...Y.YO.BR.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-     "CornerPermutation", ("O.OO.OO.GY.Y...Y.YB.GO.BR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-     "CornerPermutation", ("O.OO.OR.RY.Y...Y.YG.OB.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-     "CornerPermutation", ("O.OO.OO.GY.Y...Y.YB.BR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [jperm] // B
-     "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.OB.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U " + jperm]
-     "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.RG.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U2 " + jperm]
-     "CornerPermutation", ("O.OO.OB.BY.Y...Y.YR.GO.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), ["U' " + jperm]
-     "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [diagSwap] // diag
-     "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.OB.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [diagSwap]
-     "CornerPermutation", ("O.OO.OO.RY.Y...Y.YB.GO.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [diagSwap]
-     "CornerPermutation", ("O.OO.OG.BY.Y...Y.YO.RG.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false), [diagSwap]]
+    ["CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [] // skip (color neutral)
+     "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [jperm] // adjacent (color neutral)
+     "CornerPermutation", ("O.OO.OB.GY.Y...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U " + jperm]
+     "CornerPermutation", ("O.OO.OR.BY.Y...Y.YG.BR.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U2 " + jperm]
+     "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.RG.BR.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), ["U' " + jperm]
+     "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true), [diagSwap]] // diag (color neutral)
 
 let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
 let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
@@ -536,14 +500,14 @@ let l4ePatterns = [
 let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eBeginnerPatterns
 let lseIntermediatePatterns = eolrIntermediatePatterns @ l4ePatterns
 
-let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM
+let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
 let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
 
-let solve = solveCase rouxBeginnerPatterns
-// let solve = solveCase rouxIntermediatePatterns
+// let solve = solveCase rouxBeginnerPatterns
+let solve = solveCase rouxIntermediatePatterns
 
 let genRoux () =
-    let numCubes = 10000
+    let numCubes = 1000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""

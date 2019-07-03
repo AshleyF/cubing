@@ -67,13 +67,17 @@ let hybridSolve steps hints patterns goal stage cube =
         let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
         let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
         let cycleSwap = function 'B' -> 'G' | 'G' -> 'B' | 'R' -> 'O' | 'O' -> 'R' | c -> c
+        let auf p =
+            match List.ofSeq p with // rotate corners
+            | [b0; b1; b2; b3; b4; b5; b6; b7; b8; u0; u1; u2; u3; u4; u5; u6; u7; u8; l0; l1; l2; f0; f1; f2; r0; r1; r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
+              [b0; b1; b2; b3; b4; b5; l2; b7; l0; u6; u1; u0; u3; u4; u5; u8; u7; u2; f0; l1; f2; r0; f1; r2; b8; r1; b6; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
+            | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
         let colorCycle c p =
-            match List.ofSeq p with
+            match List.ofSeq p with // cycle colors without rotation
             | [b0; b1; b2; b3; b4; b5;   b6; b7;   b8;   u0; u1;   u2; u3; u4; u5;   u6; u7;   u8;   l0; l1;   l2;   f0; f1;   f2;   r0; r1;   r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
-              [b0; b1; b2; b3; b4; b5; c l2; b7; c l0; c u6; u1; c u0; u3; u4; u5; c u8; u7; c u2; c f0; l1; c f2; c r0; f1; c r2; c b8; r1; c b6; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
+              [b0; b1; b2; b3; b4; b5; c b6; b7; c b8; c u0; u1; c u2; u3; u4; u5; c u6; u7; c u8; c l0; l1; c l2; c f0; f1; c f2; c r0; r1; c r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
             | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
         let pat, aufNeutral, colorNeutralUpCorners = pattern
-        let auf c = colorCycle id c
         let patU () = auf pat
         let patU2 () = auf (patU ())
         let patU' () = auf (patU2 ())
