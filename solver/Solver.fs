@@ -58,13 +58,37 @@ let solveWithSteps includedSteps check cube =
 
 let hybridSolve steps hints patterns goal stage cube =
     let split (s: string) (c: char) = s.Split(c)
-    let matches (cube: string) (pattern: string * bool) =
+    let matches (cube: string) (pattern: string * bool * bool) =
         let mtch p c =
             p = '.' || p = c || // wildcard or perfect match
-            (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge
+            (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge (assume Y/W up/down)
             (p = 'E' && (c = 'W' || c = 'Y')) // good edge
-        let pat, ignoreAuf = pattern
-        Seq.forall2 mtch pat cube // assumes W/Y Up/Down
+        let matchPat p = Seq.forall2 mtch p cube
+        let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
+        let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
+        let cycleSwap = function 'B' -> 'G' | 'G' -> 'B' | 'R' -> 'O' | 'O' -> 'R' | c -> c
+        let colorCycle c p =
+            match List.ofSeq p with
+            | [b0; b1; b2; b3; b4; b5;   b6; b7;   b8;   u0; u1;   u2; u3; u4; u5;   u6; u7;   u8;   l0; l1;   l2;   f0; f1;   f2;   r0; r1;   r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
+              [b0; b1; b2; b3; b4; b5; c l2; b7; c l0; c u6; u1; c u0; u3; u4; u5; c u8; u7; c u2; c f0; l1; c f2; c r0; f1; c r2; c b8; r1; c b6; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
+            | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
+        let pat, aufNeutral, colorNeutralUpCorners = pattern
+        let auf c = colorCycle id c
+        let patU () = auf pat
+        let patU2 () = auf (patU ())
+        let patU' () = auf (patU2 ())
+        let cw p = colorCycle cycleCW p
+        let ccw p = colorCycle cycleCCW p
+        let swap p = colorCycle cycleSwap p
+        match (aufNeutral, colorNeutralUpCorners) with
+        | true, true ->
+            matchPat       pat  || matchPat       (patU ())  || matchPat       (patU2 ())  || matchPat       (patU' ())  ||
+            matchPat   (cw pat) || matchPat   (cw (patU ())) || matchPat   (cw (patU2 ())) || matchPat   (cw (patU' ())) ||
+            matchPat  (ccw pat) || matchPat  (ccw (patU ())) || matchPat  (ccw (patU2 ())) || matchPat  (ccw (patU' ())) ||
+            matchPat (swap pat) || matchPat (swap (patU ())) || matchPat (swap (patU2 ())) || matchPat (swap (patU' ()))
+        | true, false -> matchPat pat || matchPat (patU ()) || matchPat (patU2 ()) || matchPat (patU' ())
+        | false, true -> matchPat pat || matchPat (cw pat) || matchPat (ccw pat) || matchPat (swap pat) 
+        | false, false -> matchPat pat
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
         match algs with
