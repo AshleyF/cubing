@@ -50,7 +50,6 @@ We've started with Roux. The following stages are used:
 
 # TODO
 
-- Simplify patterns by discovering AUF
 - Define goals in pattern language rather than `look Face.FOO Sticker.BAR cube` expressions
 - Discover FB/SB cases by *deconstruction* from solved state
 - Formalize edge and corner orientations in search
