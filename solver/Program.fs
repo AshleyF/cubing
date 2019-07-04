@@ -3,10 +3,12 @@ open Cube
 open Solver
 open Render
 
-// single-alg CO
 let sune = "R U R' U R U2 R'"
 let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
 let mum = "M' U' M'"
+let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
+let sexy = "R U R' U'"
+let sledge = "R' F R F'"
 
 let dlEdgePatterns = [
     // Solving DL edge (during inspection) [24 cases]
@@ -256,8 +258,6 @@ let coBeginnerPatterns =
      "CornerOrientation", ("O.OO.O...Y.......Y...Y....YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " " + sune + " U2 " + sune]] // L - 22 twists (3 sunes)
 
 let coIntermediatePatterns =
-    let sexy = "R U R' U'"
-    let sledge = "R' F R F'"
     // Orient corners (CO) - hand authored patterns [8 cases] - 7 algs (~13 STM better than beginner)
     ["CornerOrientation", ("O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), [] // skip
      "CornerOrientation", ("O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["R U2 R' U' " + sexy + " R U' R'"] // H
@@ -275,7 +275,6 @@ let cpBeginnerPatterns = [
     "CornerPermutation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [jperm + " U " + jperm]] // diag (color neutral)
 
 let cpIntermediatePatterns =
-    let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
     // Permute corners (CP) - hand authored patterns [3 cases] - (two algs: jperm [same as beginner] and diagSwap) (just diag swap, ~3 STM better than beginner)
     ["CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [] // skip (color neutral)
      "CornerPermutation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), [jperm] // adjacent (color neutral)
@@ -283,6 +282,54 @@ let cpIntermediatePatterns =
 
 let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
 let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
+
+let cmllExpertPatterns = 
+    // Full CMLL - hand authored patterns [?? cases] (~?? STM better than intermediate)
+    ["CornerOrientation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [] // skip (color neutral)
+     "CornerOrientation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), [jperm] // O adjacent (color neutral)
+     "CornerOrientation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [diagSwap] // O diag (color neutral)
+     "CornerOrientation", ("O.OO.OY.YO.O...R.RG.GY.YB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F " + sexy + " " + sexy + " " + sexy + " F'"] // H rows
+     "CornerOrientation", ("O.OO.OR.OB.B...G.GY.YR.OY.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U R' U R U' R' U R U2 R'"] // H columns
+     "CornerOrientation", ("O.OO.OR.RB.G...O.OY.YG.BY.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U2' R2' F R F' U2 R' F R F'"] // H column
+     "CornerOrientation", ("O.OO.OY.YB.B...R.OO.GY.YG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r U' r2' D' r U' r' D r2 U r'"] // H row (top)
+     "CornerOrientation", ("O.OO.OB.YO.G...R.GY.YB.YR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R U R' U' R U R' U' F'"] // Pi right bar
+     "CornerOrientation", ("O.OO.OB.BO.R...G.GY.OY.YR.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R' U' R' F R F' R U' R' U2 R"] // Pi left bar
+     "CornerOrientation", ("O.OO.OY.YG.O...O.BR.YG.RY.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R' F' R U2 R U' R' U R U2' R'"] // Pi back slash
+     "CornerOrientation", ("O.OO.OG.YR.B...B.OY.YO.YG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U2 R' U' R U R' U2' R' F R F'"] // Pi forward slash
+     "CornerOrientation", ("O.OO.OB.BO.R...R.OY.GY.YG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R' F R U F U' R U R' U' F'"] // Pi checkerboard
+     "CornerOrientation", ("O.OO.OG.BR.R...O.OY.BY.YG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r U' r2' D' r U r' D r2 U r'"] // Pi rows
+     "CornerOrientation", ("O.OO.OG.OR.Y...R.YY.YB.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R U R' U' F'"] // U column
+     "CornerOrientation", ("O.OO.OO.GY.Y...G.RB.OY.YB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R2 D R' U2 R D' R' U2 R'"] // U forward slash
+     "CornerOrientation", ("O.OO.OY.YR.G...Y.YB.OB.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R2' D' R U2 R' D R U2 R"] // U back slash
+     "CornerOrientation", ("O.OO.OY.YG.B...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R2' F U' F U F2 R2 U' R' F R"] // U back row
+     "CornerOrientation", ("O.OO.OG.BR.Y...R.YY.YB.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R2 D R' U R D' R2' U' F'"] // U columns
+     "CornerOrientation", ("O.OO.OG.BY.Y...B.GO.RY.YR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r U' r' U r' D' r U' r' D r"] // U checkerboard
+     "CornerOrientation", ("O.OO.OY.BR.Y...G.YB.OY.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U R' U' R' F R F'"] // T row (to left)
+     "CornerOrientation", ("O.OO.OG.YY.R...Y.BO.BR.YO.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["L' U' L U L F' L' F"] // T row (to right)
+     "CornerOrientation", ("O.OO.OG.BR.R...Y.YY.GO.OB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R' F R2 U' R' U' R U R' F2"] // T rows
+     "CornerOrientation", ("O.OO.OR.RB.G...Y.YY.GO.OB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r' U r U2' R2' F R F' R"] // T front row
+     "CornerOrientation", ("O.OO.OR.OB.B...Y.YY.GO.RG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r' D' r U r' D r U' r U r'"] // T back row
+     "CornerOrientation", ("O.OO.OG.BY.Y...G.BO.YR.RY.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["r2' D' r U r' D r2 U' r' U' r"] // T columns
+     "CornerOrientation", ("O.OO.OY.GB.O...Y.GO.BR.YR.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), [sune] // S top row
+     "CornerOrientation", ("O.OO.OY.GG.O...Y.RR.OB.YB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["L' U2 L U2' L F' L' F"] // S checkerboard
+     "CornerOrientation", ("O.OO.OY.GR.O...Y.BB.RG.YO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R' F' R U2 R U2' R'"] // S forward slash
+     "CornerOrientation", ("O.OO.OY.GB.O...Y.RO.RG.YB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U R' U' R' F R F' R U R' U R U2 R'"] // S rows (not best alg, but what I use)
+     "CornerOrientation", ("O.OO.OY.BO.Y...G.RG.YR.YB.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U R' U R' F R F' R U2' R'"] // S bottom row
+     "CornerOrientation", ("O.OO.OY.BO.R...Y.BG.RG.YO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U' L' U R' U' L"] // S back slash
+     "CornerOrientation", ("O.OO.OR.YB.O...R.YY.GY.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["L' U' L U' L' U2 L"] // AS top row
+     "CornerOrientation", ("O.OO.OB.YO.G...R.YY.GY.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R2 D R' U R D' R' U R' U' R U' R'"] // AS rows
+     "CornerOrientation", ("O.OO.OR.YB.G...O.YY.BY.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F' L F L' U2' L' U2 L"] // AS back slash
+     "CornerOrientation", ("O.OO.OG.YR.G...O.YY.BY.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U2' R' U2 R' F R F'"] // AS checkerboard
+     "CornerOrientation", ("O.OO.OR.YB.G...R.YY.GY.OB.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["L' U R U' L U R'"] // AS back slash
+     "CornerOrientation", ("O.OO.OB.YO.B...G.YY.OY.RG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R' U' R U' L U' R' U L' U2 R"] // AS bottom row
+     "CornerOrientation", ("O.OO.OO.YY.B...G.YB.YR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R2' D' R U' R' D R U R"] // L mirror
+     "CornerOrientation", ("O.OO.OO.RY.G...B.YB.RY.GO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["F R' F' R U R U' R'"] // L inverse
+     "CornerOrientation", ("O.OO.OR.YY.B...O.YG.YG.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U2 R' U' R U R' U' R U R' U' R U' R'"] // L pure
+     "CornerOrientation", ("O.OO.OO.BY.R...R.YB.GY.GO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R U2 R D R' U2 R D' R2'"] // L front commutator
+     "CornerOrientation", ("O.OO.OG.YY.O...G.YO.YR.BR.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["R' U' R U R' F' R U R' U' R' F R2"] // L diag
+     "CornerOrientation", ("O.OO.OR.YY.O...O.YG.YG.BR.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), ["U R' U2 R' D' R U2 R' D R2"] // L back commutator
+     // Permute corners (CP) - always skip!
+     "CornerPermutation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), []] // always skip! (color neutral)
 
 let centerOrientationPatterns = [
     // Orient center - hand authored patterns [2 cases]
@@ -403,14 +450,16 @@ let lseIntermediatePatterns = eolrIntermediatePatterns @ l4eIntermediatePatterns
 
 let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
 let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
+let rouxExpertPatterns = fbPatterns @ sbPatterns @ cmllExpertPatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
 
 let solve =
     // rouxBeginnerPatterns
-    rouxIntermediatePatterns
+    // rouxIntermediatePatterns
+    rouxExpertPatterns
     |> expandPatternsForAuf |> solveCase
 
 let genRoux () =
-    let numCubes = 1000
+    let numCubes = 10000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
