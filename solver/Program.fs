@@ -284,7 +284,7 @@ let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
 let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
 
 let cmllExpertPatterns = 
-    // Full CMLL - hand authored patterns [?? cases] (~?? STM better than intermediate)
+    // Full CMLL - hand authored patterns [?? cases] (~10 STM better than intermediate)
     ["CornerOrientation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [] // skip (color neutral)
      "CornerOrientation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), [jperm] // O adjacent (color neutral)
      "CornerOrientation", ("O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [diagSwap] // O diag (color neutral)
@@ -450,7 +450,7 @@ let lseIntermediatePatterns = eolrIntermediatePatterns @ l4eIntermediatePatterns
 
 let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
 let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
-let rouxExpertPatterns = fbPatterns @ sbPatterns @ cmllExpertPatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
+let rouxExpertPatterns = fbPatterns @ sbPatterns @ cmllExpertPatterns @ lseIntermediatePatterns // 65 STM with CMLL
 
 let solve =
     // rouxBeginnerPatterns
