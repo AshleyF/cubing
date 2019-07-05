@@ -290,8 +290,10 @@ let executeRotations rs cube = Seq.fold executeRotation cube rs
 let executeMoves     ms cube = Seq.fold executeMove cube ms
 // let executeSteps     ss cube = Seq.fold executeStep cube ss
 let mutable twistCount = 0
+let mutable stageCount = 0
 let executeSteps ss cube =
     twistCount <- twistCount + Seq.length ss
+    stageCount <- stageCount + Seq.length ss
     Seq.fold executeStep cube ss
 
 type Center = U | D | L | R | F | B

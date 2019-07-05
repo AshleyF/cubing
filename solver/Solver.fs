@@ -4,6 +4,8 @@ open System
 open Cube
 open Render
 
+let quiet = false
+
 let solved =
     let u = faceOfStickers Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W
     let d = faceOfStickers Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y
@@ -16,25 +18,11 @@ let solved =
 let scrambleWithMoves (moves: Move list) n =
     let rand = Random()
     let rec scramble' cube sequence history n =
-        // let isRepeat c = List.contains c history
-        let rec canUndoTwoInOneMove c = function
-            | m :: t ->
-                match history with
-                    | _ :: previous :: _ -> if move m c = previous then true else canUndoTwoInOneMove c t
-                    | _ -> false
-            | _ -> false
         if n = 0 then (cube, Seq.rev sequence) else
             let m = List.item (rand.Next moves.Length) moves
             let cube' = move m cube
-            // if isRepeat cube' || canUndoTwoInOneMove cube' moves
-            // then scramble' cube sequence history n // try again
-            // else
             scramble' cube' (m :: sequence) (cube' :: history) (n - 1)
     scramble' solved [] [solved] n
-
-let scrambleRouxL4E =
-    let moves = [U2; M; M'; M2]
-    scrambleWithMoves moves
 
 let scramble =
     let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
@@ -108,24 +96,32 @@ let hybridSolve steps hints patterns goal stage cube =
         | Some solution -> solution
         | None -> solveWithSteps steps goal cube
 
+let mutable best = 0
+let mutable worst = 0
 let genCasesAndSolutions patterns steps cubes goal stage =
-    let rec gen cases (hints : ((Step list) list) list) = function
+    let rec gen cases (hints : ((Step list) list) list) b w = function
         | cube :: remaining ->
             let solutions = hybridSolve steps hints patterns goal stage cube
+            let turns = if solutions.Length = 0 then 0 else solutions.[0].Length
+            let b' = if turns < b then turns else b
+            let w' = if turns > w then turns else w
             let algs = Seq.map stepsToString solutions
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
             let key = if skip then "" else algs |> Seq.sort |> Seq.head
             // printfn "Key: %s" key
             match Map.tryFind key cases with
-            | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) hints remaining
+            | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) hints b' w' remaining
             | None ->
-                printfn "New case: %i [\"%s\"] (%s)" (key.GetHashCode()) (String.Join("\"; \"", algs)) (cubeToString cube)
+                if not quiet then printfn "New case: %i [\"%s\"] (%s)" (key.GetHashCode()) (String.Join("\"; \"", algs)) (cubeToString cube)
                 let cube' = if skip then cube else executeSteps (Seq.head solutions) cube
                 let hints' = if skip then hints else solutions :: hints
-                gen (Map.add key [cube, solutions, cube'] cases) hints' remaining
-        | _ -> cases
-    gen Map.empty [] cubes
+                gen (Map.add key [cube, solutions, cube'] cases) hints' b' w' remaining
+        | _ -> cases, b, w
+    let cases, b, w = gen Map.empty [] Int32.MaxValue Int32.MinValue cubes
+    best <- best + b
+    worst <- worst + w
+    cases
 
 let distinctCases solutions =
     let common (cubes: string list) =
@@ -135,18 +131,7 @@ let distinctCases solutions =
         String.Concat(Seq.init (9 * 6) commonNth)
     let cases = solutions |> Map.toList |> List.map snd |> List.map (List.map (fun (c, _, _) -> cubeToString c)) |> List.map common
     let algs = solutions |> Map.toList |> List.map fst
-    List.zip cases algs |> Seq.iter (fun (c, a) -> (* c |> stringToCube |> render; *) printfn "Algs: %s (%i) \"%s\"" a (a.GetHashCode()) c)
-
-let solveCase patterns steps name id case scrambled =
-    printfn "\nCase: %s" name
-    let solutions = genCasesAndSolutions patterns steps scrambled case id
-    distinctCases solutions
-    let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    for s in solved do
-        if not (case s) then
-            printfn "UNSOLVED: %s" (cubeToString s)
-            failwith "Authored pattern did not solve case"
-    solved
+    List.zip cases algs |> Seq.iter (fun (c, a) -> (* c |> stringToCube |> render; *) if not quiet then printfn "Algs: %s (%i) \"%s\"" a (a.GetHashCode()) c)
 
 let expandPatternsForAuf patterns =
     let expand (name, ((pat : string), cornerRotationNeutral, cornerColorNeutral, discoverAuf), algs) = seq {
@@ -165,3 +150,24 @@ let expandPatternsForAuf patterns =
             yield name, (String.Join("", u2), cornerRotationNeutral, cornerColorNeutral), (prepend "U2" algs)
             yield name, (String.Join("", u'), cornerRotationNeutral, cornerColorNeutral), (prepend "U"  algs) }
     patterns |> Seq.map expand |> Seq.concat
+
+let solveCase patterns steps name id case scrambled =
+    printfn "\nCase: %s" name
+    let solutions = genCasesAndSolutions patterns steps scrambled case id
+    distinctCases solutions
+    let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
+    for s in solved do
+        if not (case s) then
+            printfn "UNSOLVED: %s" (cubeToString s)
+            failwith "Authored pattern did not solve case"
+    solved
+
+let stageStats name numCubes =
+    printfn "--------------------------------------------------------------------------------"
+    printfn "STAGE STATS: %s" name
+    let avgStageTwistCount = float Cube.stageCount / float numCubes
+    printfn "Average: %f Best: %i Worst: %i" avgStageTwistCount best worst
+    printfn "--------------------------------------------------------------------------------"
+    Cube.stageCount <- 0
+    best <- 0
+    worst <- 0

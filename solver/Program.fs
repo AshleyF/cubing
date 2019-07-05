@@ -456,10 +456,11 @@ let solve =
     // rouxBeginnerPatterns
     // rouxIntermediatePatterns
     rouxExpertPatterns
-    |> expandPatternsForAuf |> solveCase
+    |> expandPatternsForAuf
+    |> solveCase
 
 let genRoux () =
-    let numCubes = 10000
+    let numCubes = 1000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
@@ -504,6 +505,8 @@ let genRoux () =
     let caseSolvedFB c = caseLBPair c && look Face.L Sticker.R c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.F Sticker.DL c = Color.R && look Face.F Sticker.L c = Color.R && look Face.D Sticker.UL c = Color.W
     let solvedFB = solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedDLFtoURF
 
+    Solver.stageStats "FB" numCubes
+
     // Second Block (SB)
 
     // DR (center done)
@@ -535,6 +538,8 @@ let genRoux () =
     let caseSolvedSB c = caseRBPair c && look Face.R Sticker.L c = Color.G && look Face.R Sticker.DL c = Color.G && look Face.F Sticker.DR c = Color.R && look Face.F Sticker.R c = Color.R && look Face.D Sticker.UR c = Color.W
     let solvedSB = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF
 
+    Solver.stageStats "SB" numCubes
+
     // Orient corners (CO) - hand authored patterns
     let caseCO c = caseSolvedSB c && look Face.U Sticker.UL c = Color.Y && look Face.U Sticker.UR c = Color.Y && look Face.U Sticker.DL c = Color.Y && look Face.U Sticker.DR c = Color.Y
     let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB
@@ -543,6 +548,8 @@ let genRoux () =
     let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
     let caseCP c = caseCO c && (look Face.L Sticker.UL c = look Face.L Sticker.UR c) && (look Face.R Sticker.UL c = look Face.R Sticker.UR c) // check left/right "pairs"
     let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO
+
+    Solver.stageStats "CMLL" numCubes
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let mMoves = [Move Move.M; Move Move.M'; Move Move.M2]
@@ -560,6 +567,8 @@ let genRoux () =
                    (look Face.D Sticker.D c = Color.W || look Face.D Sticker.D c = Color.Y)
     let solvedEO = solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO
 
+    Solver.stageStats "EO" numCubes
+
     // Left/right edges (LR)
 
     // L edge to DF
@@ -574,6 +583,8 @@ let genRoux () =
     let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G
     let solvedLR = solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
 
+    Solver.stageStats "LR" numCubes
+
     // Last 4 edges (L4E)
     let mud2Moves = [Move Move.M; Move Move.M'; Move Move.M2; Move Move.U2; Move Move.D2]
     let caseSolved cube =
@@ -586,8 +597,10 @@ let genRoux () =
         solved Face.D Color.W
     let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR
 
+    Solver.stageStats "L4E" numCubes
+
     let avgTwistCount = float Cube.twistCount / float numCubes;
-    printfn "Average Twists (STM): %f" avgTwistCount
+    printfn "Total Average Twists (STM): %f" avgTwistCount
 
     pause ()
 genRoux ()
