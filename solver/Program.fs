@@ -3,6 +3,8 @@ open Cube
 open Solver
 open Render
 
+let level = 1 // 0 = beginner, 1 = intermediate, 2 = expert
+
 let sune = "R U R' U R U2 R'"
 let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
 let mum = "M' U' M'"
@@ -376,19 +378,33 @@ let edgeIntermediateOrientationPatters =
 let eoBeginnerPatterns = centerOrientationPatterns @ edgeBeginnerOrientationPatters
 let eoIntermediatePatterns = centerOrientationPatterns @ edgeIntermediateOrientationPatters
 
-let lrPatterns = [
+let lrBeginnerPatterns = [
     // L edge to DF
-    "LToDF", ("OPOO.OOPOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRBRGGGWEWWEWWEW", true, true, false), [] // skip
-    "LToDF", ("OPOO.OOBOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", true, true, true),  ["M2"]
-    "LToDF", ("OBOO.OOPOYEYEEEYEYBPBRPRGPGBBBR.RGGGBBBRPRGGGWEWWEWWEW", true, true, false), ["M U2 M"; "M2 U2 M2"]
+    "LToDF", ("OPOOPOOPOYEYEEEYEYBPBRPRGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", true, true, false), [] // skip
+    "LToDF", ("OPOOPOOBOYEYEEEYEYBPBRPRGPGBBBRPRGGGBBBRPRGGGWEWWEWWEW", true, true, true),  ["M2"]
+    "LToDF", ("OBOOPOOPOYEYEEEYEYBPBRPRGPGBBBRPRGGGBBBRPRGGGWEWWEWWEW", true, true, false), ["M U2 M"; "M2 U2 M2"]
     // LR edges to bottom
     "LREdgesBottom", ("OGOO.OOPOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", true, true, false), [] // skip
     "LREdgesBottom", ("OPOO.OOGOYEYEEEYEYBPBR.RGPGBBBRPRGGGBBBRBRGGGWEWWEWWEW", true, true, true), ["M U2 M'"]
     // LR solved (AUF and up corner colors matter again)
     "LREdges", ("OGOO.OBPBYEYEEEYEYRPRG.GOPOBBBRPRGGGBBBRBRGGGWEWWEWWEW", false, false, true), ["M2 U'"]]
 
-let eolrBeginnerPatterns = eoBeginnerPatterns @ lrPatterns
-let eolrIntermediatePatterns = eoIntermediatePatterns @ lrPatterns
+let lrIntermediatePatterns = [
+    // LR edges to bottom *directly* after EO - hand authored (incomplete patterns; not restrictive enough)
+    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, false), [] // skip
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2"] // UF/UB
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, true), ["M U2 M'"; "M' U2 M'"] // UB/DF
+    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M U2 M"; "M' U2 M"] // UF/DB
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.*.......BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U M' U2 M'"; (* ugh, M *) "M U' M U M"; "M2 U M U2 M'"] // UL/UB
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.......*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U' M' U2 M'"; (* ugh, M *) "M U M U' M"; "M2 U' M U2 M'"] // UR/UB
+    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y....*..*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U' M' U M'"; "M2 U M U2 M"; "M2 U M' U2 M"; "M2 U M' U2 M"; (* ugh, M *) "M' U M U M"; "M2 U M U2 M"]
+    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y.*..*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U M' U' M'"; "M2 U' M U2 M"; "M2 U' M' U2 M"]
+    // LR solved (AUF and up corner colors matter again)
+    "LREdges", ("OBOO.OGPGYEYEEEYEYOPOB.BRPRBBBRPRGGGBBBRGRGGGWEWWEWWEW", false, false, true), ["M2 U"]
+    "LREdges", ("OGOO.OBPBYEYEEEYEYRPRG.GOPOBBBRPRGGGBBBRBRGGGWEWWEWWEW", false, false, true), ["M2 U'"]]
+
+let eolrBeginnerPatterns = eoBeginnerPatterns @ lrBeginnerPatterns
+let eolrIntermediatePatterns = eoIntermediatePatterns @ lrIntermediatePatterns
 
 let l4eBeginnerPatterns =
     let mu2 = "M' U2"
@@ -453,11 +469,13 @@ let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePattern
 let rouxExpertPatterns = fbPatterns @ sbPatterns @ cmllExpertPatterns @ lseIntermediatePatterns // 65 STM with CMLL
 
 let solve =
-    // rouxBeginnerPatterns
-    // rouxIntermediatePatterns
-    rouxExpertPatterns
-    |> expandPatternsForAuf
-    |> solveCase
+    let patterns =
+        match level with 
+        | 0 -> rouxBeginnerPatterns
+        | 1 -> rouxIntermediatePatterns
+        | 2 -> rouxExpertPatterns
+        | _ -> failwith "Unknown level"
+    patterns |> expandPatternsForAuf |> solveCase
 
 let genRoux () =
     let numCubes = 1000
@@ -571,17 +589,29 @@ let genRoux () =
 
     // Left/right edges (LR)
 
-    // L edge to DF
-    let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
-    let solvedLtoDF = solve muMoves "L edge to DF" "LToDF" caseLtoDF solvedEO
+    let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G &&
+                                     look Face.L Sticker.UL c = Color.B && look Face.R Sticker.UR c = Color.G &&
+                                     look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
+    let solvedLR =
+        if level = 0 then 
+            // L edge to DF
+            let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
+            let solvedLtoDF = solve muMoves "L edge to DF" "LREdges" caseLtoDF solvedEO
 
-    // LR edges to bottom
-    let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G
-    let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF
+            // LR edges to bottom
+            let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G
+            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF
 
-    // LR edges solved
-    let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G
-    let solvedLR = solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
+            // LR edges solved
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
+        else
+            // LR edges to bottom *directly* from EO and in either order
+            let caseLRBottom c = caseEO c && (look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G) ||
+                                             (look Face.F Sticker.D c = Color.G && look Face.B Sticker.U c = Color.B)
+            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedEO
+
+            // LR edges solved
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
 
     Solver.stageStats "LR" numCubes
 

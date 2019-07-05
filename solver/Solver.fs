@@ -50,7 +50,8 @@ let hybridSolve steps hints patterns goal stage cube =
         let mtch p c =
             p = '.' || p = c || // wildcard or perfect match
             (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge (assume Y/W up/down)
-            (p = 'E' && (c = 'W' || c = 'Y')) // good edge
+            (p = 'E' && (c = 'W' || c = 'Y')) || // good edge
+            (p = '*' && (c = 'B' || c = 'G')) // B/G for LR
         let matchPat p = Seq.forall2 mtch p cube
         let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
         let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
