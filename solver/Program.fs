@@ -391,15 +391,22 @@ let lrBeginnerPatterns = [
 
 let lrIntermediatePatterns = [
     // LR edges to bottom *directly* after EO - hand authored (incomplete patterns; not restrictive enough)
-    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, false), [] // skip
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2"] // UF/UB
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, true), ["M U2 M'"; "M' U2 M'"] // UB/DF
+    "LREdgesBottom", ("OGOO.OB.BY.Y...Y.YR.RGBGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M U2 M'"] // UF/DB (GBG front)
+    "LREdgesBottom", ("OBOO.OG.GY.Y...Y.YO.OBGBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M U2 M'"] // UF/DB (BGB front)
+    "LREdgesBottom", ("OGOO.OG.GY.Y...Y.YO.OBBBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M' U2 M'"] // UF/DB (BBB front)
+    "LREdgesBottom", ("OBOO.OB.BY.Y...Y.YR.RGGGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M' U2 M'"] // UF/DB (GGG front)
+    "LREdgesBottom", ("O*OO.OO.OY.Y...Y.Y...R.RGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [] // skip (solved)
+    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", false, false, false), [] // skip (bottom line)
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M2"] // UF/UB (unsolved upper line case)
+
     "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M U2 M"; "M' U2 M"] // UF/DB
+    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, true), ["M U2 M'"; "M' U2 M'"] // UB/DF
     "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.*.......BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U M' U2 M'"; (* ugh, M *) "M U' M U M"; "M2 U M U2 M'"] // UL/UB
     "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.......*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U' M' U2 M'"; (* ugh, M *) "M U M U' M"; "M2 U' M U2 M'"] // UR/UB
-    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y....*..*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U' M' U M'"; "M2 U M U2 M"; "M2 U M' U2 M"; "M2 U M' U2 M"; (* ugh, M *) "M' U M U M"; "M2 U M U2 M"]
-    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y.*..*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U M' U' M'"; "M2 U' M U2 M"; "M2 U' M' U2 M"]
+    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y....*..*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U' M' U M'"; "M2 U M U2 M"; "M2 U M' U2 M"; "M2 U M' U2 M"; (* ugh, M *) "M' U M U M"; "M2 U M U2 M"] // UR/UF
+    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y.*..*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U M' U' M'"; "M2 U' M U2 M"; "M2 U' M' U2 M"] // UL/UF
     // LR solved (AUF and up corner colors matter again)
+    "LREdges", ("O.OO.OO.OY.Y...Y.YBBBR.RGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [] // skip
     "LREdges", ("OBOO.OGPGYEYEEEYEYOPOB.BRPRBBBRPRGGGBBBRGRGGGWEWWEWWEW", false, false, true), ["M2 U"]
     "LREdges", ("OGOO.OBPBYEYEEEYEYRPRG.GOPOBBBRPRGGGBBBRBRGGGWEWWEWWEW", false, false, true), ["M2 U'"]]
 
@@ -488,7 +495,7 @@ let genRoux () =
     // DL
     let caseDL c = look Face.D Sticker.L c = Color.W && look Face.L Sticker.D c = Color.B
     let rotations = [Rotate X; Rotate X'; Rotate X2; Rotate Y; Rotate Y'; Rotate Y2; Rotate Z; Rotate Z'; Rotate Z2]
-    let solvedDL = solve rotations "Solve DL edge (during inspection)" "DLEdge" caseDL scrambled
+    let solvedDL = solve rotations "Solve DL edge (during inspection)" "DLEdge" caseDL scrambled false
 
     // center
     let caseLC c = caseDL c && look Face.L Sticker.C c = Color.B
@@ -501,27 +508,27 @@ let genRoux () =
                  Move Move.M; Move Move.M'; Move Move.M2;
                  Move Move.S; Move Move.S'; Move Move.S2;
                  Move Move.E; Move Move.E'; Move Move.E2]
-    let solvedLC = solve moves "Solve L center" "LCenter" caseLC solvedDL
+    let solvedLC = solve moves "Solve L center" "LCenter" caseLC solvedDL false
 
     // LB pair
     let caseLBtoFD c = caseLC c && look Face.F Sticker.D c = Color.B && look Face.D Sticker.U c = Color.O
-    let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD solvedLC
+    let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD solvedLC false
 
     let caseDLBtoURB c = caseLBtoFD c && look Face.U Sticker.UR c = Color.O && look Face.R Sticker.UR c = Color.W && look Face.B Sticker.DR c = Color.B
-    let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoURB" caseDLBtoURB solvedLBtoFD
+    let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoURB" caseDLBtoURB solvedLBtoFD false
 
     let caseLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
-    let solvedLBPair = solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedDLBtoURB
+    let solvedLBPair = solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedDLBtoURB false
 
     // LF pair
     let caseLFtoBD c = caseLBPair c && look Face.B Sticker.U c = Color.B && look Face.D Sticker.D c = Color.R
-    let solvedLFtoBD = solve moves "Tuck LF to BD" "TuckLFtoBD" caseLFtoBD solvedLBPair
+    let solvedLFtoBD = solve moves "Tuck LF to BD" "TuckLFtoBD" caseLFtoBD solvedLBPair false
 
     let caseDLFtoURF c = caseLFtoBD c && look Face.U Sticker.DR c = Color.R && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.UR c = Color.B
-    let solvedDLFtoURF = solve moves "Bring DLF corner to URF" "BringDLFtoURF" caseDLFtoURF solvedLFtoBD
+    let solvedDLFtoURF = solve moves "Bring DLF corner to URF" "BringDLFtoURF" caseDLFtoURF solvedLFtoBD false
 
     let caseSolvedFB c = caseLBPair c && look Face.L Sticker.R c = Color.B && look Face.L Sticker.DR c = Color.B && look Face.F Sticker.DL c = Color.R && look Face.F Sticker.L c = Color.R && look Face.D Sticker.UL c = Color.W
-    let solvedFB = solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedDLFtoURF
+    let solvedFB = solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedDLFtoURF true
 
     Solver.stageStats "FB" numCubes
 
@@ -534,45 +541,45 @@ let genRoux () =
                    Move Move.F; Move Move.F'
                    Move Move.B; Move Move.B'
                    Move Move.M; Move Move.M'; Move Move.M2]
-    let solvedDR = solve sbMoves "Solve DR edge" "DREdge" caseDR solvedFB
+    let solvedDR = solve sbMoves "Solve DR edge" "DREdge" caseDR solvedFB false
 
     // RB pair
     let caseRBtoFD c = caseDR c && look Face.F Sticker.D c = Color.G && look Face.D Sticker.U c = Color.O
-    let solvedRBtoFD = solve sbMoves "Tuck RB to FD" "TuckRBtoFD" caseRBtoFD solvedDR
+    let solvedRBtoFD = solve sbMoves "Tuck RB to FD" "TuckRBtoFD" caseRBtoFD solvedDR false
 
     let caseDRBtoULB c = caseRBtoFD c && look Face.U Sticker.UL c = Color.O && look Face.L Sticker.UL c = Color.W && look Face.B Sticker.DL c = Color.G
-    let solvedDRBtoULB = solve sbMoves "Bring DRB to ULB" "BringDRBtoULB" caseDRBtoULB solvedRBtoFD
+    let solvedDRBtoULB = solve sbMoves "Bring DRB to ULB" "BringDRBtoULB" caseDRBtoULB solvedRBtoFD false
 
     let caseRBPair c = caseDR c && look Face.R Sticker.R c = Color.G && look Face.R Sticker.DR c = Color.G && look Face.B Sticker.UR c = Color.O && look Face.B Sticker.R c = Color.O && look Face.D Sticker.DR c = Color.W
-    let solvedRBPair = solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair solvedDRBtoULB
+    let solvedRBPair = solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair solvedDRBtoULB false
 
     // RF pair
     let caseRFtoBD c = caseRBPair c && look Face.B Sticker.U c = Color.G && look Face.D Sticker.D c = Color.R
-    let solvedRFtoBD = solve sbMoves "Tuck RF to BD" "TuckRFtoBD" caseRFtoBD solvedRBPair
+    let solvedRFtoBD = solve sbMoves "Tuck RF to BD" "TuckRFtoBD" caseRFtoBD solvedRBPair false
 
     let caseDRFtoULF c = caseRFtoBD c && look Face.U Sticker.DL c = Color.R && look Face.L Sticker.UR c = Color.W && look Face.F Sticker.UL c = Color.G
-    let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD
+    let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD false
 
     let caseSolvedSB c = caseRBPair c && look Face.R Sticker.L c = Color.G && look Face.R Sticker.DL c = Color.G && look Face.F Sticker.DR c = Color.R && look Face.F Sticker.R c = Color.R && look Face.D Sticker.UR c = Color.W
-    let solvedSB = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF
+    let solvedSB = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF true
 
     Solver.stageStats "SB" numCubes
 
     // Orient corners (CO) - hand authored patterns
     let caseCO c = caseSolvedSB c && look Face.U Sticker.UL c = Color.Y && look Face.U Sticker.UR c = Color.Y && look Face.U Sticker.DL c = Color.Y && look Face.U Sticker.DR c = Color.Y
-    let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB
+    let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB false
 
     // Permute corners (CP) - hand authored patterns
     let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
     let caseCP c = caseCO c && (look Face.L Sticker.UL c = look Face.L Sticker.UR c) && (look Face.R Sticker.UL c = look Face.R Sticker.UR c) // check left/right "pairs"
-    let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO
+    let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO true
 
     Solver.stageStats "CMLL" numCubes
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let mMoves = [Move Move.M; Move Move.M'; Move Move.M2]
     let caseCenterO c = caseCP c && (look Face.U Sticker.C c = Color.W || look Face.U Sticker.C c = Color.Y)
-    let solvedCenterO = solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedCP
+    let solvedCenterO = solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedCP false
 
     // Orient edges (EO) (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let muMoves = mMoves @ [Move Move.U; Move Move.U'; Move Move.U2]
@@ -583,7 +590,7 @@ let genRoux () =
                    (look Face.U Sticker.D c = Color.W || look Face.U Sticker.D c = Color.Y) &&
                    (look Face.D Sticker.U c = Color.W || look Face.D Sticker.U c = Color.Y) &&
                    (look Face.D Sticker.D c = Color.W || look Face.D Sticker.D c = Color.Y)
-    let solvedEO = solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO
+    let solvedEO = solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
 
     Solver.stageStats "EO" numCubes
 
@@ -596,22 +603,22 @@ let genRoux () =
         if level = 0 then 
             // L edge to DF
             let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
-            let solvedLtoDF = solve muMoves "L edge to DF" "LREdges" caseLtoDF solvedEO
+            let solvedLtoDF = solve muMoves "L edge to DF" "LREdges" caseLtoDF solvedEO false
 
             // LR edges to bottom
             let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G
-            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF
+            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF false
 
             // LR edges solved
-            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom true
         else
             // LR edges to bottom *directly* from EO and in either order
             let caseLRBottom c = caseEO c && (look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G) ||
                                              (look Face.F Sticker.D c = Color.G && look Face.B Sticker.U c = Color.B)
-            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedEO
+            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedEO false
 
             // LR edges solved
-            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom true
 
     Solver.stageStats "LR" numCubes
 
@@ -625,7 +632,7 @@ let genRoux () =
         solved Face.R Color.G &&
         solved Face.U Color.Y &&
         solved Face.D Color.W
-    let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR
+    let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
 

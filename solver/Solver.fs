@@ -138,7 +138,7 @@ let expandPatternsForAuf patterns =
     let expand (name, ((pat : string), cornerRotationNeutral, cornerColorNeutral, discoverAuf), algs) = seq {
         yield name, (pat, cornerRotationNeutral, cornerColorNeutral), algs
         if discoverAuf then
-            let prepend a algs = List.map (fun alg -> a + " " + alg) algs
+            let prepend a algs = if List.length algs = 0 then [a] else List.map (fun alg -> a + " " + alg) algs
             let auf p =
                 match List.ofSeq p with
                 | [b0; b1; b2; b3; b4; b5; b6; b7; b8; u0; u1; u2; u3; u4; u5; u6; u7; u8; l0; l1; l2; f0; f1; f2; r0; r1; r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
@@ -152,15 +152,16 @@ let expandPatternsForAuf patterns =
             yield name, (String.Join("", u'), cornerRotationNeutral, cornerColorNeutral), (prepend "U"  algs) }
     patterns |> Seq.map expand |> Seq.concat
 
-let solveCase patterns steps name id case scrambled =
+let solveCase patterns steps name id case scrambled verify =
     printfn "\nCase: %s" name
     let solutions = genCasesAndSolutions patterns steps scrambled case id
     distinctCases solutions
     let solved = solutions |> Map.toList |> List.map snd |> List.concat |> List.map (fun (_, _, c) -> c)
-    for s in solved do
-        if not (case s) then
-            printfn "UNSOLVED: %s" (cubeToString s)
-            failwith "Authored pattern did not solve case"
+    if verify then
+        for s in solved do
+            if not (case s) then
+                printfn "UNSOLVED: %s" (cubeToString s)
+                failwith "Authored pattern did not solve case"
     solved
 
 let stageStats name numCubes =
