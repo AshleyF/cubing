@@ -27,38 +27,18 @@ This process is iterated until a complete method (e.g. Roux, CFOP, ZZ, Petrus, .
 
 # Roux
 
-We've started with Roux. The following stages are used:
-
-- FB - First block (left 1x2x3 block)
-    - DL edge in place (using rotations; during inspection) [24 cases]
-	- L center (also R center of course) [6 cases]
-	- BL pair
-	    - BL edge to DF (very meticulous for now) [22 cases]
-		- BL corner to UBR
-		- Pair and insert
-	- FL pair
-	    - FL edge to DF
-		- FL corner to UFR
-		- Pair and insert
-- SB - Second block (right 1x2x3 block)
-    - DR edge
-    - BR pair
-	- FR pair
-- EO - Edge orientation (orient 6 remaining edges)
-- LR - Left/Right upper edges
-- L4E - Last four edges
-
-# Stats
+We've started with Roux.
 
 ## Beginner (10,000 solves)
 
-FB/SB tuck same orientation always in front, bring corner to top always same orientation, pair and insert.
-CMLL with sune only.
-EO with M' U' M' only.
-LR bring to DF/UB, then stack, bring to bottom, insert.
-L4E with M' U2' except bars and simple M2 case.
+- FB/SB tuck same orientation always in front, bring corner to top always same orientation, pair and insert.
+- CMLL with sune only.
+- EO with M' U' M' only.
+- LR bring to DF/UB, then stack, bring to bottom, insert.
+- L4E with M' U2' except bars and simple M2 case.
 
 | Stage | Average | Worst |
+| ----- | ------- | ----- |
 | FB    | 15.5    |  22   |
 | SB    | 21.1    |  32   |
 | CMLL  | 34.8    |  66   |
@@ -69,12 +49,13 @@ L4E with M' U2' except bars and simple M2 case.
 
 ## Intermediate (10,000 solves)
 
-Two-look CMLL (better by 15.5 avg, -40 worst).
-Full EO cases (better by 4.4 avg, -10 worst).
-Full LR cases (better by 1.9 avg, -3 worst).
-Full L4E cases (better by 5.2 avg, -16 worst).
+- Two-look CMLL (better by 15.5 avg, -40 worst).
+- Full EO cases (better by 4.4 avg, -10 worst).
+- Full LR cases (better by 1.9 avg, -3 worst).
+- Full L4E cases (better by 5.2 avg, -16 worst).
 
 | Stage | Average | Worst |
+| ----- | ------- | ----- |
 | FB    | 15.5    |  22   |
 | SB    | 21.1    |  32   |
 | CMLL  | 19.3    |  26   |
@@ -85,9 +66,10 @@ Full L4E cases (better by 5.2 avg, -16 worst).
 
 ## Expert (10,000 solves)
 
-Full CMLL (better by 8.6 avg, -10 worst).
+- Full CMLL (better by 8.6 avg, -10 worst).
 
 | Stage | Average | Worst |
+| ----- | ------- | ----- |
 | FB    | 15.5    | 22    |
 | SB    | 21.1    | 32    |
 | CMLL  | 10.7    | 16    |
