@@ -59,44 +59,42 @@ LR bring to DF/UB, then stack, bring to bottom, insert.
 L4E with M' U2' except bars and simple M2 case.
 
 | Stage | Average | Worst |
-| FB    | 15.5 | 22 |
-| SB    | 21.1 | 32 |
-| CMLL  | 34.8 | 66 |
-| EO    | 10.9 | 20 |
-| LR    | 7.4  | 10 |
-| L4E   | 9.3  | 21 |
-| Total | 99.0 | 171 |
+| FB    | 15.5    |  22   |
+| SB    | 21.1    |  32   |
+| CMLL  | 34.8    |  66   |
+| EO    | 10.9    |  20   |
+| LR    |  7.4    |  10   |
+| L4E   |  9.3    |  21   |
+| Total | 99.0    | 171   |
 
 ## Intermediate (10,000 solves)
 
 Two-look CMLL (better by 15.5 avg, -40 worst).
-Fell EO cases (better by 4.4 avg, -10 worst)
+Full EO cases (better by 4.4 avg, -10 worst).
+Full LR cases (better by 1.9 avg, -3 worst).
 Full L4E cases (better by 5.2 avg, -16 worst).
-Case: Solve DL edge (during inspection)
 
 | Stage | Average | Worst |
-| FB    | 15.5 | 22 |
-| SB    | 21.1 | 32 |
-| CMLL  | 19.3 | 26 |
-| EO    | 6.5  | 10 |
-| LR    | 7.4  | 10 |
-| L4E   | 4.1  | 5  |
-| Total | 74.0 | 105 |
-
-Total Average Twists (STM): 74.023800
+| FB    | 15.5    |  22   |
+| SB    | 21.1    |  32   |
+| CMLL  | 19.3    |  26   |
+| EO    |  6.5    |  10   |
+| LR    |  5.5    |   7   |
+| L4E   |  4.1    |   5   |
+| Total | 71.9    | 102   |
 
 ## Expert (10,000 solves)
 
-Full CMLL (better by 8.6 avg, -10 worst)
+Full CMLL (better by 8.6 avg, -10 worst).
 
 | Stage | Average | Worst |
-| FB    | 15.5 | 22 |
-| SB    | 21.1 | 32 |
-| CMLL  | 10.7 | 16 |
-| EO    | 6.5  | 10 |
-| LR    | 7.4  | 10 |
-| L4E   | 4.0  | 5  |
-| Total | 65.3 | 95 |
+| FB    | 15.5    | 22    |
+| SB    | 21.1    | 32    |
+| CMLL  | 10.7    | 16    |
+| EO    |  6.5    | 10    |
+| LR    |  5.5    |  7    |
+| L4E   |  4.0    |  5    |
+| Total | 63.4    | 92    |
 
 # TODO
 

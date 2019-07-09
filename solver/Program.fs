@@ -3,7 +3,7 @@ open Cube
 open Solver
 open Render
 
-let level = 1 // 0 = beginner, 1 = intermediate, 2 = expert
+let level = 2 // 0 = beginner, 1 = intermediate, 2 = expert
 
 let sune = "R U R' U R U2 R'"
 let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
@@ -390,25 +390,47 @@ let lrBeginnerPatterns = [
     "LREdges", ("OGOO.OBPBYEYEEEYEYRPRG.GOPOBBBRPRGGGBBBRBRGGGWEWWEWWEW", false, false, true), ["M2 U'"]]
 
 let lrIntermediatePatterns = [
-    // LR edges to bottom *directly* after EO - hand authored (incomplete patterns; not restrictive enough)
-    "LREdgesBottom", ("OGOO.OB.BY.Y...Y.YR.RGBGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M U2 M'"] // UF/DB (GBG front)
-    "LREdgesBottom", ("OBOO.OG.GY.Y...Y.YO.OBGBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M U2 M'"] // UF/DB (BGB front)
-    "LREdgesBottom", ("OGOO.OG.GY.Y...Y.YO.OBBBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M' U2 M'"] // UF/DB (BBB front)
-    "LREdgesBottom", ("OBOO.OB.BY.Y...Y.YR.RGGGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M' U2 M'"] // UF/DB (GGG front)
-    "LREdgesBottom", ("O*OO.OO.OY.Y...Y.Y...R.RGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [] // skip (solved)
-    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", false, false, false), [] // skip (bottom line)
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), ["M2"] // UF/UB (unsolved upper line case)
-
-    "LREdgesBottom", ("O*OO.O...Y.Y...Y.Y....*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M U2 M"; "M' U2 M"] // UF/DB
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.........BBBR.RGGGBBBR*RGGGW.WW.WW.W", true, true, true), ["M U2 M'"; "M' U2 M'"] // UB/DF
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.*.......BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U M' U2 M'"; (* ugh, M *) "M U' M U M"; "M2 U M U2 M'"] // UL/UB
-    "LREdgesBottom", ("O.OO.O.*.Y.Y...Y.Y.......*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M2 U' M' U2 M'"; (* ugh, M *) "M U M U' M"; "M2 U' M U2 M'"] // UR/UB
-    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y....*..*.BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U' M' U M'"; "M2 U M U2 M"; "M2 U M' U2 M"; "M2 U M' U2 M"; (* ugh, M *) "M' U M U M"; "M2 U M U2 M"] // UR/UF
-    "LREdgesBottom", ("O.OO.O...Y.Y...Y.Y.*..*....BBBR.RGGGBBBR.RGGGW.WW.WW.W", true, true, true), ["M' U M' U' M'"; "M2 U' M U2 M"; "M2 U' M' U2 M"] // UL/UF
-    // LR solved (AUF and up corner colors matter again)
-    "LREdges", ("O.OO.OO.OY.Y...Y.YBBBR.RGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [] // skip
-    "LREdges", ("OBOO.OGPGYEYEEEYEYOPOB.BRPRBBBRPRGGGBBBRGRGGGWEWWEWWEW", false, false, true), ["M2 U"]
-    "LREdges", ("OGOO.OBPBYEYEEEYEYRPRG.GOPOBBBRPRGGGBBBRBRGGGWEWWEWWEW", false, false, true), ["M2 U'"]]
+    // LR edges to bottom *directly* after EO (incomplete patterns; not restrictive enough)
+    "LREdges", ("O.OO.OO.OY.Y...Y.YBBBR.RGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  [] // LR
+    "LREdges", ("OGOO.OG.GY.Y...Y.YO.OBBBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U'"] // L0
+    "LREdges", ("O.OO.OOGOY.Y...Y.YBBBR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U M U2 M U"] // L1
+    "LREdges", ("O.OO.OR.RY.Y...Y.YG.GOGOBBBBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M' U2 M' U'"] // L1
+    "LREdges", ("O.OO.ORGRY.Y...Y.YG.GO.OBBBBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U' M U2 M U"] // L2
+    "LREdges", ("O.OO.OO.OY.Y...Y.YBBBRGRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U' M' U2 M' U'"] // L2
+    "LREdges", ("O.OO.OBBBY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBRGRGGGW.WW.WW.W", false, false, true),  ["M U2 M U"] // L3
+    "LREdges", ("O.OO.OBGBY.Y...Y.YR.RGBGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U2 M2 U"] // RL
+    "LREdges", ("O.OO.OGBGY.Y...Y.YO.OBGBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U2 M2 U'"] // RL
+    "LREdges", ("OGOO.OB.BY.Y...Y.YR.RGBGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M U2 M' U"] // R0
+    "LREdges", ("O.OO.OR.RY.Y...Y.YGBGOGOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U' M U2 M' U"] // R1
+    "LREdges", ("O.OO.OOGOY.Y...Y.YB.BR.RGBGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U' M' U2 M U'"] // R1
+    "LREdges", ("O.OO.OO.OY.Y...Y.YB.BRGRGBGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U M U2 M' U"] // R2
+    "LREdges", ("O.OO.ORGRY.Y...Y.YGBGO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M' U2 M U'"] // R2
+    "LREdges", ("O.OO.OGBGY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBRGRGGGW.WW.WW.W", false, false, true),  ["M' U2 M U'"] // R3
+    "LREdges", ("OBOO.OG.GY.Y...Y.YO.OBGBR.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M U2 M' U'"] // 0L
+    "LREdges", ("OBOO.OB.BY.Y...Y.YR.RGGGO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U"] // 0R
+    "LREdges", ("OBOO.OR.RY.Y...Y.YG.GOGOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M U' M2 U"; "M U2 M U M2 U'"] // 01
+    "LREdges", ("OBOO.OO.OY.Y...Y.YB.BRGRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M U M2 U"; "M U2 M U' M2 U'"] // 02
+    "LREdges", ("OBOO.OG.GY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBRGRGGGW.WW.WW.W", false, false, true),  ["M2 U"] // 03
+    "LREdges", ("O.OO.OOBOY.Y...Y.YBGBR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M' U2 M U"] // 1L
+    "LREdges", ("O.OO.OR.RY.Y...Y.YG.GOBOBGBBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M U2 M' U'"] // 1L
+    "LREdges", ("O.OO.OR.RY.Y...Y.YGGGOBOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U' M' U2 M' U"] // 1R
+    "LREdges", ("OGOO.OR.RY.Y...Y.YG.GOBOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M U M2 U'"; "M U2 M U' M2 U"] // 10
+    "LREdges", ("O.OO.ORGRY.Y...Y.YG.GOBOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U M2 U"]  // 12
+    "LREdges", ("O.OO.OOBOY.Y...Y.YB.BRGRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M2 U'"] // 12
+    "LREdges", ("O.OO.OOBOY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBRGRGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U' M2 U'"; "M U2 M' U M2 U"] // 13
+    "LREdges", ("O.OO.OO.OY.Y...Y.YBGBRBRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U' M U2 M' U'"] // 2L
+    "LREdges", ("O.OO.ORBRY.Y...Y.YG.GO.OBGBBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U' M' U2 M U"] // 2L
+    "LREdges", ("O.OO.ORBRY.Y...Y.YGGGO.OB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U M U2 M U'"]  // 2R
+    "LREdges", ("O.OO.OO.OY.Y...Y.YB.BRBRGGGBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U M' U2 M' U"] // 2R
+    "LREdges", ("OGOO.OO.OY.Y...Y.YB.BRBRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M' U2 M U' M2 U'"; "M U2 M U M2 U"] // 20
+    "LREdges", ("O.OO.OOGOY.Y...Y.YB.BRBRG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), ["M2 U' M2 U"] // 21
+    "LREdges", ("O.OO.ORBRY.Y...Y.YG.GOGOB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true),  ["M2 U' M2 U'"] // 21
+    "LREdges", ("O.OO.ORBRY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBRGRGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U M2 U'"; "M U2 M' U' M2 U"] // 23
+    "LREdges", ("O.OO.OBGBY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBRBRGGGW.WW.WW.W", false, false, true),  ["M' U2 M U"] // 3L
+    "LREdges", ("O.OO.OGGGY.Y...Y.YO.OB.BR.RBBBR.RGGGBBBRBRGGGW.WW.WW.W", false, false, true),  ["M U2 M U'"] // 3R
+    "LREdges", ("OGOO.OB.BY.Y...Y.YR.RG.GO.OBBBR.RGGGBBBRBRGGGW.WW.WW.W", false, false, true),  ["M2 U'"] // 30
+    "LREdges", ("O.OO.OOGOY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBRBRGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U M2 U"; "M U2 M' U' M2 U'"] // 31
+    "LREdges", ("O.OO.ORGRY.Y...Y.YG.GO.OB.BBBBR.RGGGBBBRBRGGGW.WW.WW.W", false, false, true),  ["M' U2 M' U' M2 U"; "M U2 M' U M2 U'"]] // 32
 
 let eolrBeginnerPatterns = eoBeginnerPatterns @ lrBeginnerPatterns
 let eolrIntermediatePatterns = eoIntermediatePatterns @ lrIntermediatePatterns
@@ -485,7 +507,7 @@ let solve =
     patterns |> expandPatternsForAuf |> solveCase
 
 let genRoux () =
-    let numCubes = 1000
+    let numCubes = 10000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
@@ -601,7 +623,7 @@ let genRoux () =
                                      look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
     let solvedLR =
         if level = 0 then 
-            // L edge to DF
+            // L edge to DF*)
             let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
             let solvedLtoDF = solve muMoves "L edge to DF" "LREdges" caseLtoDF solvedEO false
 
@@ -612,13 +634,8 @@ let genRoux () =
             // LR edges solved
             solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom true
         else
-            // LR edges to bottom *directly* from EO and in either order
-            let caseLRBottom c = caseEO c && (look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G) ||
-                                             (look Face.F Sticker.D c = Color.G && look Face.B Sticker.U c = Color.B)
-            let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedEO false
-
-            // LR edges solved
-            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedLRBottom true
+            // LR edges solved (directly from EO)
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedEO true
 
     Solver.stageStats "LR" numCubes
 
