@@ -18,6 +18,7 @@
     <Compile Include="Cube.fs" />
     <Compile Include="Render.fs" />
     <Compile Include="Solver.fs" />
+    <Compile Include="Roux.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
