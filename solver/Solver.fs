@@ -5,6 +5,7 @@ open Cube
 open Render
 
 let quiet = false
+let warnings = true
 
 let solved =
     let u = faceOfStickers Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W
@@ -88,7 +89,7 @@ let hybridSolve steps hints patterns goal stage cube =
         | a :: _ -> [split a ' ' |> Seq.map stringToStep |> List.ofSeq]
         | [] -> [] // skip
     | None ->
-        printfn "UNMATCHED: %s" (cubeToString cube)
+        if warnings then printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
             match Seq.tryHead h with
             | Some h' -> cube |> executeSteps h' |> goal

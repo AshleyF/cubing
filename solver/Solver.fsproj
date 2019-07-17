@@ -19,6 +19,7 @@
     <Compile Include="Render.fs" />
     <Compile Include="Solver.fs" />
     <Compile Include="Roux.fs" />
+    <Compile Include="Pairing.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

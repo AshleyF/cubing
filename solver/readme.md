@@ -27,7 +27,7 @@ This process is iterated until a complete method (e.g. Roux, CFOP, ZZ, Petrus, .
 
 # Roux
 
-We've started with Roux.
+We've started with Roux. Note that the following include first rotating the DL edge into place. These rotations (1.5 average, 2 worst case) have been subtracted from FB.
 
 ## Beginner (10,000 solves)
 
@@ -39,13 +39,13 @@ We've started with Roux.
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 15.5    |  22   |
-| SB    | 21.1    |  32   |
+| FB    | 14.0    |  20   |
+| SB    | 21.2    |  32   |
 | CMLL  | 35.0    |  66   |
 | EO    | 10.9    |  20   |
 | LR    |  7.4    |  10   |
 | L4E   |  9.4    |  21   |
-| Total | 99.3    | 171   |
+| Total | 97.9    | 169   |
 
 ## Intermediate (10,000 solves)
 
@@ -57,13 +57,13 @@ We've started with Roux.
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 15.3    |  22   |
-| SB    | 21.2    |  32   |
+| FB    | 14.0    |  20   |
+| SB    | 21.1    |  32   |
 | CMLL  | 19.3    |  26   |
 | EO    |  6.5    |  10   |
 | LR    |  5.5    |   7   |
 | L4E   |  4.1    |   5   |
-| Total | 71.9    | 102   |
+| Total | 70.5    | 100   |
 
 ## Expert (10,000 solves)
 
@@ -71,13 +71,13 @@ We've started with Roux.
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 15.5    | 22    |
+| FB    | 14.0    | 20    |
 | SB    | 21.1    | 32    |
 | CMLL  | 10.7    | 16    |
 | EO    |  6.5    | 10    |
 | LR    |  5.5    |  7    |
 | L4E   |  4.0    |  5    |
-| Total | 63.4    | 92    |
+| Total | 61.8    | 90    |
 
 # TODO
 
