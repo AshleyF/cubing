@@ -41,23 +41,24 @@ We've started with Roux.
 | ----- | ------- | ----- |
 | FB    | 15.5    |  22   |
 | SB    | 21.1    |  32   |
-| CMLL  | 34.8    |  66   |
+| CMLL  | 35.0    |  66   |
 | EO    | 10.9    |  20   |
 | LR    |  7.4    |  10   |
-| L4E   |  9.3    |  21   |
-| Total | 99.0    | 171   |
+| L4E   |  9.4    |  21   |
+| Total | 99.3    | 171   |
 
 ## Intermediate (10,000 solves)
 
-- Two-look CMLL (better by 15.5 avg, -40 worst).
+- Two-look CMLL (better by 15.7 avg, -40 worst).
 - Full EO cases (better by 4.4 avg, -10 worst).
 - Full LR cases (better by 1.9 avg, -3 worst).
-- Full L4E cases (better by 5.2 avg, -16 worst).
+- Full L4E cases (better by 5.3 avg, -16 worst).
+- More flexible FB/SB (better by 0.1 avg, same worst).
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 15.5    |  22   |
-| SB    | 21.1    |  32   |
+| FB    | 15.3    |  22   |
+| SB    | 21.2    |  32   |
 | CMLL  | 19.3    |  26   |
 | EO    |  6.5    |  10   |
 | LR    |  5.5    |   7   |

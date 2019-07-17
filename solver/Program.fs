@@ -48,7 +48,7 @@ let lCenterPatterns = [
     "LCenter", (".............G.......................B..........WB....", false, false, false), ["r u"; "r E'"; "r' u'"; "r' E"; "M u'"; "M E"; "M' u"; "M' E'"]
     "LCenter", (".............B.......................B..........WG....", false, false, false), ["r u'"; "r E"; "r' u"; "r' E'"; "M u"; "M E'"; "M' u'"; "M' E"]]
 
-let lbPairPatterns = [
+let lbPairBeginnerPatterns = [
     // Tuck LB edge to FD [22 cases]
     "TuckLBtoFD", ("............................B.....G..B..B.....O.W.....", false, false, false), [] // skip
     "TuckLBtoFD", ("...O.......................BB.....G..B..........W.....", false, false, false), ["B r"; "B M'"]
@@ -73,33 +73,87 @@ let lbPairPatterns = [
     "TuckLBtoFD", ("............O......B........B.....G..B..........W.....", false, false, false), ["U r2"; "U M2"; "U' F2"]
     "TuckLBtoFD", ("............B......O........B.....G..B..........W.....", false, false, false), ["U' r'"; "U' M"]
     // Bring DLB corner to URB [24 cases]
-    "BringDLBtoURB", ("........B..O..............W.B.....G..B..B.....O.W.....", false, false, false), [] // skip
-    "BringDLBtoURB", ("..B.........................B.....G..B..B...O.O.W....W", false, false, false), ["B"]
-    "BringDLBtoURB", ("...............W....BO......B.....G..B..B.....O.W.....", false, false, false), ["U B'"]
-    "BringDLBtoURB", (".................O.....WB...B.....G..B..B.....O.W.....", false, false, false), ["U'"]
-    "BringDLBtoURB", ("...............O....WB......B.....G..B..B.....O.W.....", false, false, false), ["U2"]
-    "BringDLBtoURB", ("............................B.....G..B..BBW...OOW.....", false, false, false), ["R2"]
-    "BringDLBtoURB", ("...............B....OW......B.....G..B..B.....O.W.....", false, false, false), ["U' R"]
-    "BringDLBtoURB", ("......B..W........O.........B.....G..B..B.....O.W.....", false, false, false), ["B'"]
-    "BringDLBtoURB", ("............................B.....G..B..BOB...OWW.....", false, false, false), ["R U'"]
-    "BringDLBtoURB", ("............................B.....G..B..BWO...OBW.....", false, false, false), ["R' B"]
-    "BringDLBtoURB", (".................B.....OW...B.....G..B..B.....O.W.....", false, false, false), ["R"]
-    "BringDLBtoURB", ("............................B.....G..BWOB....BO.W.....", false, false, false), ["L' U2 L"; "r' F2 r"; "F2 R F2"; "b2 L b2"; "M F2 r"; "S2 L b2"]
-    "BringDLBtoURB", ("O...........................B.....G.BB..B.....O.W..W..", false, false, false), ["B R'"]
-    "BringDLBtoURB", ("........W..B..............O.B.....G..B..B.....O.W.....", false, false, false), ["U R"; "R B"; "B U"]
-    "BringDLBtoURB", ("B...........................B.....G.WB..B.....O.W..O..", false, false, false), ["B2"]
-    "BringDLBtoURB", ("......W..O........B.........B.....G..B..B.....O.W.....", false, false, false), ["U"]
-    "BringDLBtoURB", ("............................B.....G..BBWB....OO.W.....", false, false, false), ["L' U B' L"; "L2 u2 b2 U'"; "L2 u2 S2 U'"; "r' F U' r"; "r' F2 U' M'"; "r' F2 M' U'"; "r2 U2 F2 U'"; "r2 F2 M2 U'"; "F U' R F'"; "F U' r F'"; "F2 U2 r2 U"; "F2 U2 M2 U"; "b L' U b'"; "b L' u b'"; "b L2 U S"; "b L2 u S"; "b L2 S U"; "b2 u2 L2 U"; "b2 L2 S2 U"; "M F U' r"; "M F2 U' M'"; "M F2 M' U'"; "M2 U2 F2 U'"; "M2 F2 M2 U'"; "S' L' U b'"; "S' L' u b'"; "S' L2 U S"; "S' L2 u S"; "S' L2 S U"; "S2 u2 L2 U"; "S2 L2 S2 U"]
-    "BringDLBtoURB", ("........O..W..............B.B.....G..B..B.....O.W.....", false, false, false), ["U' B'"; "R' U'"; "B' R'"]
-    "BringDLBtoURB", ("..W.........................B.....G..B..B...B.O.W....O", false, false, false), ["R2 U'"; "B2 U"]
-    "BringDLBtoURB", ("............................B.....G..BOBB....WO.W.....", false, false, false), ["L2 B' L2"; "r2 F' r2 | F U2 F' | b L2 b' | M2 F' r2 | S' L2 b'"]
-    "BringDLBtoURB", (".................W.....BO...B.....G..B..B.....O.W.....", false, false, false), ["U2 B'"; "R2 B"]
-    "BringDLBtoURB", ("W...........................B.....G.OB..B.....O.W..B..", false, false, false), ["B' U"]
-    "BringDLBtoURB", ("..O.........................B.....G..B..B...W.O.W....B", false, false, false), ["R'"]
-    "BringDLBtoURB", ("......O..B........W.........B.....G..B..B.....O.W.....", false, false, false), ["U2 R"; "B2 R'"]
+    "BringDLBtoU", ("........B..O..............W.B.....G..B..B.....O.W.....", false, false, false), [] // skip
+    "BringDLBtoU", ("..B.........................B.....G..B..B...O.O.W....W", false, false, false), ["B"]
+    "BringDLBtoU", ("...............W....BO......B.....G..B..B.....O.W.....", false, false, false), ["U B'"]
+    "BringDLBtoU", (".................O.....WB...B.....G..B..B.....O.W.....", false, false, false), ["U'"]
+    "BringDLBtoU", ("...............O....WB......B.....G..B..B.....O.W.....", false, false, false), ["U2"]
+    "BringDLBtoU", ("............................B.....G..B..BBW...OOW.....", false, false, false), ["R2"]
+    "BringDLBtoU", ("...............B....OW......B.....G..B..B.....O.W.....", false, false, false), ["U' R"]
+    "BringDLBtoU", ("......B..W........O.........B.....G..B..B.....O.W.....", false, false, false), ["B'"]
+    "BringDLBtoU", ("............................B.....G..B..BOB...OWW.....", false, false, false), ["R U'"]
+    "BringDLBtoU", ("............................B.....G..B..BWO...OBW.....", false, false, false), ["R' B"]
+    "BringDLBtoU", (".................B.....OW...B.....G..B..B.....O.W.....", false, false, false), ["R"]
+    "BringDLBtoU", ("............................B.....G..BWOB....BO.W.....", false, false, false), ["L' U2 L"; "r' F2 r"; "F2 R F2"; "b2 L b2"; "M F2 r"; "S2 L b2"]
+    "BringDLBtoU", ("O...........................B.....G.BB..B.....O.W..W..", false, false, false), ["B R'"]
+    "BringDLBtoU", ("........W..B..............O.B.....G..B..B.....O.W.....", false, false, false), ["U R"; "R B"; "B U"]
+    "BringDLBtoU", ("B...........................B.....G.WB..B.....O.W..O..", false, false, false), ["B2"]
+    "BringDLBtoU", ("......W..O........B.........B.....G..B..B.....O.W.....", false, false, false), ["U"]
+    "BringDLBtoU", ("............................B.....G..BBWB....OO.W.....", false, false, false), ["L' U B' L"; "L2 u2 b2 U'"; "L2 u2 S2 U'"; "r' F U' r"; "r' F2 U' M'"; "r' F2 M' U'"; "r2 U2 F2 U'"; "r2 F2 M2 U'"; "F U' R F'"; "F U' r F'"; "F2 U2 r2 U"; "F2 U2 M2 U"; "b L' U b'"; "b L' u b'"; "b L2 U S"; "b L2 u S"; "b L2 S U"; "b2 u2 L2 U"; "b2 L2 S2 U"; "M F U' r"; "M F2 U' M'"; "M F2 M' U'"; "M2 U2 F2 U'"; "M2 F2 M2 U'"; "S' L' U b'"; "S' L' u b'"; "S' L2 U S"; "S' L2 u S"; "S' L2 S U"; "S2 u2 L2 U"; "S2 L2 S2 U"]
+    "BringDLBtoU", ("........O..W..............B.B.....G..B..B.....O.W.....", false, false, false), ["U' B'"; "R' U'"; "B' R'"]
+    "BringDLBtoU", ("..W.........................B.....G..B..B...B.O.W....O", false, false, false), ["R2 U'"; "B2 U"]
+    "BringDLBtoU", ("............................B.....G..BOBB....WO.W.....", false, false, false), ["L2 B' L2"; "r2 F' r2 | F U2 F' | b L2 b' | M2 F' r2 | S' L2 b'"]
+    "BringDLBtoU", (".................W.....BO...B.....G..B..B.....O.W.....", false, false, false), ["U2 B'"; "R2 B"]
+    "BringDLBtoU", ("W...........................B.....G.OB..B.....O.W..B..", false, false, false), ["B' U"]
+    "BringDLBtoU", ("..O.........................B.....G..B..B...W.O.W....B", false, false, false), ["R'"]
+    "BringDLBtoU", ("......O..B........W.........B.....G..B..B.....O.W.....", false, false, false), ["U2 R"; "B2 R'"]
     // Insert LB pair [1 case]
-    // "InsertLBPair", ("O..O.......................BB.....G.BB..........W..W..", false, false), [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoURB)
+    // "InsertLBPair", ("O..O.......................BB.....G.BB..........W..W..", false, false), [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoU)
     "InsertLBPair", ("........B..O..............W.B.....G..B..B.....O.W.....", false, false, false), ["R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"; "M2 r B'"]]
+
+let lbPairIntermediatePatterns = [
+    // Tuck LB edge to FD [22 cases]
+    "TuckLBtoFD", ("............................B.....G..B..B.....O.W.....", false, false, false), [] // skip
+    "TuckLBtoFD", ("...O.......................BB.....G..B..........W.....", false, false, false), ["B r"; "B M'"]
+    "TuckLBtoFD", (".....B......................B.....GO.B..........W.....", false, false, false), ["R2 F"; "r2 F"; "B r2"; "B M2"]
+    "TuckLBtoFD", (".....O......................B.....GB.B..........W.....", false, false, false), ["B' r"; "B' M'"]
+    "TuckLBtoFD", ("...B.......................OB.....G..B..........W.....", false, false, false), ["B' r2"; "B' M2"]
+    "TuckLBtoFD", (".......O..B.................B.....G..B..........W.....", false, false, false), ["U2 r'"; "U2 M"; "r' F2"; "B2 r"; "B2 M'"; "M F2"]
+    "TuckLBtoFD", (".B..........................B.....G..B..........W...O.", false, false, false), ["r2 F2"; "B2 r2"; "B2 M2"; "M2 F2"]
+    "TuckLBtoFD", ("............................B...BOG..B..........W.....", false, false, false), ["F"]
+    "TuckLBtoFD", ("............................BBO...G..B..........W.....", false, false, false), ["F r'"; "F M"]
+    "TuckLBtoFD", ("............................BOB...G..B..........W.....", false, false, false), ["F'"]
+    "TuckLBtoFD", ("............................B...OBG..B..........W.....", false, false, false), ["F' r'"; "F' M"]
+    "TuckLBtoFD", ("................O.....B.....B.....G..B..........W.....", false, false, false), ["F2"]
+    "TuckLBtoFD", ("............................B.....G..B..O.....B.W.....", false, false, false), ["r F2"; "F2 r'"; "F2 M"; "M' F2"]
+    "TuckLBtoFD", ("............................B.....G..B.....B....W.O...", false, false, false), ["L D' L'"; "L' D' L"; "L2 D' L2"; "l D' L'"; "l' D' L"; "l2 D' L2"; "R F' r'"; "R F' M"; "R' B' r"; "R' B' M'"; "R2 U F2"; "R2 U' r2"; "R2 U' M2"; "r F' r'"; "r F' M"; "r' B' r"; "r' B' M'"; "r2 U F2"; "r2 U' r2"; "r2 U' M2"]
+    "TuckLBtoFD", ("................B.....O.....B.....G..B..........W.....", false, false, false), ["r'"; "M"]
+    "TuckLBtoFD", (".O..........................B.....G..B..........W...B.", false, false, false), ["r"; "M'"]
+    "TuckLBtoFD", (".......B..O.................B.....G..B..........W.....", false, false, false), ["r2"; "M2"]
+    "TuckLBtoFD", ("............................B.....G..B.....O....W.B...", false, false, false), ["R F"; "r F"]
+    "TuckLBtoFD", ("..............B..........O..B.....G..B..........W.....", false, false, false), ["U r'"; "U M"; "R' F"; "r' F"]
+    "TuckLBtoFD", ("..............O..........B..B.....G..B..........W.....", false, false, false), ["U F2"; "U' r2"; "U' M2"]
+    "TuckLBtoFD", ("............O......B........B.....G..B..........W.....", false, false, false), ["U r2"; "U M2"; "U' F2"]
+    "TuckLBtoFD", ("............B......O........B.....G..B..........W.....", false, false, false), ["U' r'"; "U' M"]
+    // Bring DLB corner to URB [24 cases]
+    "BringDLBtoU", ("........B..O..............W.B.....G..B..B.....O.W.....", false, false, false), [] // skip - UBR (UFR would be ["R'"])
+    "BringDLBtoU", (".................B.....OW...B.....G..B..B.....O.W.....", false, false, false), [] // skip - UFR (UBR would be ["R"])
+    "BringDLBtoU", ("..B.........................B.....G..B..B...O.O.W....W", false, false, false), ["B"] // UBR (UFR would take ["R' U"; "B R'"])
+    "BringDLBtoU", ("...............W....BO......B.....G..B..B.....O.W.....", false, false, false), ["U B'"] // UBR (UFR would take ["U B' R'"; "U' R U"; "U2 B U2"; "U2 B' R2"; "u' R u"; "u2 B u2"; "D' F D"; "D2 F D2"; "d' F d"; "d2 F d2"; "r' F M'"; "r2 F M2"; "M F M'"; "M2 F M2"])
+    "BringDLBtoU", (".................O.....WB...B.....G..B..B.....O.W.....", false, false, false), ["U'"] // UBR (UFR would take ["U' R'"])
+    "BringDLBtoU", ("...............O....WB......B.....G..B..B.....O.W.....", false, false, false), ["U2"] // UBR (UFR would take ["U2 R'"])
+    "BringDLBtoU", ("............................B.....G..B..BBW...OOW.....", false, false, false), ["R"] // UFR (UBR would be +1 QTM ["R2"])
+    "BringDLBtoU", ("...............B....OW......B.....G..B..B.....O.W.....", false, false, false), ["U'"] // UFR (UBR would take ["U' R"])
+    "BringDLBtoU", ("......B..W........O.........B.....G..B..B.....O.W.....", false, false, false), ["B'"] // UBR (UFR would take ["B' R'"])
+    "BringDLBtoU", ("............................B.....G..B..BOB...OWW.....", false, false, false), ["R U'"] // UBR (UFR would take ["l F' l'"; "l2 F' l2"; "R U' R'"; "R' B U"; "R2 B U2"; "R2 B' R2"; "M F' M'"; "M2 F' M2"])
+    "BringDLBtoU", ("............................B.....G..B..BWO...OBW.....", false, false, false), ["R' B"] // UBR (UFR would be +1 QTM ["R2 U"])
+    "BringDLBtoU", ("............................B.....G..BWOB....BO.W.....", false, false, false), ["L' U2 L"; "r' F2 r"; "F2 R F2"; "b2 L b2"; "M F2 r"; "S2 L b2"] // UBR (UFR seems slightly awkward ["L2 u2 b2"; "L2 u2 S2"; "r' F2 M'"; "r2 U2 F2"; "r2 F2 M2"; "M F2 M'"; "M2 U2 F2"; "M2 F2 M2"])
+    "BringDLBtoU", ("O...........................B.....G.BB..B.....O.W..W..", false, false, false), ["B R'"] // UBR (UFR would be +1 QTM ["B R2"; "B' U2"])
+    "BringDLBtoU", ("........W..B..............O.B.....G..B..B.....O.W.....", false, false, false), ["U"] // UFR (UBR would be ["U R"; "R B"; "B U"])
+    "BringDLBtoU", ("B...........................B.....G.WB..B.....O.W..O..", false, false, false), ["B2"] // UBR (UFR would be ["B2 R'"])
+    "BringDLBtoU", ("......W..O........B.........B.....G..B..B.....O.W.....", false, false, false), ["U"] // UBR (UFR would be ["U R'"; "B' U"])
+    "BringDLBtoU", ("............................B.....G..BBWB....OO.W.....", false, false, false), ["L' U B' L"; "L2 u2 b2 U'"; "L2 u2 S2 U'"; "r' F U' r"; "r' F2 U' M'"; "r' F2 M' U'"; "r2 U2 F2 U'"; "r2 F2 M2 U'"; "F U' R F'"; "F U' r F'"; "F2 U2 r2 U"; "F2 U2 M2 U"; "b L' U b'"; "b L' u b'"; "b L2 U S"; "b L2 u S"; "b L2 S U"; "b2 u2 L2 U"; "b2 L2 S2 U"; "M F U' r"; "M F2 U' M'"; "M F2 M' U'"; "M2 U2 F2 U'"; "M2 F2 M2 U'"; "S' L' U b'"; "S' L' u b'"; "S' L2 U S"; "S' L2 u S"; "S' L2 S U"; "S2 u2 L2 U"; "S2 L2 S2 U"] // UBR (UFR seems equivalent though ["L' U L U'"; "L' d F d'"; "L2 B L2 U'"; "L2 B' L2 U"; "r' F U' M'"; "r' F r U'"; "r' F M' U'"; "r2 F r2 U'"; "r2 F M2 U'"; "r2 F' r2 U"; "F U F' U2"; "F U2 F' U"; "b L b' U2"; "b L2 b' U"; "M F U' M'"; "M F r U'"; "M F M' U'"; "M2 F r2 U'"; "M2 F M2 U'"; "M2 F' r2 U"; "S' L b' U2"; "S' L2 b' U"])
+    "BringDLBtoU", ("........O..W..............B.B.....G..B..B.....O.W.....", false, false, false), ["U' B'"; "R' U'"; "B' R'"] // UBR (UFW would be +1 QTM ["B U2"; "B' R2"])
+    "BringDLBtoU", ("..W.........................B.....G..B..B...B.O.W....O", false, false, false), ["B U"] // UFR (UBR would be +1 QTM ["R2 U'"; "B2 U"])
+    "BringDLBtoU", ("............................B.....G..BOBB....WO.W.....", false, false, false), ["L' U' L"; "r' F' r"; "M F' r"] // UFR (UBR seems more awkward ["L2 B' L2"; "r2 F' r2 | F U2 F' | b L2 b' | M2 F' r2 | S' L2 b'"])
+    "BringDLBtoU", (".................W.....BO...B.....G..B..B.....O.W.....", false, false, false), ["R U"] // UFR (UBR would be +1 QTM ["U2 B'"; "R2 B"])
+    "BringDLBtoU", ("W...........................B.....G.OB..B.....O.W..B..", false, false, false), ["B' U"] // UBR (UFR would be +1 QTM ["B2 U"])
+    "BringDLBtoU", ("..O.........................B.....G..B..B...W.O.W....B", false, false, false), ["R'"] // UBR (UFR would be +1 QTM ["R2"])
+    "BringDLBtoU", ("......O..B........W.........B.....G..B..B.....O.W.....", false, false, false), ["U2"] // UFR (UBR would be ["U2 R"; "B2 R'"])
+    // Insert LB pair [1 case]
+    // "InsertLBPair", ("O..O.......................BB.....G.BB..........W..W..", false, false), [] // skip TODO: this should be hierarchical (before TuckLBtoFD & BringDLBtoU)
+    "InsertLBPair", ("........B..O..............W.B.....G..B..B.....O.W.....", false, false, false), ["M2 r B'"; "R M B'"; "R2 r' B'"; "r M2 B'"; "r' R2 B'"; "M R B'"] // B front
+    "InsertLBPair", (".................B.....OW...B.....G..B..B.....O.W.....", false, false, false), ["R' r' B'"; "R2 M B'"; "r' R' B'"; "r2 M' B'"; "M R2 B'"; "M' U2 B"; "M' r2 B'"]] // O front
 
 let lfPairPatterns = [
     // Tuck LF to BD [20 cases]
@@ -148,7 +202,8 @@ let lfPairPatterns = [
     // Pair and insert LF pair (complete FB) [1 case]
     "InsertLFPair", ("OB.O.............R.....BW..BB.....G.BB..........W..WR.", false, false, false), ["R' M' F"; "R2 r F"; "r R2 F"; "r' M2 F"; "M' R' F"; "M2 r' F"]]
 
-let fbPatterns = dlEdgePatterns @ lCenterPatterns @ lbPairPatterns @ lfPairPatterns
+let fbBeginnerPatterns = dlEdgePatterns @ lCenterPatterns @ lbPairBeginnerPatterns @ lfPairPatterns
+let fbIntermediatePatterns = dlEdgePatterns @ lCenterPatterns @ lbPairIntermediatePatterns @ lfPairPatterns
 
 let drEdgePatterns = [
     // Solve DR edge [18 cases] (restricted to U, R/r, F, B, M)
@@ -285,7 +340,7 @@ let cpIntermediatePatterns =
 let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
 let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
 
-let cmllExpertPatterns = 
+let cmllAdvancedPatterns = 
     // Full CMLL - hand authored patterns [?? cases] (~10 STM better than intermediate)
     ["CornerOrientation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [] // skip (color neutral)
      "CornerOrientation", ("O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true), [jperm] // O adjacent (color neutral)
@@ -493,21 +548,21 @@ let l4eIntermediatePatterns = [
 let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eBeginnerPatterns
 let lseIntermediatePatterns = eolrIntermediatePatterns @ l4eIntermediatePatterns
 
-let rouxBeginnerPatterns = fbPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
-let rouxIntermediatePatterns = fbPatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
-let rouxExpertPatterns = fbPatterns @ sbPatterns @ cmllExpertPatterns @ lseIntermediatePatterns // 65 STM with CMLL
+let rouxBeginnerPatterns = fbBeginnerPatterns @ sbPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
+let rouxIntermediatePatterns = fbIntermediatePatterns @ sbPatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
+let rouxAdvancedPatterns = fbIntermediatePatterns @ sbPatterns @ cmllAdvancedPatterns @ lseIntermediatePatterns // 65 STM with CMLL
 
 let solve =
     let patterns =
         match level with 
         | 0 -> rouxBeginnerPatterns
         | 1 -> rouxIntermediatePatterns
-        | 2 -> rouxExpertPatterns
+        | 2 -> rouxAdvancedPatterns
         | _ -> failwith "Unknown level"
     patterns |> expandPatternsForAuf |> solveCase
 
 let genRoux () =
-    let numCubes = 10000
+    let numCubes = 1000
     printfn "Scrambling %i cubes" numCubes
     let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
     printfn ""
@@ -536,8 +591,10 @@ let genRoux () =
     let caseLBtoFD c = caseLC c && look Face.F Sticker.D c = Color.B && look Face.D Sticker.U c = Color.O
     let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD solvedLC false
 
-    let caseDLBtoURB c = caseLBtoFD c && look Face.U Sticker.UR c = Color.O && look Face.R Sticker.UR c = Color.W && look Face.B Sticker.DR c = Color.B
-    let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoURB" caseDLBtoURB solvedLBtoFD false
+    let caseDLBtoUFR c = look Face.U Sticker.DR c = Color.B && look Face.R Sticker.UL c = Color.W && look Face.F Sticker.UR c = Color.O
+    let caseDLBtoUBR c = look Face.U Sticker.UR c = Color.O && look Face.R Sticker.UR c = Color.W && look Face.B Sticker.DR c = Color.B
+    let caseDLBtoU c = caseLBtoFD c && (caseDLBtoUBR c || (if level > 0 then caseDLBtoUFR c else false))
+    let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoU" caseDLBtoU solvedLBtoFD false
 
     let caseLBPair c = caseLC c && look Face.L Sticker.L c = Color.B && look Face.L Sticker.DL c = Color.B && look Face.B Sticker.UL c = Color.O && look Face.B Sticker.L c = Color.O && look Face.D Sticker.DL c = Color.W
     let solvedLBPair = solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedDLBtoURB false
