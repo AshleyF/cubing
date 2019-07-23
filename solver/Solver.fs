@@ -174,3 +174,8 @@ let stageStats name numCubes =
     Cube.stageCount <- 0
     best <- 0
     worst <- 0
+
+let initScrambledCubes numCubes =
+    printfn "Scrambling %i cubes" numCubes
+    printfn ""
+    List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)

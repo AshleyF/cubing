@@ -563,9 +563,7 @@ let solve =
     patterns |> expandPatternsForAuf |> solveCase
 
 let generate numCubes =
-    printfn "Scrambling %i cubes" numCubes
-    let scrambled = List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
-    printfn ""
+    let scrambled = initScrambledCubes numCubes
 
     // First Block (FB)
 
@@ -709,8 +707,3 @@ let generate numCubes =
     let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
-
-    let avgTwistCount = float Cube.twistCount / float numCubes;
-    printfn "Total Average Twists (STM): %f" avgTwistCount
-
-    pause ()
