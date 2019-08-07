@@ -97,3 +97,26 @@ We've started with Roux. Note that the following include first rotating the DL e
 Long term:
 - Video analysis
 - Program synthesis for block-building steps
+
+# Ideas
+
+It may be possible to use A* to solve cubes, with a strong heuristic guide. As a heuristic, I'm thinking to use some measure of "entrophy"; zero being solved and something like ln(states) otherwise.
+
+Aside from being solved. Pieces may have other properties and relationships making them more or less closer to solved.
+
+* Edge/center pairs
+* Edge/corner pairs
+* 1x2x2 blocks
+* 1x2x3 blocks
+* 2x2x3 blocks (Petrus)
+* 1x3x3 faces (beginner)
+* 2x3x3 layers (F2L)
+* Oriented
+* Permuted
+* Edges oriented (in Roux/ZZ sense)
+* Edge/center in line (single twist to solve)
+* Edge/corner in line (single twist to solve)
+
+I'm hoping that such an approach will cause the system to do block building or could be influenced by weights to tend to use layer-by-layer, Roux-style, Petrus-style, ZZ-style EO-line, corners first, etc. It may automatically do interesting things like influencing edges during F2L/SB, etc. The hope is to have a solver for first/second block in Roux for example and use pattern matching for the rest and to have solves from which humans can learn (human-like to some degree).
+
+Interesting that with block building, having individual pieces in place can be _bad_. For example, F2L cases where a corner or edge is already in place are _harder_. They need to be pair outside of the "slot" in which they belong and then inserted as a unit.
