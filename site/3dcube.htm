@@ -1,0 +1,74 @@
+<!-- Minimal 3D cube
+https://github.com/aditya-r-m/twisty-polyhedra
+https://medium.com/@adityam.rtm/creating-3d-twisty-puzzles-using-programming-5800fb7eaab8 -->
+<div style="background-color:black;text-align:center">
+<canvas id="c" width="400px" height="400px"></canvas>
+</div>
+<script>
+const refPoints = [
+  [1,1,1],
+  [1,1,-1],
+  [1,-1,1],
+  [1,-1,-1],
+  [-1,1,1],
+  [-1,1,-1],
+  [-1,-1,1],
+  [-1,-1,-1]
+];
+
+let points = [];
+const faces = [
+  [0,1,3,2],
+  [0,1,5,4],
+  [0,2,6,4],
+  [1,3,7,5],
+  [2,3,7,6],
+  [4,5,7,6]
+];
+const colors = ['white','blue','red','lawngreen','yellow','darkorange'];
+faces.forEach((f, i) => f.color = colors[i]);
+
+let theta = 0;
+let phi = 0;
+const update = () => {
+  theta += 0.01;
+  phi += 0.01;
+  points = [];
+  for(let i = 0; i < refPoints.length; i++) {
+    let [x,y,z] = refPoints[i];
+    let xn, yn, zn;
+    zn = z * Math.cos(-theta) - x * Math.sin(-theta);
+    xn = z * Math.sin(-theta) + x * Math.cos(-theta);
+    z = zn;
+    yn = y * Math.cos(phi) - z * Math.sin(phi);
+    zn = y * Math.sin(phi) + z * Math.cos(phi);
+    points.push([xn,yn,zn]);
+  }
+  faces.sort((f1, f2) => f1.reduce((a, p) => a + points[p][2], 0) - f2.reduce((a, p) => a + points[p][2], 0));
+}
+
+const ctx = window.c.getContext('2d');
+ctx.translate(200,200);
+ctx.scale(120, 120);
+
+const render = () => {
+  ctx.fillStyle = 'black';
+  ctx.fillRect(-100,-100,600,600);
+  faces.forEach((face, index) => {
+    ctx.fillStyle = face.color;
+    ctx.beginPath();
+    const processedPoints = face.map(pid => points[pid].slice(0, 2));
+    ctx.moveTo(...processedPoints[0]);
+    processedPoints.forEach(p => ctx.lineTo(...p));
+    ctx.closePath();
+    ctx.fill();
+  })
+}
+
+const loop = () => {
+  update();
+  render();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
