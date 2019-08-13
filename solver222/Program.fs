@@ -42,85 +42,44 @@ let getOrderedStates () =
 
 let states = getOrderedStates ()
 
-let goalDistance = Array.create numStates Byte.MaxValue
-let rec computeGoalDistances (states : State []) goal =
-    let goals =
-        let rec goals' i acc =
-            if i < numStates then
-                if i % 10000 = 0 then printf "."
-                if goal states.[i] then
-                    goalDistance.[i] <- 0uy
-                    goals' (i + 1) (i :: acc)
-                else goals' (i + 1) acc
-            else
-                printfn "!"
-                acc
-        goals' 0 []
-    goals |> List.length |> printfn "Goal States: %i"
+let rec computeGoalDistances htm (states : State []) goal =
+    let goalDistances = Array.create numStates Byte.MaxValue
     let plySingleTwist t q i =
-        let s = states.[i]
-        let d = goalDistance.[i]
-        let s' = applyTransform s t
-        let i' = findStateIndex states s'
-        let d' = goalDistance.[i']
-        if d < d' then
-            goalDistance.[i'] <- d + 1uy
+        let i' = applyTransform states.[i] t |> findStateIndex states
+        let d = goalDistances.[i]
+        if d < goalDistances.[i'] then
+            goalDistances.[i'] <- d + 1uy
             Set.add i' q
         else q
     let plyTwists q gs =
         let chain t q = List.fold (plySingleTwist t) q gs
-        q |> chain twistU |> chain twistU' // |> chain twistU2
-          |> chain twistR |> chain twistR' // |> chain twistR2
-          |> chain twistF |> chain twistF' // |> chain twistF2
-    let ply1 = plyTwists Set.empty goals |> Set.toList
-    printfn "Ply1 %A" ply1.Length
-    let ply2 = plyTwists Set.empty ply1 |> Set.toList
-    printfn "Ply2 %A" ply2.Length
-    let ply3 = plyTwists Set.empty ply2 |> Set.toList
-    printfn "Ply3 %A" ply3.Length
-    let ply4 = plyTwists Set.empty ply3 |> Set.toList
-    printfn "Ply4 %A" ply4.Length
-    let ply5 = plyTwists Set.empty ply4 |> Set.toList
-    printfn "Ply5 %A" ply5.Length
-    let ply6 = plyTwists Set.empty ply5 |> Set.toList
-    printfn "Ply6 %A" ply6.Length
-    let ply7 = plyTwists Set.empty ply6 |> Set.toList
-    printfn "Ply7 %A" ply7.Length
-    let ply8 = plyTwists Set.empty ply7 |> Set.toList
-    printfn "Ply8 %A" ply8.Length
-    let ply9 = plyTwists Set.empty ply8 |> Set.toList
-    printfn "Ply9 %A" ply9.Length
-    let ply10 = plyTwists Set.empty ply9 |> Set.toList
-    printfn "Ply10 %A" ply10.Length
-    let ply11 = plyTwists Set.empty ply10 |> Set.toList
-    printfn "Ply11 %A" ply11.Length
-    let ply12 = plyTwists Set.empty ply11 |> Set.toList
-    printfn "Ply12 %A" ply12.Length
-    let ply13 = plyTwists Set.empty ply12 |> Set.toList
-    printfn "Ply13 %A" ply13.Length
-    let ply14 = plyTwists Set.empty ply13 |> Set.toList
-    printfn "Ply14 %A" ply14.Length
-    let ply15 = plyTwists Set.empty ply14 |> Set.toList
-    printfn "Ply15 %A" ply15.Length
+        q |> chain twistU  |> chain twistR  |> chain twistF
+          |> chain twistU' |> chain twistR' |> chain twistF'
+          |> if htm then (fun q -> q |> chain twistU2 |> chain twistR2 |> chain twistF2) else id
+    let rec iterate n q =
+        printfn "n=%i %i" n (List.length q)
+        let q' = plyTwists Set.empty q |> Set.toList
+        if q'.Length > 0 then iterate (n + 1) q'
+    let goals =
+        let rec goals' i acc =
+            if i < numStates then
+                if goal states.[i] then
+                    goalDistances.[i] <- 0uy
+                    goals' (i + 1) (i :: acc)
+                else goals' (i + 1) acc
+            else acc
+        goals' 0 []
+    goals |> List.length |> printfn "Goal States: %i"
+    iterate 0 goals
+    goalDistances
 
+let isSolved = ((=) solvedState)
 
+printfn "Computing QTM Distances..."
+let qtmDistances = computeGoalDistances false states isSolved 
 
-
-
-
-    (*
-    let update depth queue t =
-        let update' s t q =
-            let s' = applyTransform s t
-            let i = findStateIndex states s'
-            if depth < goalDistance.[i] then
-                goalDistance.[i] <- depth
-                i :: q
-            else q
-        update' 
-    *)
-
-computeGoalDistances states ((=) solvedState)
+printfn "Computing HTM Distances..."
+let htmDistances = computeGoalDistances true states isSolved
 
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
