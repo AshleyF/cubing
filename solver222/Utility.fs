@@ -138,7 +138,7 @@ let isCanonical ((p, o) : State) = // DLB corner fixed
 
 let canonicalize = distinctRotations >> Seq.filter isCanonical >> Seq.head
 
-let file = "../../../States222.bin"
+let statesFile = "../../../States222.bin"
 
 let saveStates states =
     let writeState (bw : BinaryWriter) ((p, o) : State) =
@@ -151,10 +151,10 @@ let saveStates states =
             s |> List.ofArray |> compress' 0
         compress 3 p
         compress 2 o
-    use bw = new BinaryWriter(new FileStream(file, FileMode.Create))
+    use bw = new BinaryWriter(new FileStream(statesFile, FileMode.Create))
     Array.iter (writeState bw) states
 
-let statesPersisted () = File.Exists file
+let statesPersisted () = File.Exists statesFile
 
 let loadStates numStates =
     let readState (br : BinaryReader) : State =
@@ -169,7 +169,7 @@ let loadStates numStates =
             let b2 = br.ReadByte() |> int
             (b0 <<< 16) ||| (b1 <<< 8) ||| b2 |> decompress
         readVal 3 0b111, readVal 2 0b11
-    use br = new BinaryReader(File.Open(file, FileMode.Open))
+    use br = new BinaryReader(File.Open(statesFile, FileMode.Open))
     let read i =
         if i % 100000 = 0 then printf "."
         readState br
@@ -185,3 +185,14 @@ let stateComparer = StateComparer()
 
 let findStateIndex states s =
     Array.BinarySearch(states, s, stateComparer)
+
+let computeOrLoadDistances name comp =
+    let file = sprintf "../../../%sDistances222.bin" name
+    if File.Exists file then
+        printfn "Loading %s distances..." name
+        File.ReadAllBytes(file)
+    else
+        printfn "Computing %s distances..." name
+        let distances = comp ()
+        File.WriteAllBytes(file, distances)
+        distances

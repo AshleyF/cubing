@@ -1,6 +1,8 @@
 ﻿open System
 open Utility
 
+printfn "2x2 Solver - See https://en.wikipedia.org/wiki/Pocket_Cube#Permutations"
+
 let numStates = 3674160 
 
 let getRawStates () =
@@ -75,11 +77,8 @@ let rec computeGoalDistances htm (states : State []) goal =
 
 let isSolved = ((=) solvedState)
 
-printfn "Computing QTM Distances..."
-let qtmDistances = computeGoalDistances false states isSolved 
-
-printfn "Computing HTM Distances..."
-let htmDistances = computeGoalDistances true states isSolved
+let qtmDistances = computeOrLoadDistances "QTM" (fun () -> computeGoalDistances false states isSolved)
+let htmDistances = computeOrLoadDistances "HTM" (fun () -> computeGoalDistances true states isSolved)
 
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
