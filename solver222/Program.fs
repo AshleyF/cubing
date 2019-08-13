@@ -49,5 +49,33 @@ let baz = Rotation X |> moveToTransform |> applyTransform solvedState
 let i = baz |> canonicalize |> findStateIndex states
 printfn "Found (%i): %A" i states.[i]
 
+let goalDistance = Array.create numStates Byte.MaxValue
+
+let rec computeGoalDistances (states : State []) goal =
+    let goals =
+        let rec goals' i acc =
+            if i < numStates then
+                if i % 10000 = 0 then printf "."
+                if goal states.[i] then
+                    goalDistance.[i] <- 0uy
+                    goals' (i + 1) (i :: acc)
+                else goals' (i + 1) acc
+            else acc
+        goals' 0 []
+    goals |> List.length |> printfn "Goal States: %i"
+    (*
+    let update depth queue t =
+        let update' s t q =
+            let s' = applyTransform s t
+            let i = findStateIndex states s'
+            if depth < goalDistance.[i] then
+                goalDistance.[i] <- depth
+                i :: q
+            else q
+        update' 
+    *)
+
+computeGoalDistances states ((=) solvedState)
+
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
