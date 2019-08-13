@@ -42,15 +42,7 @@ let getOrderedStates () =
 
 let states = getOrderedStates ()
 
-printfn "Testing..."
-let foo = [|1; 2; 3; 0; 4; 5; 6; 7|], [|0; 0; 0; 0; 0; 0; 0; 0|]
-let bar = Twist L |> moveToTransform |> applyTransform solvedState
-let baz = Rotation X |> moveToTransform |> applyTransform solvedState
-let i = baz |> canonicalize |> findStateIndex states
-printfn "Found (%i): %A" i states.[i]
-
 let goalDistance = Array.create numStates Byte.MaxValue
-
 let rec computeGoalDistances (states : State []) goal =
     let goals =
         let rec goals' i acc =
@@ -60,9 +52,62 @@ let rec computeGoalDistances (states : State []) goal =
                     goalDistance.[i] <- 0uy
                     goals' (i + 1) (i :: acc)
                 else goals' (i + 1) acc
-            else acc
+            else
+                printfn "!"
+                acc
         goals' 0 []
     goals |> List.length |> printfn "Goal States: %i"
+    let plySingleTwist t q i =
+        let s = states.[i]
+        let d = goalDistance.[i]
+        let s' = applyTransform s t
+        let i' = findStateIndex states s'
+        let d' = goalDistance.[i']
+        if d < d' then
+            goalDistance.[i'] <- d + 1uy
+            Set.add i' q
+        else q
+    let plyTwists q gs =
+        let chain t q = List.fold (plySingleTwist t) q gs
+        q |> chain twistU |> chain twistU' // |> chain twistU2
+          |> chain twistR |> chain twistR' // |> chain twistR2
+          |> chain twistF |> chain twistF' // |> chain twistF2
+    let ply1 = plyTwists Set.empty goals |> Set.toList
+    printfn "Ply1 %A" ply1.Length
+    let ply2 = plyTwists Set.empty ply1 |> Set.toList
+    printfn "Ply2 %A" ply2.Length
+    let ply3 = plyTwists Set.empty ply2 |> Set.toList
+    printfn "Ply3 %A" ply3.Length
+    let ply4 = plyTwists Set.empty ply3 |> Set.toList
+    printfn "Ply4 %A" ply4.Length
+    let ply5 = plyTwists Set.empty ply4 |> Set.toList
+    printfn "Ply5 %A" ply5.Length
+    let ply6 = plyTwists Set.empty ply5 |> Set.toList
+    printfn "Ply6 %A" ply6.Length
+    let ply7 = plyTwists Set.empty ply6 |> Set.toList
+    printfn "Ply7 %A" ply7.Length
+    let ply8 = plyTwists Set.empty ply7 |> Set.toList
+    printfn "Ply8 %A" ply8.Length
+    let ply9 = plyTwists Set.empty ply8 |> Set.toList
+    printfn "Ply9 %A" ply9.Length
+    let ply10 = plyTwists Set.empty ply9 |> Set.toList
+    printfn "Ply10 %A" ply10.Length
+    let ply11 = plyTwists Set.empty ply10 |> Set.toList
+    printfn "Ply11 %A" ply11.Length
+    let ply12 = plyTwists Set.empty ply11 |> Set.toList
+    printfn "Ply12 %A" ply12.Length
+    let ply13 = plyTwists Set.empty ply12 |> Set.toList
+    printfn "Ply13 %A" ply13.Length
+    let ply14 = plyTwists Set.empty ply13 |> Set.toList
+    printfn "Ply14 %A" ply14.Length
+    let ply15 = plyTwists Set.empty ply14 |> Set.toList
+    printfn "Ply15 %A" ply15.Length
+
+
+
+
+
+
     (*
     let update depth queue t =
         let update' s t q =
