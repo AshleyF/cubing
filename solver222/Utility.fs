@@ -133,8 +133,7 @@ let distinctRotations state = seq {
     yield state |> applyTransform rotateZ'
     yield state |> applyTransform rotateZ2 }
 
-let isCanonical ((p, o) : State) = // DLB corner fixed
-    p.[6] = 6 && o.[6] = 0
+let isCanonical ((p, o) : State) = p.[6] = 6 && o.[6] = 0 // DLB corner fixed
 
 let canonicalize = distinctRotations >> Seq.filter isCanonical >> Seq.head
 
@@ -189,10 +188,10 @@ let findStateIndex states s =
 let computeOrLoadDistances name comp =
     let file = sprintf "../../../%sDistances222.bin" name
     if File.Exists file then
-        printfn "Loading %s distances..." name
+        printfn "%A Loading %s distances..." (DateTime.Now) name
         File.ReadAllBytes(file)
     else
-        printfn "Computing %s distances..." name
+        printfn "%A Computing %s distances (~40 min)..." (DateTime.Now) name
         let distances = comp ()
         File.WriteAllBytes(file, distances)
         distances

@@ -2,6 +2,8 @@
 open Utility
 
 printfn "2x2 Solver - See https://en.wikipedia.org/wiki/Pocket_Cube#Permutations"
+printfn "First run initialization requires ~1.5 hr (generating *.bin state and distances files)."
+printfn "Runs thereafter are faster (~15 seconds)."
 
 let numStates = 3674160 
 
@@ -83,7 +85,7 @@ let htmDistances = computeOrLoadDistances "HTM" (fun () -> computeGoalDistances 
 let bestTwists (states : State []) (distances : byte []) (cube : State) =
     let scoredTwists = seq {
         let score (t : Transform) = distances.[cube |> applyTransform t |> canonicalize |> findStateIndex states]
-        yield ("_", identityTransform, score identityTransform)
+        yield ("", identityTransform, score identityTransform)
         yield ("U",  twistU,  score twistU)
         yield ("U'", twistU', score twistU')
         yield ("U2", twistU2, score twistU2)
@@ -98,7 +100,7 @@ let bestTwists (states : State []) (distances : byte []) (cube : State) =
         yield ("R2", twistR2, score twistR2)
         yield ("F",  twistF,  score twistF)
         yield ("F'", twistF', score twistF')
-        yield ("F2", twistF2, score twistF2)} |> List.ofSeq
+        yield ("F2", twistF2, score twistF2) } |> List.ofSeq
         // yield ("B",  twistB,  score twistB)
         // yield ("B'", twistB', score twistB')
         // yield ("B2", twistB2, score twistB2)
@@ -110,24 +112,36 @@ let bestTwists (states : State []) (distances : byte []) (cube : State) =
 let solve states distances cube =
     let rec solve' c =
         let (n, t, s) = bestTwists states distances c |> Seq.head
-        printf "%s (%i)" n s
-        if t <> identityTransform then applyTransform t c |> solve'
+        printf "%s " n
+        if t <> identityTransform then applyTransform t c |> solve' else c
     cube |> solve'
+
+let test distances =
+    printfn "Testing"
+    let test' i cube =
+        printf "%i " i
+        let solved = solve states distances cube
+        if solved <> solvedState then printfn " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FAILED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        printfn ""
+    Seq.iteri test' states
 
 let scrambled =
     solvedState
-    |> applyTransform twistF
-    |> applyTransform twistU'
-    |> applyTransform twistF2
-    |> applyTransform twistR'
+    |> applyTransform twistR
     |> applyTransform twistU
-    |> applyTransform twistF2
+    |> applyTransform twistR'
     |> applyTransform twistU
     |> applyTransform twistR
     |> applyTransform twistU2
+    |> applyTransform twistR'
+    |> applyTransform twistU2
+    |> applyTransform twistF
 
 printfn "Solving..."
-solve states htmDistances scrambled
+let solved = solve states htmDistances scrambled
+if solved <> solvedState then printfn " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WHAT?! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+test htmDistances
 
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
