@@ -80,5 +80,54 @@ let isSolved = ((=) solvedState)
 let qtmDistances = computeOrLoadDistances "QTM" (fun () -> computeGoalDistances false states isSolved)
 let htmDistances = computeOrLoadDistances "HTM" (fun () -> computeGoalDistances true states isSolved)
 
+let bestTwists (states : State []) (distances : byte []) (cube : State) =
+    let scoredTwists = seq {
+        let score (t : Transform) = distances.[cube |> applyTransform t |> canonicalize |> findStateIndex states]
+        yield ("_", identityTransform, score identityTransform)
+        yield ("U",  twistU,  score twistU)
+        yield ("U'", twistU', score twistU')
+        yield ("U2", twistU2, score twistU2)
+        // yield ("D",  twistD,  score twistD)
+        // yield ("D'", twistD', score twistD')
+        // yield ("D2", twistD2, score twistD2)
+        // yield ("L",  twistL,  score twistL)
+        // yield ("L'", twistL', score twistL')
+        // yield ("L2", twistL2, score twistL2)
+        yield ("R",  twistR,  score twistR)
+        yield ("R'", twistR', score twistR')
+        yield ("R2", twistR2, score twistR2)
+        yield ("F",  twistF,  score twistF)
+        yield ("F'", twistF', score twistF')
+        yield ("F2", twistF2, score twistF2)} |> List.ofSeq
+        // yield ("B",  twistB,  score twistB)
+        // yield ("B'", twistB', score twistB')
+        // yield ("B2", twistB2, score twistB2)
+        
+    let scoreValue (_, _, s) = s
+    let best = Seq.minBy scoreValue scoredTwists
+    Seq.filter (fun x -> scoreValue x = scoreValue best) scoredTwists
+
+let solve states distances cube =
+    let rec solve' c =
+        let (n, t, s) = bestTwists states distances c |> Seq.head
+        printf "%s (%i)" n s
+        if t <> identityTransform then applyTransform t c |> solve'
+    cube |> solve'
+
+let scrambled =
+    solvedState
+    |> applyTransform twistF
+    |> applyTransform twistU'
+    |> applyTransform twistF2
+    |> applyTransform twistR'
+    |> applyTransform twistU
+    |> applyTransform twistF2
+    |> applyTransform twistU
+    |> applyTransform twistR
+    |> applyTransform twistU2
+
+printfn "Solving..."
+solve states htmDistances scrambled
+
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
