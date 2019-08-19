@@ -57,11 +57,11 @@ let moveToTransform = function
 //   2 -> combine t t
 // > 2 -> recurse
 
-let applyTransform ((ps, os) : State) ((pt, ot) : Transform) : State =
+let applyTransform ((pt, ot) : Transform) ((ps, os) : State) : State =
     Array.init 8 (fun i -> ps.[pt.[i]]),
     Array.init 8 (fun i -> (os.[pt.[i]] + ot.[i]) % 3)
 
-let combine (t0 : Transform) t1 = applyTransform (State t0) t1 |> Transform
+let combine (t0 : Transform) t1 = applyTransform t1 (State t0) |> Transform
 
 let twistU2  = combine twistU  twistU
 let twistD2  = combine twistD  twistD
@@ -195,3 +195,17 @@ let computeOrLoadDistances name comp =
         let distances = comp ()
         File.WriteAllBytes(file, distances)
         distances
+
+let display label ((p, o) as cube : State) =
+    let color c f =
+        let colors = [|[|'U'; 'F'; 'R'|]; [|'U'; 'R'; 'B'|]; [|'U'; 'B'; 'L'|]; [|'U'; 'L'; 'F'|];
+                       [|'D'; 'R'; 'F'|]; [|'D'; 'F'; 'L'|]; [|'D'; 'L'; 'B'|]; [|'D'; 'B'; 'R'|]|]
+        colors.[p.[c]].[(o.[c] + f) % 3]
+    printfn "%s:\n  %c%c\n  %c%c\n%c%c%c%c%c%c%c%c\n%c%c%c%c%c%c%c%c\n  %c%c\n  %c%c" label
+                                (color 6 2) (color 7 1)
+                                (color 2 1) (color 1 2)
+        (color 6 1) (color 2 2) (color 2 0) (color 1 0) (color 1 1) (color 7 2) (color 7 0) (color 6 0)
+        (color 5 2) (color 3 1) (color 3 0) (color 0 0) (color 0 2) (color 4 1) (color 4 0) (color 5 0)
+                                (color 3 2) (color 0 1)
+                                (color 5 1) (color 4 2)
+    cube

@@ -17,9 +17,9 @@ let getRawStates () =
         let enqueue next (progress, states, queue) =
             if Set.contains next states then progress, states, queue
             else (progress + 1), (Set.add next states), next :: queue
-        let u = applyTransform current twistU
-        let r = applyTransform current twistR
-        let f = applyTransform current twistF
+        let u = applyTransform twistU current
+        let r = applyTransform twistR current
+        let f = applyTransform twistF current
         (progress, states, queue) |> enqueue u |> enqueue r |> enqueue f // avoiding DLB corner
     let rec go progress states = function
         | current :: queue ->
@@ -49,7 +49,7 @@ let states = getOrderedStates ()
 let rec computeGoalDistances htm (states : State []) goal =
     let goalDistances = Array.create numStates Byte.MaxValue
     let plySingleTwist t q i =
-        let i' = applyTransform states.[i] t |> findStateIndex states
+        let i' = applyTransform t states.[i] |> findStateIndex states
         let d = goalDistances.[i]
         if d < goalDistances.[i'] then
             goalDistances.[i'] <- d + 1uy
@@ -89,21 +89,12 @@ let bestTwists (states : State []) (distances : byte []) (cube : State) =
         yield ("U",  twistU,  score twistU)
         yield ("U'", twistU', score twistU')
         yield ("U2", twistU2, score twistU2)
-        // yield ("D",  twistD,  score twistD)
-        // yield ("D'", twistD', score twistD')
-        // yield ("D2", twistD2, score twistD2)
-        // yield ("L",  twistL,  score twistL)
-        // yield ("L'", twistL', score twistL')
-        // yield ("L2", twistL2, score twistL2)
         yield ("R",  twistR,  score twistR)
         yield ("R'", twistR', score twistR')
         yield ("R2", twistR2, score twistR2)
         yield ("F",  twistF,  score twistF)
         yield ("F'", twistF', score twistF')
         yield ("F2", twistF2, score twistF2) } |> List.ofSeq
-        // yield ("B",  twistB,  score twistB)
-        // yield ("B'", twistB', score twistB')
-        // yield ("B2", twistB2, score twistB2)
         
     let scoreValue (_, _, s) = s
     let best = Seq.minBy scoreValue scoredTwists
@@ -124,24 +115,21 @@ let test distances =
         if solved <> solvedState then printfn " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FAILED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         printfn ""
     Seq.iteri test' states
+// test htmDistances
 
-let scrambled =
-    solvedState
-    |> applyTransform twistR
-    |> applyTransform twistU
-    |> applyTransform twistR'
-    |> applyTransform twistU
-    |> applyTransform twistR
-    |> applyTransform twistU2
-    |> applyTransform twistR'
-    |> applyTransform twistU2
-    |> applyTransform twistF
-
-printfn "Solving..."
-let solved = solve states htmDistances scrambled
-if solved <> solvedState then printfn " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WHAT?! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-
-test htmDistances
+solvedState
+|> applyTransform twistR
+|> applyTransform twistU
+|> applyTransform twistR'
+|> applyTransform twistU
+|> applyTransform twistR
+|> applyTransform twistU2
+|> applyTransform twistR'
+|> applyTransform twistU2
+|> applyTransform twistF
+|> display "Scrambled"
+|> solve states htmDistances
+|> display "Solved" |> ignore
 
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
