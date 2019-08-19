@@ -46,8 +46,6 @@ let moveToTransform = function
     | Twist t -> twistToTransform t
     | Rotation r -> rotationToTransform r
 
-// let invert t =
-
 // let combine t0 t1 =
 
 // let multiply t n =
