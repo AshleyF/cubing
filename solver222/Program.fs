@@ -5,7 +5,7 @@ printfn "2x2 Solver - See https://en.wikipedia.org/wiki/Pocket_Cube#Permutations
 printfn "First run initialization requires ~1.5 hr (generating *.bin state and distances files)."
 printfn "Runs thereafter are faster (~15 seconds)."
 
-let numStates = 3674160 
+let numStates = 3674160
 
 let getRawStates () =
     // this generates all 3,674,160 possible 2x2 states, assuming DLB corner is fixed
@@ -82,25 +82,24 @@ let isSolved = ((=) solvedState)
 let qtmDistances = computeOrLoadDistances "QTM" (fun () -> computeGoalDistances false states isSolved)
 let htmDistances = computeOrLoadDistances "HTM" (fun () -> computeGoalDistances true states isSolved)
 
-let bestTwists (states : State []) (distances : byte []) (cube : State) =
-    let scoredTwists = seq {
-        let score (t : Transform) = distances.[cube |> applyTransform t |> canonicalize |> findStateIndex states]
-        yield ("", identityTransform, score identityTransform)
-        yield ("U",  twistU,  score twistU)
-        yield ("U'", twistU', score twistU')
-        yield ("U2", twistU2, score twistU2)
-        yield ("R",  twistR,  score twistR)
-        yield ("R'", twistR', score twistR')
-        yield ("R2", twistR2, score twistR2)
-        yield ("F",  twistF,  score twistF)
-        yield ("F'", twistF', score twistF')
-        yield ("F2", twistF2, score twistF2) } |> List.ofSeq
-        
-    let scoreValue (_, _, s) = s
-    let best = Seq.minBy scoreValue scoredTwists
-    Seq.filter (fun x -> scoreValue x = scoreValue best) scoredTwists
-
 let solve states distances cube =
+    let bestTwists (states : State []) (distances : byte []) (cube : State) =
+        let scoredTwists = seq {
+            let score (t : Transform) = distances.[cube |> applyTransform t |> canonicalize |> findStateIndex states]
+            yield ("", identityTransform, score identityTransform)
+            yield ("U",  twistU,  score twistU)
+            yield ("U'", twistU', score twistU')
+            yield ("U2", twistU2, score twistU2)
+            yield ("R",  twistR,  score twistR)
+            yield ("R'", twistR', score twistR')
+            yield ("R2", twistR2, score twistR2)
+            yield ("F",  twistF,  score twistF)
+            yield ("F'", twistF', score twistF')
+            yield ("F2", twistF2, score twistF2) } |> List.ofSeq
+            
+        let scoreValue (_, _, s) = s
+        let best = Seq.minBy scoreValue scoredTwists
+        Seq.filter (fun x -> scoreValue x = scoreValue best) scoredTwists
     let rec solve' c =
         let (n, t, s) = bestTwists states distances c |> Seq.head
         printf "%s " n
@@ -130,6 +129,24 @@ solvedState
 |> display "Scrambled"
 |> solve states htmDistances
 |> display "Solved" |> ignore
+
+// export states htmDistances "htm" 100
+
+printfn "Testing Entropy"
+let sample = states |> Seq.take 2000
+let entropy = sample |> Seq.map entropy
+let maxEntropy = entropy |> Seq.max
+let normalizedEntropy = entropy |> Seq.map (fun e -> e / maxEntropy)
+
+let distances = sample |> Seq.map (fun c -> double qtmDistances.[findStateIndex states c])
+let maxDistance = distances |> Seq.max
+let normalizedDistances = distances |> Seq.map (fun e -> e / maxDistance)
+
+let error =
+    let mse (e, d) = let sq x = x * x in e - d |> sq
+    Seq.zip normalizedEntropy normalizedDistances |> Seq.averageBy mse
+
+printfn "Error: %f" error
 
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore

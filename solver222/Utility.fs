@@ -194,16 +194,74 @@ let computeOrLoadDistances name comp =
         File.WriteAllBytes(file, distances)
         distances
 
-let display label ((p, o) as cube : State) =
-    let color c f =
-        let colors = [|[|'U'; 'F'; 'R'|]; [|'U'; 'R'; 'B'|]; [|'U'; 'B'; 'L'|]; [|'U'; 'L'; 'F'|];
-                       [|'D'; 'R'; 'F'|]; [|'D'; 'F'; 'L'|]; [|'D'; 'L'; 'B'|]; [|'D'; 'B'; 'R'|]|]
-        colors.[p.[c]].[(o.[c] + f) % 3]
+let solve states distances cube =
+    let bestTwists (states : State []) (distances : byte []) (cube : State) =
+        let scoredTwists = seq {
+            let score (t : Transform) = distances.[cube |> applyTransform t |> canonicalize |> findStateIndex states]
+            yield ("", identityTransform, score identityTransform)
+            yield ("U",  twistU,  score twistU)
+            yield ("U'", twistU', score twistU')
+            yield ("U2", twistU2, score twistU2)
+            yield ("R",  twistR,  score twistR)
+            yield ("R'", twistR', score twistR')
+            yield ("R2", twistR2, score twistR2)
+            yield ("F",  twistF,  score twistF)
+            yield ("F'", twistF', score twistF')
+            yield ("F2", twistF2, score twistF2) } |> List.ofSeq
+            
+        let scoreValue (_, _, s) = s
+        let best = Seq.minBy scoreValue scoredTwists
+        Seq.filter (fun x -> scoreValue x = scoreValue best) scoredTwists
+    let rec solve' c =
+        let (n, t, s) = bestTwists states distances c |> Seq.head
+        printf "%s " n
+        if t <> identityTransform then applyTransform t c |> solve' else c
+    cube |> solve'
+
+let faces ((p, o) as cube : State) =
+    let face c f = [|[|'U'; 'F'; 'R'|]; [|'U'; 'R'; 'B'|]; [|'U'; 'B'; 'L'|]; [|'U'; 'L'; 'F'|]; [|'D'; 'R'; 'F'|]; [|'D'; 'F'; 'L'|]; [|'D'; 'L'; 'B'|]; [|'D'; 'B'; 'R'|]|].[p.[c]].[(o.[c] + f) % 3]
+    [                           (face 6 2); (face 7 1);
+                                (face 2 1); (face 1 2);
+        (face 6 1); (face 2 2); (face 2 0); (face 1 0); (face 1 1); (face 7 2); (face 7 0); (face 6 0);
+        (face 5 2); (face 3 1); (face 3 0); (face 0 0); (face 0 2); (face 4 1); (face 4 0); (face 5 0);
+                                (face 3 2); (face 0 1);
+                                (face 5 1); (face 4 2)]
+;
+let display label cube =
+    let f = faces cube
     printfn "%s:\n  %c%c\n  %c%c\n%c%c%c%c%c%c%c%c\n%c%c%c%c%c%c%c%c\n  %c%c\n  %c%c" label
-                                (color 6 2) (color 7 1)
-                                (color 2 1) (color 1 2)
-        (color 6 1) (color 2 2) (color 2 0) (color 1 0) (color 1 1) (color 7 2) (color 7 0) (color 6 0)
-        (color 5 2) (color 3 1) (color 3 0) (color 0 0) (color 0 2) (color 4 1) (color 4 0) (color 5 0)
-                                (color 3 2) (color 0 1)
-                                (color 5 1) (color 4 2)
+            f.[0] f.[1] f.[2] f.[3] f.[4] f.[5] f.[6] f.[7] f.[8] f.[9] f.[10] f.[11] f.[12]
+            f.[13] f.[14] f.[15] f.[16] f.[17] f.[18] f.[19] f.[20] f.[21] f.[22] f.[23]
     cube
+
+let export (states : State []) (distances : byte []) (name : string) (num : int) =
+    let rand = new Random()
+    let maxDist = Seq.max distances |> double
+    let export' n =
+        let d = double distances.[n] / maxDist
+        let (perm, orient) = states.[n]
+        let p i = double perm.[i] / 7.0
+        let o i = double orient.[i] / 2.0
+        printfn "{input:[%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f],output:[%f]},"
+                        (p 0) (p 1) (p 2) (p 3) (p 4) (p 5) (p 6) (p 7)
+                        (o 0) (o 1) (o 2) (o 3) (o 4) (o 5) (o 6) (o 7) d
+    for _ in 0 .. num do
+        rand.Next(states.Length) |> export'
+
+let entropy cube =
+    let f = faces cube
+    let facePairs = [f.[0] = f.[1]; f.[0] = f.[2]; f.[1] = f.[3]; f.[2] = f.[3]
+                     f.[4] = f.[5]; f.[4] = f.[12]; f.[5] = f.[13]; f.[12] = f.[13]
+                     f.[6] = f.[7]; f.[6] = f.[14]; f.[7] = f.[15]; f.[14] = f.[15]
+                     f.[8] = f.[9]; f.[8] = f.[16]; f.[9] = f.[17]; f.[16] = f.[17]
+                     f.[10] = f.[11]; f.[10] = f.[18]; f.[11] = f.[19]; f.[18] = f.[19]
+                     f.[20] = f.[21]; f.[20] = f.[22]; f.[21] = f.[23]; f.[22] = f.[23]]
+    let facePairEntropy = facePairs |> Seq.filter ((=) false) |> Seq.length
+    let faceQuads = [f.[0] = f.[1] && f.[1] = f.[2] && f.[2] = f.[3]
+                     f.[4] = f.[5] && f.[5] = f.[12] && f.[12] = f.[13]
+                     f.[6] = f.[7] && f.[7] = f.[14] && f.[14] = f.[15]
+                     f.[8] = f.[9] && f.[9] = f.[16] && f.[16] = f.[17]
+                     f.[10] = f.[11] && f.[11] = f.[18] && f.[18] = f.[19]
+                     f.[20] = f.[21] && f.[21] = f.[22] && f.[22] = f.[23]]
+    let faceQuadEntropy = faceQuads |> Seq.filter ((=) false) |> Seq.length
+    double facePairEntropy + double faceQuadEntropy * 2.
