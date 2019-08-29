@@ -3,3 +3,7 @@
 */obj/*
 .vscode
 .ionide
+**/data.csv
+**/labels.csv
+**/*.bin
+**/model.hdf5

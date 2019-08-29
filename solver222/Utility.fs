@@ -234,19 +234,26 @@ let display label cube =
             f.[13] f.[14] f.[15] f.[16] f.[17] f.[18] f.[19] f.[20] f.[21] f.[22] f.[23]
     cube
 
-let export (states : State []) (distances : byte []) (name : string) (num : int) =
-    let rand = new Random()
-    let maxDist = Seq.max distances |> double
-    let export' n =
-        let d = double distances.[n] / maxDist
-        let (perm, orient) = states.[n]
-        let p i = double perm.[i] / 7.0
-        let o i = double orient.[i] / 2.0
-        printfn "{input:[%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f],output:[%f]},"
-                        (p 0) (p 1) (p 2) (p 3) (p 4) (p 5) (p 6) (p 7)
-                        (o 0) (o 1) (o 2) (o 3) (o 4) (o 5) (o 6) (o 7) d
-    for _ in 0 .. num do
-        rand.Next(states.Length) |> export'
+let exportForTensorflow (states : State []) (distances : byte []) (name : string) (num : int) =
+    let dataFile = "../../../models/tensorflow/data.csv"
+    let labelsFile = "../../../models/tensorflow/labels.csv"
+    if not (File.Exists dataFile && File.Exists labelsFile) then
+        printfn "Exporting data/labels.csv for TensorFlow..."
+        let maxDist = Seq.max distances |> double
+        use data = new StreamWriter(dataFile)
+        use labels = new StreamWriter(labelsFile)
+        let export' n =
+            let d = double distances.[n] / maxDist
+            let f i = if int distances.[n] = i then 1 else 0
+            let (perm, orient) = states.[n]
+            let p i = double perm.[i] / 7.0
+            let o i = double orient.[i] / 2.0
+            data.WriteLine(sprintf "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f"
+                                    (p 0) (p 1) (p 2) (p 3) (p 4) (p 5) (p 6) (p 7)
+                                    (o 0) (o 1) (o 2) (o 3) (o 4) (o 5) (o 6) (o 7))
+            labels.WriteLine(sprintf "%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i" (f 0) (f 1) (f 2) (f 3) (f 4) (f 5) (f 6) (f 7) (f 8) (f 9) (f 10) (f 11)) // (f 12) (f 13) (f 14) // max 11 HTM, 14 QTM)
+        for n in 0 .. (num - 1) do
+            export' n
 
 let entropy cube =
     let f = faces cube

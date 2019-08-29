@@ -82,6 +82,8 @@ let isSolved = ((=) solvedState)
 let qtmDistances = computeOrLoadDistances "QTM" (fun () -> computeGoalDistances false states isSolved)
 let htmDistances = computeOrLoadDistances "HTM" (fun () -> computeGoalDistances true states isSolved)
 
+exportForTensorflow states htmDistances "htm" numStates
+
 let solve states distances cube =
     let bestTwists (states : State []) (distances : byte []) (cube : State) =
         let scoredTwists = seq {
@@ -116,6 +118,7 @@ let test distances =
     Seq.iteri test' states
 // test htmDistances
 
+(*
 solvedState
 |> applyTransform twistR
 |> applyTransform twistU
@@ -129,8 +132,7 @@ solvedState
 |> display "Scrambled"
 |> solve states htmDistances
 |> display "Solved" |> ignore
-
-// export states htmDistances "htm" 100
+*)
 
 printfn "Testing Entropy"
 let sample = states |> Seq.take 2000
