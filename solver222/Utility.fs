@@ -254,21 +254,3 @@ let exportForTensorflow (states : State []) (distances : byte []) (name : string
             labels.WriteLine(sprintf "%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i" (f 0) (f 1) (f 2) (f 3) (f 4) (f 5) (f 6) (f 7) (f 8) (f 9) (f 10) (f 11)) // (f 12) (f 13) (f 14) // max 11 HTM, 14 QTM)
         for n in 0 .. (num - 1) do
             export' n
-
-let entropy cube =
-    let f = faces cube
-    let facePairs = [f.[0] = f.[1]; f.[0] = f.[2]; f.[1] = f.[3]; f.[2] = f.[3]
-                     f.[4] = f.[5]; f.[4] = f.[12]; f.[5] = f.[13]; f.[12] = f.[13]
-                     f.[6] = f.[7]; f.[6] = f.[14]; f.[7] = f.[15]; f.[14] = f.[15]
-                     f.[8] = f.[9]; f.[8] = f.[16]; f.[9] = f.[17]; f.[16] = f.[17]
-                     f.[10] = f.[11]; f.[10] = f.[18]; f.[11] = f.[19]; f.[18] = f.[19]
-                     f.[20] = f.[21]; f.[20] = f.[22]; f.[21] = f.[23]; f.[22] = f.[23]]
-    let facePairEntropy = facePairs |> Seq.filter ((=) false) |> Seq.length
-    let faceQuads = [f.[0] = f.[1] && f.[1] = f.[2] && f.[2] = f.[3]
-                     f.[4] = f.[5] && f.[5] = f.[12] && f.[12] = f.[13]
-                     f.[6] = f.[7] && f.[7] = f.[14] && f.[14] = f.[15]
-                     f.[8] = f.[9] && f.[9] = f.[16] && f.[16] = f.[17]
-                     f.[10] = f.[11] && f.[11] = f.[18] && f.[18] = f.[19]
-                     f.[20] = f.[21] && f.[21] = f.[22] && f.[22] = f.[23]]
-    let faceQuadEntropy = faceQuads |> Seq.filter ((=) false) |> Seq.length
-    double facePairEntropy + double faceQuadEntropy * 2.

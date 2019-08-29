@@ -134,21 +134,5 @@ solvedState
 |> display "Solved" |> ignore
 *)
 
-printfn "Testing Entropy"
-let sample = states |> Seq.take 2000
-let entropy = sample |> Seq.map entropy
-let maxEntropy = entropy |> Seq.max
-let normalizedEntropy = entropy |> Seq.map (fun e -> e / maxEntropy)
-
-let distances = sample |> Seq.map (fun c -> double qtmDistances.[findStateIndex states c])
-let maxDistance = distances |> Seq.max
-let normalizedDistances = distances |> Seq.map (fun e -> e / maxDistance)
-
-let error =
-    let mse (e, d) = let sq x = x * x in e - d |> sq
-    Seq.zip normalizedEntropy normalizedDistances |> Seq.averageBy mse
-
-printfn "Error: %f" error
-
 printfn "%A Done! (press return to exit)" (DateTime.Now)
 Console.ReadLine() |> ignore
