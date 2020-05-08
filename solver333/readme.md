@@ -41,11 +41,11 @@ We've started with Roux. Note that the following include first rotating the DL e
 | ----- | ------- | ----- |
 | FB    | 14.0    |  20   |
 | SB    | 21.2    |  32   |
-| CMLL  | 35.0    |  66   |
+| CMLL  | 34.4    |  59   |
 | EO    | 10.9    |  20   |
 | LR    |  7.4    |  10   |
 | L4E   |  9.4    |  21   |
-| Total | 97.9    | 169   |
+| Total | 97.3    | 162   |
 
 ## Intermediate (10,000 solves)
 

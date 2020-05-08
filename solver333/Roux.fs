@@ -2,7 +2,6 @@
 
 open Cube
 open Solver
-open Render
 
 let level = 2 // 0 = beginner, 1 = intermediate, 2 = expert
 
@@ -307,7 +306,7 @@ let sbPatterns = drEdgePatterns @ rbPairPatterns @ rfPairPatterns
 let coBeginnerPatterns =
     // Orient corners (CO) - hand authored patterns [8 cases] - single-alg (sune)
     ["CornerOrientation", ("O.OO.O...Y.Y...Y.Y.........BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, false), [] // skip
-     "CornerOrientation", ("O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune] // H - 38 twists (5 sunes) - easy to learn, but not bestcoH]
+     "CornerOrientation", ("O.OO.OY.Y............Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " U2 " + sune + " " + sune + " U2 " + sune] // H - 31 twists (4 sunes) - easy to learn, but not bestcoH]
      "CornerOrientation", ("O.OO.OY..............Y..Y.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " U2 " + sune + " U' " + sune + " U2 " + sune] // Pi - 31 twists (4 sunes)
      "CornerOrientation", ("O.OO.O...Y.Y.........Y.Y...BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " U' " + sune + " U2 " + sune] // U - 23 twists (3 sunes)
      "CornerOrientation", ("O.OO.OY....Y.....Y...Y.....BBBR.RGGGBBBR.RGGGW.WW.WW.W", false, false, true), [sune + " U " + sune + " U2 " + sune] // T - 23 twists (3 sunes)
@@ -680,7 +679,7 @@ let generate numCubes =
         if level = 0 then 
             // L edge to DF*)
             let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
-            let solvedLtoDF = solve muMoves "L edge to DF" "LREdges" caseLtoDF solvedEO false
+            let solvedLtoDF = solve muMoves "L edge to DF" "LToDF" caseLtoDF solvedEO false
 
             // LR edges to bottom
             let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G

@@ -1,6 +1,6 @@
 ﻿open System
 
-let numCubes = 1000
+let numCubes = 10000
 
 Roux.generate numCubes
 // Pairing.generate numCubes
