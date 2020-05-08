@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>Roux</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script lang="javascript">
+            ROOFPIG_CONF_BASE = "flags=canvas showalg | hover=5";
+        </script>
+        <script src="jquery.min.js"></script>
+        <script src="roofpig_and_three.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <h1>Roux</h1>
+        <!--
+        <h2>First Block</h2>
+        <p>The goal is to build the 2x3 blue block on the left with white down.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Solve Down-Left Edge (24 cases)</h3>
+        <p>Rotate the cube so that the blue-white edge is in the down-left position with blue left and white down.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>If the edge is on the left with blue facing left then simply rotate to the down-left position.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=x | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x | alg=x' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=x2 | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>If the edge is in the center (S) slice and flipped the right way then simply rotate to the down-left position.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=z' | alg=z | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=z | alg=z' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=z2 | alg=z2 | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>Once the edge is on the bottom with white facing down then simply retate to the down-left position.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' | alg=y | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y | alg=y' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 | alg=y2 | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>Otherwise, bring to the bottom in the correct orientation and rotate to the down-left position.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y x' | alg=x y' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' x | alg=x' y | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 z' | alg=z y2 | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y x2 | alg=x2 y' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' x2 | alg=x2' y | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' x' | alg=x y | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y x | alg=x' y' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 z | alg=z' y2 | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 x' | alg=x y2 | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y z' | alg=z y' | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' z | alg=z' y | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 x | alg=x' y2 | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' z' | alg=z y | colored=DL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y z | alg=z' y' | colored=DL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Solve Left Center (6 cases)</h3>
+        <p>Attach the blue center with the down-left edge.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=DL L R | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>If aligned then simply rotate into place with wide-u.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y | alg=u' | colored=DL L R | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y2 | alg=u2 | colored=DL L R | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' | alg=u | colored=DL L R | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <p>If the blue center is on top or bottom, bring it down or up with wide-r, then rotate into place.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' x | alg=r' u | colored=DL L R | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=y' x' | alg=r u | colored=DL L R | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Tuck Blue-Orange Edge (22 cases)</h3>
+        <p>Tuck the blue-orange edge into the front-down position with blue facing front.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x B r | alg=r' | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' B r | alg=r | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 B r | alg=r2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' B r | alg=B r | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' B r | alg=B' r | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 B r | alg=B' r2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x B r | alg=F r' | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x B r | alg=F' r' | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x B r | alg=U r' | colored=DL L R BL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=F | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=F' | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=U' F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=R' F | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=R2 F | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x B r | alg=r' F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 B r | alg=r2' F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' B r | alg=r F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=R F | colored=DL L R BL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=U F2 | colored=DL L R BL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r | alg=L' D' L | colored=DL L R BL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Setup Blue-Orange-White Corner (24 cases)</h3>
+        <p>Bring blue-orange-white corner to upper-right-back with white facing right.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R2 | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U' R' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U R | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=B R' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U2' R | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=B | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=B' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=B2 | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R' B | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R2 B | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U B' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=U2' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=B' U | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R U' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R2 U' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=R' U' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=L' U2 L | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=L2' B' L2| colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=B r R2 | alg=L' U B' L | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Pair Up And Insert In Back-Left (1 case)</h3>
+        <p>Pair blue-orange edge with blue-orange-white corner and insert in back-left.</p>
+        <p>Note: You can pair on the bottom directly as well (but this doesn't work later with second block).</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x | alg=M2' r B' | colored=DL L R BL BLD | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Tuck Blue-Red Edge (20 cases)</h3>
+        <p>Tuck the blue-red edge into the back-down position with blue facing back.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' F' r' | alg=r | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x F' r' | alg=r' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' F' r' | alg=U r | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' F' r' | alg=U' r | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' F' r' | alg=U2' r | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x F' r' | alg=F r' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x F' r' | alg=F' r' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=F' r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=U' r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=F r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=F2 r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=U r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=U2' r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' | alg=L D L' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' | alg=L' B' L | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x F' r' | alg=r F2 r2' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=R F' r2' | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 F' r' | alg=R' U r2 | colored=DL L R BL BLD FL | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Setup Blue-Red-White Corner (21 cases)</h3>
+        <p>Bring blue-red-white corner to upper-right-front with white facing right.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R2 | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=F' R | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U' R' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U2' R' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U R' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U2' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R U | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R' U | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R2 U | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=F U' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=F | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=F' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=F2 | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=U' F | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R F' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F' r' R2 | alg=R2 F' | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <h3>Pair Up And Insert In Front-Left (1 case)</h3>
+        <p>Pair blue-red edge with blue-red-white corner and insert in front-left.</p>
+        <p>Note: You can pair on the bottom directly as well (but this doesn't work later with second block).</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=M2' r' F | colored=DL L R BL BLD FL FLD | pov=Ufl" />
+                </td>
+            </tr>
+        </table>
+        <!---->
+        <!--
+        <h2>Second Block</h2>
+        <p>The goal is to build the 2x3 green block on the right with white down while preserving the first block.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=R DR BR BRD FR FRD | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Solve Down-Right Edge (18 cases)</h3>
+        <p>Solve the green-white edge into the down-right position with green right and white down.</p>
+        <p>Restricted to U, R/r, F, B and M twists.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=R | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=R' | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U' R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=r U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x | alg=r' U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=r2 U R2' | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=r2 U' R2' | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=r U' R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x | alg=r' U' R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=B U B' R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=F' U' F R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=U' r U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=U r U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=R2 U r U R2 | colored=R DR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Tuck Green-Orange Edge (16 cases)</h3>
+        <p>Tuck the green-orange edge into the front-down position with green facing front.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' R M2 | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=M2' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R' U' R M2 | alg=M' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=U M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=U' M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=U2' M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=U M2' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=U' M2' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=U2' M2' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=M U2' M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=M' U2' M2' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=R U r' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R' U' R M2 | alg=R' U R M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=R U' r' M | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R' U' R M2 | alg=R' U' r M' | colored=R DR BR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Setup Green-Orange-White Corner (18 cases)</h3>
+        <p>Bring green-orange-white corner to upper-left-back with white facing left.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U2 | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R U' R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R U2 R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R' U' R | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R' U2 R | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=F' U F | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=F' U2 F | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R' U R U' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U2 R' U2 R | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U R' U2 R | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U R U' R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U' R U' R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=U2 R U' R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=R2 B' R' B R' | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R' U' M' r | alg=B' R2 B R2 U2 | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Pair Up And Insert In Back-Right (1 case)</h3>
+        <p>Pair green-orange edge with green-orange-white corner and insert in back-right.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=M2' R' U R | colored=R DR BR DBR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Tuck Green-Red Edge (14 cases)</h3>
+        <p>Tuck the green-red edge into the back-down position with green facing back.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x R U R' M2 | alg=M | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=U M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=U' M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=U2 M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=U M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=U' M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=U2 M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=M' U2 M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=M U2 M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 R U R' M2 | alg=R U R' M2' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' R U R' M2 | alg=R U' R' M' | colored=R DR BR DRB FR | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Setup Green-Red-White Corner (15 cases)</h3>
+        <p>Bring green-red-white corner to upper-left-front with white facing left.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U2 | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U2 R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R' F R F' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U2 R U2 R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U' R' U | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U R U2 R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=U' R U2 R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U2 R' U | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=F' U F U' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U R' U | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' M2 | alg=R U' B U' B' R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Pair Up And Insert In Front-Right (1 case)</h3>
+        <p>Pair green-red edge with green-red-white corner and insert in front-right.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=M' r U' R' | colored=R DR BR DRB FR DRF | solved=DL L BL BLD FL FLD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <!---->
+        <h2>Top Corners (CMLL)</h2>
+        <p>The goal is to orient and permute the top corners to be solved relative to one another.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Orient Top Corners (8 cases)</h3>
+        <p>Orient the top corners so that yellow is facing up.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>If there is a <b>single</b> yellow "sticker" facing up then rotate it to the front-left position.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' | alg=U' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' | alg=U2' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>And performe this ("Sune") algorithm: R U R' U R U2 R'</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>Sometimes after doing this, you arrive at an unsolved position from above. In this case, repeat the procedure.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>If there is not a <b>single</b> yellow "sticker" facing up (instead two or none) then rotate a side sticker into the front-left position facing front.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F U R U' R' F' U' | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F R' F' R U R U' R' | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' U' R' F R F' | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Ulb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F U R U' R' U R U' R' F' U2 | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Urb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' U R U' R' U R U2 R' | alg=U | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:Ufl | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>Applying the sune algorithm repeatedly will cycle through these cases and eventually solve.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=L' U2 L U L' U L U2 | alg=R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=L' U2 L U L' U L | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=U R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=L' U2 L U L' U L U | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=F U R U' R' F' U | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=L' U2 L U L' U L U2 | alg=U2 R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' U | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 R U2 R' U' R U' R' U R U2 R' U' R U' R' R U2 R' U' R U' R' U | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U2 R' U' R U' R' U2 | alg=R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+        </table>
+        <!--
+     sune + " U' " + sune + " U2 " + sune] // U - 23 twists (3 sunes)
+     sune + " U " + sune + " U2 " + sune] // T - 23 twists (3 sunes)
+     sune + " " + sune + " U2 " + sune]] // L - 22 twists (3 sunes)
+     sune + " U2 " + sune + " U' " + sune + " U2 " + sune] // Pi - 31 twists (4 sunes)
+     sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune] // H - 38 twists (5 sunes) - easy to learn, but not bestcoH]
+
+alg=    R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+alg=U2  R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+alg=    R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+alg=U2' R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+
+[] // skip
+"R U2 R' U' " + sexy + " R U' R'"] // H
+"F " + sexy + " " + sexy + " F'"] // Pi
+"F " + sexy + " F'"] // U
+sune] // sune
+"L' U' L U' L' U2 L"] // anti-sune
+["F R' F' R U R U' R'"]] // L
+
+let sune = "R U R' U R U2 R'"
+let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
+let mum = "M' U' M'"
+let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
+let sexy = "R U R' U'"
+let sledge = "R' F R F'"
+        -->
+    </body>
+</html>

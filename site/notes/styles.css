@@ -3,7 +3,7 @@ body { background-color: black; color: white; }
 
 a { color: white; }
 
-h1, h2, p { font-family: sans-serif }
+h1, h2, h3, p { font-family: sans-serif }
 
 .roofpig { width: 128px; height: 180px; display: block; }
 
