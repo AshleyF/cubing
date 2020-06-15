@@ -220,6 +220,30 @@ type Move =
 
 type Step = Rotate of Rotate | Move of Move
 
+let inverseRotation = function
+    | X -> X' | X' -> X | X2 -> X2
+    | Y -> Y' | Y' -> Y | Y2 -> Y2
+    | Z -> Z' | Z' -> Z | Z2 -> Z2
+
+let inverseMove = function
+    | U -> U' | U' -> U | U2 -> U2 | UW -> UW' | UW' -> UW | UW2 -> UW2
+    | D -> D' | D' -> D | D2 -> D2 | DW -> DW' | DW' -> DW | DW2 -> DW2
+    | L -> L' | L' -> L | L2 -> L2 | LW -> LW' | LW' -> LW | LW2 -> LW2
+    | R -> R' | R' -> R | R2 -> R2 | RW -> RW' | RW' -> RW | RW2 -> RW2
+    | F -> F' | F' -> F | F2 -> F2 | FW -> FW' | FW' -> FW | FW2 -> FW2
+    | B -> B' | B' -> B | B2 -> B2 | BW -> BW' | BW' -> BW | BW2 -> BW2
+    | M -> M' | M' -> M | M2 -> M2
+    | S -> S' | S' -> S | S2 -> S2
+    | E -> E' | E' -> E | E2 -> E2 
+
+let inverseStep = function
+    | Rotate r -> inverseRotation r |> Rotate
+    | Move m -> inverseMove m |> Move
+
+let inverseRotations = List.map inverseRotation >> List.rev
+let inverseMoves = List.map inverseMove >> List.rev
+let inverseSteps = List.map inverseStep >> List.rev
+
 let rotate = function
     | X   -> rotateX
     | X'  -> rotateX'
@@ -282,9 +306,9 @@ let step = function
     | Rotate r -> rotate r
     | Move   m -> move m
 
-let executeRotation cube r = rotate r cube
-let executeMove     cube m = move   m cube
-let executeStep     cube s = step   s cube
+let executeRotation (cube : Cube) r = rotate r cube
+let executeMove     (cube : Cube) m = move   m cube
+let executeStep     (cube : Cube) s = step   s cube
 
 let executeRotations rs cube = Seq.fold executeRotation cube rs
 let executeMoves     ms cube = Seq.fold executeMove cube ms
@@ -355,3 +379,12 @@ let searchEdges edges color0 color1 cube =
         | _ -> failwith "Edge not found"
     find edges
 let findEdge color0 color1 cube = searchEdges [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR] color0 color1 cube
+
+let solved =
+    let u = faceOfStickers Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W
+    let d = faceOfStickers Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y
+    let l = faceOfStickers Color.O Color.O Color.O Color.O Color.O Color.O Color.O Color.O Color.O
+    let r = faceOfStickers Color.R Color.R Color.R Color.R Color.R Color.R Color.R Color.R Color.R
+    let f = faceOfStickers Color.G Color.G Color.G Color.G Color.G Color.G Color.G Color.G Color.G
+    let b = faceOfStickers Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B
+    cubeOfFaces u d l r f b

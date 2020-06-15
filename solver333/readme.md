@@ -6,15 +6,15 @@ Given thousands of scrambled cubes, the act of finding solutions to each step ge
 
 ## Build Alg Sets
 
-Given a partial goal state to be reached and a partially (or entirely) scrambled cube, we do an exhausive breadth-first search; terminating at the minimum depth at which one or more solutions are found.
+Given a partial goal state to be reached and a partially (or entirely) scrambled cube, we do an exhaustive breadth-first search; terminating at the minimum depth at which one or more solutions are found.
 This produces a set of algs which all solve the particular scramble. There may be many equally short solutions. Longer solutions are not considered.
-Given a set of scrambled cubes, we get a set of many algorithm sets; one alg set for each distinct case encountered. In this way, we discover the cases given a sufficient (thousands) number of scrambles.
+Given a set of scrambled cubes, we get a set of many algorithm sets; one alg set for each distinct case encountered. In this way, we discover the cases given a sufficient number (thousands) of scrambles.
 
 ## Find Distinct Case Patterns
 
 The set of scrambles and solutions are grouped by distinct alg set. Each group represents a distinct case.
 Across all of the scrambles for a given case, we find the commonality. This becomes the pattern by which the case may be recognized.
-Given a sufficent (at least hundreds per case) number of scrambles, the commonality settles to the true minimum.
+Given a sufficient (at least hundreds per case) number of scrambles, the commonality settles to the true minimum.
 
 ## Optimize Solver
 
@@ -100,7 +100,7 @@ Long term:
 
 # Ideas
 
-It may be possible to use A* to solve cubes, with a strong heuristic guide. As a heuristic, I'm thinking to use some measure of "entrophy"; zero being solved and something like ln(states) otherwise.
+It may be possible to use A* to solve cubes, with a strong heuristic guide. As a heuristic, I'm thinking to use some measure of "entropy"; zero being solved and something like `ln(states)` otherwise.
 
 Aside from being solved. Pieces may have other properties and relationships making them more or less closer to solved.
 

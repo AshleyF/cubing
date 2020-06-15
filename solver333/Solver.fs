@@ -7,15 +7,6 @@ open Render
 let quiet = false
 let warnings = true
 
-let solved =
-    let u = faceOfStickers Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W
-    let d = faceOfStickers Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y Color.Y
-    let l = faceOfStickers Color.O Color.O Color.O Color.O Color.O Color.O Color.O Color.O Color.O
-    let r = faceOfStickers Color.R Color.R Color.R Color.R Color.R Color.R Color.R Color.R Color.R
-    let f = faceOfStickers Color.G Color.G Color.G Color.G Color.G Color.G Color.G Color.G Color.G
-    let b = faceOfStickers Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B Color.B
-    cubeOfFaces u d l r f b
-
 let scrambleWithMoves (moves: Move list) n =
     let rand = Random()
     let rec scramble' cube sequence history n =
@@ -23,7 +14,7 @@ let scrambleWithMoves (moves: Move list) n =
             let m = List.item (rand.Next moves.Length) moves
             let cube' = move m cube
             scramble' cube' (m :: sequence) (cube' :: history) (n - 1)
-    scramble' solved [] [solved] n
+    scramble' Cube.solved [] [Cube.solved] n
 
 let scramble =
     let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices

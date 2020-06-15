@@ -4,7 +4,7 @@
         <title>Roux</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script lang="javascript">
-            ROOFPIG_CONF_BASE = "flags=canvas showalg | hover=5";
+            ROOFPIG_CONF_BASE = "flags=canvas | hover=5";
         </script>
         <script src="jquery.min.js"></script>
         <script src="roofpig_and_three.min.js"></script>
@@ -12,8 +12,7 @@
     </head>
     <body>
         <h1>Roux</h1>
-        <!--
-        <h2>First Block</h2>
+        <h2>First Block (FB)</h2>
         <p>The goal is to build the 2x3 blue block on the left with white down.</p>
         <table>
             <tr>
@@ -503,9 +502,7 @@
                 </td>
             </tr>
         </table>
-        <!---->
-        <!--
-        <h2>Second Block</h2>
+        <h2>Second Block (SB)</h2>
         <p>The goal is to build the 2x3 green block on the right with white down while preserving the first block.</p>
         <table>
             <tr>
@@ -846,7 +843,6 @@
                 </td>
             </tr>
         </table>
-        <!---->
         <h2>Top Corners (CMLL)</h2>
         <p>The goal is to orient and permute the top corners to be solved relative to one another.</p>
         <table>
@@ -994,32 +990,148 @@
                     <div class="roofpig" data-config="base=BASE | alg=U2' R U R' U R U2' R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
                 </td>
         </table>
+        <h3>Permute Top Corners (3 cases)</h3>
+        <p>Permute the top corners so that pairs of side colors (orange, blue, green or red pairs) are adjacent (upper face may remain misaligned).</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>Rotate pairs (if any) to face left and perform this ("JPerm") algorithm: R U R' F' R U R' U' R' F R2 U' R'.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | alg=R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:ulB X:urB |pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U | alg=R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:uLf X:uLb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U' | alg=R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:uRf X:uRb | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 | alg=R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:ulF X:urF | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>If no adjacent pairs exist then simply perform the JPerm algorithm from any rotation (making a pair - blue in this example) and then repeat.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=R U R' F' R U R' U' R' F R2 U' R' U2 | alg=R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+                </td>
+                <td>Repeat</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U | alg=U R U R' F' R U R' U' R' F R2 U' R' | colored=ULF ULB URF URB | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | tweaks=X:uLf X:uLb | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h2>Orient Edges (EO)</h2>
+        <p>The goal is to orient the edges (and centers) such that up (yellow) and down (white) "stickers" are facing up or down while side colors (red, orange, green, blue) and facing the do the sides (front, back, left or right).</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>Yellow or white may be thought of as interchangable and are considered oriented when facing up or down.</p>
+        <p>Red, orange, green and blue may also be thought of as interchangable and are considered oriented when facing any side.</p>
+        <p>It may be confusing, but all of the following (and many more!) are all oriented correctly.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M2 | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M2 U M2 | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M2 U2 M U2 M' | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M2 U2 M' U2 M U2 | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M2 U2 M' U2 M' U2 M U2 M' U2 | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=M2 U M2 U' M2 U2 M2 U M2 U | colored=UL UR UF UB DF DB U D F B | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>To make thinking about and diagramming this easier, we will color these "light" up/down colors cyan and the "dark" side colors purple.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | colored=UL UR UF UB DF DB U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Orient Centers</h3>
+        <p>If the top/bottom centers are on the front/back, then orient them.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x' | alg=M' | colored=U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <h3>Arrow Case</h3>
+        <p>This is the "Arrow Case". With the "arrow" pointing to the front, perform the sequence: M' U' M'</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 | alg=M' U' M' | colored=UL UR UF UB DF DB U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <p>Any time a pair of adjacent misoriented edges is on top, rotate the to the back-right.</p>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=M U M U M U M | alg= | colored=UL UR UF UB U | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U' M U M U M U M | alg=U | colored=UL UR UF UB U | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U M U M U M U M | alg=U' | colored=UL UR UF UB U | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=U2 M U M U M U M | alg=U2 | colored=UL UR UF UB U | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=x2 M U M U | alg=M' U' M' | colored=UL UR UF UB DF DB U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>Arrow</td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=| alg=M' U' M' U' M' U' M' | colored=UL UR UF UB DF DB U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+                <td>
+                    <div class="roofpig" data-config="base=BASE | setupmoves=| alg=M' U' M' U2 M' U' M' | colored=UL UR UF UB DF DB U D F B | colors=R:#808 L:#808 F:#808 B:#808 U:#0FF D:#0FF | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD ULF ULB URF URB | pov=Ufr" />
+                </td>
+            </tr>
+        </table>
         <!--
-     sune + " U' " + sune + " U2 " + sune] // U - 23 twists (3 sunes)
-     sune + " U " + sune + " U2 " + sune] // T - 23 twists (3 sunes)
-     sune + " " + sune + " U2 " + sune]] // L - 22 twists (3 sunes)
-     sune + " U2 " + sune + " U' " + sune + " U2 " + sune] // Pi - 31 twists (4 sunes)
-     sune + " U' " + sune + " " + sune + " U' " + sune + " U2 " + sune] // H - 38 twists (5 sunes) - easy to learn, but not bestcoH]
 
-alg=    R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
-alg=U2  R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
-alg=    R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
-alg=U2' R U R' U R U2 R' | colored=Ulf Ulb Urf Urb | solved=DL L BL BLD FL FLD R DR BR BRD FR FRD | pov=Ufr" />
+mum + " U2 " + mum] // 2-up L (NE)
+mum + " U' " + mum] // 2-up L (NE)/2-down
 
-[] // skip
-"R U2 R' U' " + sexy + " R U' R'"] // H
-"F " + sexy + " " + sexy + " F'"] // Pi
-"F " + sexy + " F'"] // U
-sune] // sune
-"L' U' L U' L' U2 L"] // anti-sune
-["F R' F' R U R U' R'"]] // L
-
-let sune = "R U R' U R U2 R'"
-let jperm = "R U R' F' R U R' U' R' F R2 U' R'" // without final AUF (U')
-let mum = "M' U' M'"
-let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
-let sexy = "R U R' U'"
-let sledge = "R' F R F'"
+mum + " " + mum + " U' " + mum] // 2-up vertical
+"M2 " +  mum + " " + mum + " U' " + mum] // 2-down
+mum + " " + mum + " U2 " + mum + " U " + mum + " U' " + mum] // 2 B/B
+mum + " U " + mum + " U' " + mum] // 2 B/F
+mum + " U' " + mum + " U " + mum + " U' " + mum] // 4 up
+mum + " U' " + mum + " U2 " + mum] // arrow F/B
+mum + " U2 " + mum + " U2 " + mum] // 2-up/2-down horizontal (special case - leave horizontal)
+mum + " U2 " + mum + " U " + mum + " U' " + mum]] // 6-flip
         -->
     </body>
 </html>

@@ -17,6 +17,7 @@
     <None Include="readme.md" />
     <Compile Include="Cube.fs" />
     <Compile Include="Render.fs" />
+    <Compile Include="LSE.fs" />
     <Compile Include="Solver.fs" />
     <Compile Include="Roux.fs" />
     <Compile Include="Pairing.fs" />
