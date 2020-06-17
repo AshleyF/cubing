@@ -1,6 +1,8 @@
 ﻿module LSE
 
 open Cube
+open System
+open System.IO
 
 let generate () =
     printfn "Generating LSE Cases"
@@ -14,7 +16,7 @@ let generate () =
             |> Seq.map (fun (_, (moves, cube)) -> (move :: moves), Cube.executeMove cube move) // execute move
             |> Seq.map (fun (moves, cube) -> (Render.cubeToString cube), (moves, cube)) // render case
             |> Seq.filter (fun (case, _) -> not (Map.containsKey case known)) // filter existing
-        newCases |> Seq.iter (fun (case, _) ->
+        newCases |> Seq.iter (fun _ ->
             count <- count + 1
             if count % 1000 = 0 then printf ".")
         yield! newCases }
@@ -41,13 +43,6 @@ let generate () =
     let cases = iter init init
     printfn "Total Cases: %i" (Seq.length cases)
 
-    let cornersSolved cube = Color.B = Cube.look Face.L Sticker.UR cube
-    let anyAUF predicate cube =
-        cube |> predicate ||
-        Cube.executeMove cube Move.U |> predicate ||
-        Cube.executeMove cube Move.U' |> predicate ||
-        Cube.executeMove cube Move.U2 |> predicate
-
     let centerOriented cube =
         let center = Cube.look Face.U Sticker.C cube
         center = Color.Y || center = Color.W
@@ -62,16 +57,44 @@ let generate () =
 
     let misoriented face sticker cube = not (oriented face sticker cube)
 
+    let sidesComplete l r cube =
+        (Cube.look Face.L Sticker.UL cube = l &&
+         Cube.look Face.L Sticker.U cube = l &&
+         Cube.look Face.R Sticker.UL cube = r &&
+         Cube.look Face.R Sticker.U cube = r) ||
+        (Cube.look Face.L Sticker.UL cube = r &&
+         Cube.look Face.L Sticker.U cube = r &&
+         Cube.look Face.R Sticker.UL cube = l &&
+         Cube.look Face.R Sticker.U cube = l)
+
+    let lrComplete = sidesComplete Color.B Color.G
+    let fbComplete = sidesComplete Color.O Color.R
+
     let subset name file selector =
+        let solution scramble =
+            let mutable first = true
+            let annotate cube =
+                if first && lrComplete cube then first <- false; " [EOLR]"
+                elif first && fbComplete cube then first <- false; " [EOFB]"
+                else ""
+            let cube = Cube.executeMoves scramble yellowUpRedFront
+            let solution = Cube.inverseMoves scramble
+            let l4e = lrComplete cube || fbComplete cube
+            String.Join(' ',
+                List.scan Cube.executeMove cube solution
+                |> List.tail // not including initial scrambled state
+                |> List.zip solution
+                |> List.map (fun (m, c) -> sprintf "%s%s" (Render.moveToString m) (if l4e then "" else annotate c)))
         let sub =
             cases
-            |> Seq.filter (fun (_, (_, cube)) -> selector cube)
-            |> Seq.distinctBy fst
-            |> Seq.map (fun (_, (moves, _)) -> moves |> List.rev |> Render.movesToString)
-            |> Seq.filter ((<>) "")
+            |> Seq.filter (fun (_, (moves, cube)) -> not (Seq.isEmpty moves) && selector cube)
+            |> Seq.distinctBy fst // distinct cube state
+            |> Seq.map (fun (_, (moves, _)) -> moves |> List.rev) // scrambles
+            |> Seq.map (fun scramble -> scramble, solution scramble) // add annotated solution
+            |> Seq.map (fun (scramble, eolr) -> sprintf "%s  (%s)" (Render.movesToString scramble) eolr)
             |> List.ofSeq
         printfn "%s (%i)" name (List.length sub)
-        System.IO.File.WriteAllLines(sprintf "%s.txt" file, sprintf "%s [%i cases]" name sub.Length :: "" :: sub)
+        File.WriteAllLines(sprintf "%s.txt" file, sprintf "%s [%i cases]" name sub.Length :: "" :: sub)
 
     let l4e includeMisorientedCenters cube =
         let oriented =
@@ -80,10 +103,7 @@ let generate () =
             (if oriented Face.D Sticker.D cube then 1 else 0) +
             (if oriented Face.D Sticker.U cube then 1 else 0) +
             if centerOriented cube then 4 else 0
-        cornersSolved cube &&
-        Cube.look Face.L Sticker.U cube = Color.B &&
-        Cube.look Face.R Sticker.U cube = Color.G &&
-        (oriented = 8 || (includeMisorientedCenters && oriented = 0))
+        lrComplete cube && (oriented = 8 || (includeMisorientedCenters && oriented = 0))
 
     let arrow front cube =
         centerOriented cube &&
