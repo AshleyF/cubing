@@ -23,12 +23,14 @@ let generate () =
 
     let rec genMU known cases = seq {
         printfn "Count: %i" (Map.count cases)
-        yield! gen known cases Move.U'
-        yield! gen known cases Move.U
-        yield! gen known cases Move.U2
-        yield! gen known cases Move.M'
+        //yield! gen known cases Move.E2
+        //yield! gen known cases Move.D2
+        yield! gen known cases Move.M2
         yield! gen known cases Move.M
-        yield! gen known cases Move.M2 }
+        yield! gen known cases Move.M'
+        yield! gen known cases Move.U2
+        yield! gen known cases Move.U
+        yield! gen known cases Move.U' }
 
     let yellowUpRedFront = Cube.executeRotation (Cube.executeRotation Cube.solved Rotate.X2) Rotate.Y
     let init = [Render.cubeToString yellowUpRedFront, ([], yellowUpRedFront)]
@@ -41,7 +43,14 @@ let generate () =
         else known
 
     let cases = iter init init
-    printfn "Total Cases: %i" (Seq.length cases)
+    printfn "Total Cases: %i" (List.length cases)
+
+    let sideBlocksAligned cube = // assumes E2/D2
+        Cube.look Face.L Sticker.C cube = Color.B &&
+        Cube.look Face.L Sticker.DL cube = Color.B
+
+    let casesWithBlocksSolved = cases |> List.filter (fun (_, (_, cube)) -> sideBlocksAligned cube)
+    printfn "Total Cases (with blocks solved): %i" (List.length casesWithBlocksSolved)
 
     let centerOriented cube =
         let center = Cube.look Face.U Sticker.C cube
@@ -57,7 +66,7 @@ let generate () =
 
     let misoriented face sticker cube = not (oriented face sticker cube)
 
-    let sidesComplete l r cube =
+    let lrAligned l r cube =
         (Cube.look Face.L Sticker.UL cube = l &&
          Cube.look Face.L Sticker.U cube = l &&
          Cube.look Face.R Sticker.UL cube = r &&
@@ -67,8 +76,11 @@ let generate () =
          Cube.look Face.R Sticker.UL cube = l &&
          Cube.look Face.R Sticker.U cube = l)
 
-    let lrComplete = sidesComplete Color.B Color.G
-    let fbComplete = sidesComplete Color.O Color.R
+    let lrComplete = lrAligned Color.B Color.G
+    let fbComplete cube =
+        lrAligned Color.O Color.R cube &&
+        Cube.look Face.U Sticker.L cube = Color.Y && 
+        Cube.look Face.U Sticker.R cube = Color.Y
 
     let subset name file selector =
         let solution scramble =
@@ -79,19 +91,22 @@ let generate () =
                 else ""
             let cube = Cube.executeMoves scramble yellowUpRedFront
             let solution = Cube.inverseMoves scramble
-            let l4e = lrComplete cube || fbComplete cube
-            String.Join(' ',
-                List.scan Cube.executeMove cube solution
-                |> List.tail // not including initial scrambled state
-                |> List.zip solution
-                |> List.map (fun (m, c) -> sprintf "%s%s" (Render.moveToString m) (if l4e then "" else annotate c)))
+            let sol =
+                String.Join(' ',
+                    List.scan Cube.executeMove cube solution
+                    |> List.tail // not including initial scrambled state
+                    |> List.zip solution
+                    |> List.map (fun (m, c) -> sprintf "%s%s" (Render.moveToString m) (annotate c)))
+            let i = sol.IndexOf('[')
+            if i <> -1 then sprintf "%s: %s" (sol.Substring(i + 1, 4)) (sol.Substring(0, i - 1)) else sol // quick & dirty reformatting
         let sub =
-            cases
+            casesWithBlocksSolved
+            |> Seq.filter (fun (_, (_, cube)) -> sideBlocksAligned cube)
             |> Seq.filter (fun (_, (moves, cube)) -> not (Seq.isEmpty moves) && selector cube)
             |> Seq.distinctBy fst // distinct cube state
             |> Seq.map (fun (_, (moves, _)) -> moves |> List.rev) // scrambles
             |> Seq.map (fun scramble -> scramble, solution scramble) // add annotated solution
-            |> Seq.map (fun (scramble, eolr) -> sprintf "%s  (%s)" (Render.movesToString scramble) eolr)
+            |> Seq.map (fun (scramble, eolr) -> sprintf "%s    (%s)" (Render.movesToString scramble) eolr)
             |> List.ofSeq
         printfn "%s (%i)" name (List.length sub)
         File.WriteAllLines(sprintf "%s.txt" file, sprintf "%s [%i cases]" name sub.Length :: "" :: sub)
@@ -103,7 +118,7 @@ let generate () =
             (if oriented Face.D Sticker.D cube then 1 else 0) +
             (if oriented Face.D Sticker.U cube then 1 else 0) +
             if centerOriented cube then 4 else 0
-        lrComplete cube && (oriented = 8 || (includeMisorientedCenters && oriented = 0))
+        lrComplete cube && Cube.look Face.L Sticker.U cube = Color.B && (oriented = 8 || (includeMisorientedCenters && oriented = 0))
 
     let arrow front cube =
         centerOriented cube &&
@@ -155,6 +170,37 @@ let generate () =
         not (arrowAdjacent front cube) &&
         not (arrowBottom front cube)
 
+    let diagOpposite11 front cube =
+        centerOriented cube &&
+        oriented Face.U Sticker.L cube &&
+        oriented Face.U Sticker.R cube &&
+        if front then
+            misoriented Face.U Sticker.D cube &&
+            misoriented Face.D Sticker.D cube &&
+            oriented Face.U Sticker.U cube &&
+            oriented Face.D Sticker.U cube
+        else
+            misoriented Face.U Sticker.U cube &&
+            misoriented Face.D Sticker.U cube &&
+            oriented Face.U Sticker.D cube &&
+            oriented Face.D Sticker.D cube
+
+    let diagOpposite11Good front cube =
+        diagOpposite11 front cube &&
+        (lrEdge Face.L Sticker.U cube || lrEdge Face.R Sticker.U cube) &&
+        if front then (lrEdge Face.F Sticker.D cube || lrEdge Face.B Sticker.D cube)
+        else (lrEdge Face.F Sticker.U cube || lrEdge Face.B Sticker.U cube)
+
+    let diagOpposite11Alright front cube =
+        diagOpposite11 front cube &&
+        (lrEdge Face.L Sticker.U cube || lrEdge Face.R Sticker.U cube) &&
+        lrEdge Face.D (if front then Sticker.D else Sticker.U) cube
+
+    let diagOpposite11QuickEO front cube =
+        diagOpposite11 front cube &&
+        if front then (lrEdge Face.D Sticker.D cube && lrEdge Face.B Sticker.D cube)
+        else (lrEdge Face.D Sticker.U cube && lrEdge Face.F Sticker.U cube)
+
     subset "L4E (oriented centers)" "l4e_oriented" (l4e false)
     subset "L4E (including misoriented centers)" "l4e_misoriented" (l4e true)
 
@@ -168,3 +214,10 @@ let generate () =
     subset "EOLR Bottom Arrow (back)" "arrow_bottom_back" (arrowBottom false)
     subset "EOLR Bad Arrow (front)" "arrow_bad_front" (arrowBad true)
     subset "EOLR Bad Arrow (back)" "arrow_bad_back" (arrowBad false)
+
+    subset "EOLR Good 1F-1B (front)" "1f-1b_good_front" (diagOpposite11Good true)
+    subset "EOLR Good 1F-1B (back)" "1f-1b_good_back" (diagOpposite11Good false)
+    subset "EOLR Alright 1F-1B (front)" "1f-1b_alright_front" (diagOpposite11Alright true)
+    subset "EOLR Alright 1F-1B (back)" "1f-1b_alright_back" (diagOpposite11Alright false)
+    subset "EOLR Quick EO 1F-1B (front)" "1f-1b_quick_eo_front" (diagOpposite11QuickEO true)
+    subset "EOLR Quick EO 1F-1B (back)" "1f-1b_quick_eo_back" (diagOpposite11QuickEO false)
