@@ -85,7 +85,7 @@ let fbComplete cube =
     Cube.look Face.U Sticker.L cube = Color.Y && 
     Cube.look Face.U Sticker.R cube = Color.Y
 
-let subset name file selector =
+let subset name file (index : StreamWriter) selector =
     let solution scramble =
         let mutable first = true
         let annotate cube =
@@ -112,7 +112,8 @@ let subset name file selector =
         |> Seq.map (fun (scramble, eolr) -> sprintf "%s    (%s)" (Render.movesToString scramble) eolr)
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
-    File.WriteAllLines(sprintf "%s.txt" file, sprintf "%s [%i cases]" name sub.Length :: "" :: sub)
+    File.WriteAllLines(sprintf "../../../%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
+    index.WriteLine(sprintf "- (%s)[%s.md]" name file)
 
 let l4e includeMisorientedCenters cube =
     let oriented =
@@ -223,33 +224,47 @@ let diagOpposite11Worst front cube =
     if front then (lrEdge Face.F Sticker.D cube && lrEdge Face.B Sticker.D cube)
     else (lrEdge Face.F Sticker.U cube && lrEdge Face.B Sticker.U cube)
 
-subset "L4E (oriented centers)" "l4e_oriented" (l4e false)
-subset "L4E (including misoriented centers)" "l4e_misoriented" (l4e true)
+let index = new StreamWriter(File.OpenWrite "../../../EOLR.md")
+index.WriteLine("# LSE EOLR/FB")
+index.WriteLine();
 
-subset "EOLR Best Arrow (front)" "arrow_best_front" (arrowBest true)
-subset "EOLR Best Arrow (back)" "arrow_best_back" (arrowBest false)
-subset "EOLR Good Arrow (front)" "arrow_good_front" (arrowGood true)
-subset "EOLR Good Arrow (back)" "arrow_good_back" (arrowGood false)
-subset "EOLR Adjacent Arrow (front)" "arrow_adjacent_front" (arrowAdjacent true)
-subset "EOLR Adjacent Arrow (back)" "arrow_adjacent_back" (arrowAdjacent false)
-subset "EOLR Bottom Arrow (front)" "arrow_bottom_front" (arrowBottom true)
-subset "EOLR Bottom Arrow (back)" "arrow_bottom_back" (arrowBottom false)
-subset "EOLR Bad Arrow (front)" "arrow_bad_front" (arrowBad true)
-subset "EOLR Bad Arrow (back)" "arrow_bad_back" (arrowBad false)
+index.WriteLine("## L4E Cases (after EOLR)")
+index.WriteLine()
+subset "L4E (oriented centers)" "l4e_oriented" index (l4e false)
+subset "L4E (including misoriented centers)" "l4e_misoriented" index (l4e true)
 
-subset "EOLR Good 1F-1B (front)" "1f-1b_good_front" (diagOpposite11Good true)
-subset "EOLR Good 1F-1B (back)" "1f-1b_good_back" (diagOpposite11Good false)
-subset "EOLR Alright 1F-1B (front)" "1f-1b_alright_front" (diagOpposite11Alright true)
-subset "EOLR Alright 1F-1B (back)" "1f-1b_alright_back" (diagOpposite11Alright false)
-subset "EOLR Quick EO 1F-1B (front)" "1f-1b_quick_eo_front" (diagOpposite11QuickEO true)
-subset "EOLR Quick EO 1F-1B (back)" "1f-1b_quick_eo_back" (diagOpposite11QuickEO false)
-subset "UF is LR with Adjacent 1F-1B (front)" "1f-1b_uf_is_lr_adjacent_front" (diagOpposite11UFisLR true true)
-subset "UB is LR with Adjacent 1F-1B (back)" "1f-1b_ub_is_lr_adjacent_back" (diagOpposite11UFisLR false true)
-subset "UF is LR with Non-adjacent 1F-1B (front)" "1f-1b_uf_is_lr_nonadjacent_front" (diagOpposite11UFisLR true false)
-subset "UB is LR with Non-adjacent 1F-1B (back)" "1f-1b_ub_is_lr_nonadjacent_back" (diagOpposite11UFisLR false false)
-subset "Decent 1F-1B (front)" "1f-1b_decent_front" (diagOpposite11Decent true)
-subset "Decent 1F-1B (back)" "1f-1b_decent_back" (diagOpposite11Decent false)
-subset "Bad 1F-1B (front)" "1f-1b_bad_front" (diagOpposite11Bad true)
-subset "Bad 1F-1B (back)" "1f-1b_bad_back" (diagOpposite11Bad false)
-subset "Worst 1F-1B (front)" "1f-1b_worst_front" (diagOpposite11Worst true)
-subset "Worst 1F-1B (back)" "1f-1b_worst_back" (diagOpposite11Worst false)
+index.WriteLine()
+index.WriteLine("## EOLR Arrow Cases")
+index.WriteLine()
+subset "EOLR Best Arrow (front)" "eolr_arrow_best_front" index (arrowBest true)
+subset "EOLR Best Arrow (back)" "eolr_arrow_best_back" index (arrowBest false)
+subset "EOLR Good Arrow (front)" "eolr_arrow_good_front" index (arrowGood true)
+subset "EOLR Good Arrow (back)" "eolr_arrow_good_back" index (arrowGood false)
+subset "EOLR Adjacent Arrow (front)" "eolr_arrow_adjacent_front" index (arrowAdjacent true)
+subset "EOLR Adjacent Arrow (back)" "eolr_arrow_adjacent_back" index (arrowAdjacent false)
+subset "EOLR Bottom Arrow (front)" "eolr_arrow_bottom_front" index (arrowBottom true)
+subset "EOLR Bottom Arrow (back)" "eolr_arrow_bottom_back" index (arrowBottom false)
+subset "EOLR Bad Arrow (front)" "eolr_arrow_bad_front" index (arrowBad true)
+subset "EOLR Bad Arrow (back)" "eolr_arrow_bad_back" index (arrowBad false)
+
+index.WriteLine()
+index.WriteLine("## EOLR 1F-1B Cases")
+index.WriteLine()
+subset "EOLR Good 1F-1B (front)" "eolr_1f-1b_good_front" index (diagOpposite11Good true)
+subset "EOLR Good 1F-1B (back)" "eolr_1f-1b_good_back" index (diagOpposite11Good false)
+subset "EOLR Alright 1F-1B (front)" "eolr_1f-1b_alright_front" index (diagOpposite11Alright true)
+subset "EOLR Alright 1F-1B (back)" "eolr_1f-1b_alright_back" index (diagOpposite11Alright false)
+subset "EOLR Quick EO 1F-1B (front)" "eolr_1f-1b_quick_eo_front" index (diagOpposite11QuickEO true)
+subset "EOLR Quick EO 1F-1B (back)" "eolr_1f-1b_quick_eo_back" index (diagOpposite11QuickEO false)
+subset "EOLR UF is LR with Adjacent 1F-1B (front)" "eolr_1f-1b_uf_is_lr_adjacent_front" index (diagOpposite11UFisLR true true)
+subset "EOLR UB is LR with Adjacent 1F-1B (back)" "eolr_1f-1b_ub_is_lr_adjacent_back" index (diagOpposite11UFisLR false true)
+subset "EOLR UF is LR with Non-adjacent 1F-1B (front)" "eolr_1f-1b_uf_is_lr_nonadjacent_front" index (diagOpposite11UFisLR true false)
+subset "EOLR UB is LR with Non-adjacent 1F-1B (back)" "eolr_1f-1b_ub_is_lr_nonadjacent_back" index (diagOpposite11UFisLR false false)
+subset "EOLR Decent 1F-1B (front)" "eolr_1f-1b_decent_front" index (diagOpposite11Decent true)
+subset "EOLR Decent 1F-1B (back)" "eolr_1f-1b_decent_back" index (diagOpposite11Decent false)
+subset "EOLR Bad 1F-1B (front)" "eolr_1f-1b_bad_front" index (diagOpposite11Bad true)
+subset "EOLR Bad 1F-1B (back)" "eolr_1f-1b_bad_back" index (diagOpposite11Bad false)
+subset "EOLR Worst 1F-1B (front)" "eolr_1f-1b_worst_front" index (diagOpposite11Worst true)
+subset "EOLR Worst 1F-1B (back)" "eolr_1f-1b_worst_back" index (diagOpposite11Worst false)
+
+index.Close()
