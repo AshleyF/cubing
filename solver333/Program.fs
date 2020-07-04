@@ -2,9 +2,8 @@
 
 let numCubes = 10000
 
-// Roux.generate numCubes
+Roux.generate numCubes
 // Pairing.generate numCubes
-LSE.generate ()
 
 let avgTwistCount = float Cube.twistCount / float numCubes;
 printfn "Total Average Twists (STM): %f" avgTwistCount
