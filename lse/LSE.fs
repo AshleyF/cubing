@@ -110,7 +110,7 @@ let subset name file (index : StreamWriter) selector =
         |> Seq.distinctBy fst // distinct cube state
         |> Seq.map (fun (_, (moves, _)) -> moves |> List.rev) // scrambles
         |> Seq.map (fun scramble -> scramble, solution scramble) // add annotated solution
-        |> Seq.map (fun (scramble, eolr) -> sprintf "- %s    (%s)" (Render.movesToString scramble) eolr)
+        |> Seq.map (fun (scramble, eolr) -> sprintf "1. `%s` (%s)" (Render.movesToString scramble) eolr)
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
     File.WriteAllLines(sprintf "../../../%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
