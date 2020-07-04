@@ -113,7 +113,7 @@ let subset name file (index : StreamWriter) selector =
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
     File.WriteAllLines(sprintf "../../../%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
-    index.WriteLine(sprintf "- (%s)[%s.md]" name file)
+    index.WriteLine(sprintf "- [%s](%s.md)" name file)
 
 let l4e includeMisorientedCenters cube =
     let oriented =
