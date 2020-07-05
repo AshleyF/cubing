@@ -1,5 +1,11 @@
 # Rouxtorial for Kayden
 
+These were notes made before creating this video: https://www.youtube.com/watch?v=ERHoTBolGIE
+
+[See also the Beginner's Roux page](../roux.html)
+[See also the EO page](./eo.md)
+[See also the L4E page](./l4e.md)
+
 # Intro
 
 - For Kayden
