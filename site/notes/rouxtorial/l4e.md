@@ -1,3 +1,47 @@
 # L4E Rouxtorial for Kayden
 
-[See also the L4E page](../l4e.html)
+[See also the L4E page](https://ashleyf.github.io/cubing/site/notes/l4e.html)
+
+- Basic:
+    - M away + solved
+    - Bars (belong up/down, vertical/horizontal)
+    - Columns (belong front/back)
+    - Dots
+        - Make bars
+        - M2 away (same)
+    - 3-cycle
+        - Find "loner" piece, bring to top
+        - U2, makes bar in front/back
+        - Bar to top, U2, and insert
+        - Finding the "loner" and knowing which way it goes? (M around? look around? track!)
+- Intermediate:
+    - [JPerm's reco system](https://youtu.be/MBGnqDjSBPE): Down edge F/B, other down edge opposite
+    - Keep solo edge up, non-solo edge to bottom
+- Advanced:
+    - Save 1 twist with vertical bars (opposite on top)
+    - Dots advanced alg
+    - Tracking (UB, DF/DB)
+- Cases:
+    - Simple: M2
+    - Bars0: (U2 M2 U2)
+    - Bars1: (U2 M2 U2) M2
+    - Columns0: (M' U2 M2 U2) M'
+    - Columns1: (M' U2 M2 U2) M
+    - Dots0: (E2 M E2) M
+    - Dots1: (E2 M E2) M'
+    - Cycle0a: U2 M U2 M
+    - Cycle0b: M' U2 M' U2
+    - Cycle1a: M2 U2 M U2 M
+    - Cycle1b: M U2 M' U2
+    - Cycle2a: U2 M U2 M'
+    - Cycle2b: M' U2 M U2
+    - Cycle3a: M2 U2 M U2 M'
+    - Cycle3b: M U2 M U2
+    - Cycle4a: U2 M' U2 M
+    - Cycle4b: M' U2 M' U2 M2
+    - Cycle5a: M2 U2 M' U2 M
+    - Cycle5b: M U2 M' U2 M2
+    - Cycle6a: U2 M' U2 M'
+    - Cycle6a: M' U2 M U2 M2
+    - Cycle7a: M2 U2 M' U2 M'
+    - Cycle7b: M U2 M U2 M2

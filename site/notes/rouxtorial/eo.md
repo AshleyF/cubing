@@ -1,6 +1,6 @@
 # EO Rouxtorial for Kayden
 
-[See also the EO page](../eo.html)
+[See also the EO page](https://ashleyf.github.io/cubing/site/notes/eo.html)
 
 - Basic:
     - Front arrow (setup: M U M)
@@ -30,3 +30,15 @@
         - Ensure 1-1 LR (setup: U M2 U' M' U2 M U' M' U M)
     - 6-flip: R U' r' U' M' U r U r' (setup: r U' r' U' M U r U R')
     - Algs for all
+- Cases:
+    - Arrow (front): M U M (AUF x4)
+    - Arrow (back): M U M' (AUF x4)
+    - 4-0: M U M U2 M U2 M
+    - 2o-2: M' U M' U2 M U2 M (AUF x2)
+    - 2a-2: M U M U M2 (AUF x4)
+    - 2o-0: M U M U M' U' M (AUF x2)
+    - 0-2: M U M' U M U' M
+    - 2a-0: M' U M' U2 M' U' M' (AUF x4)
+    - 1f-1: M U M' U M U M (AUF x4)
+    - 1b-1: M U M U M' U M (AUF x4)
+    - 6-flip: R U' r' U' M' U r U r'
