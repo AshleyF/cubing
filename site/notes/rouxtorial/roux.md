@@ -2,10 +2,10 @@
 
 These were notes made before creating this video: https://www.youtube.com/watch?v=ERHoTBolGIE
 
-[See also the Beginner's Roux page](https://ashleyf.github.io/cubing/site/notes/roux.html)
-[See also the EO page](./eo.md)
-[See also the L4E page](./l4e.md)
-[See also the CMLL page](./cmll.md)
+- [See also the Beginner's Roux page](https://ashleyf.github.io/cubing/site/notes/roux.html)
+- [See also the EO page](./eo.md)
+- [See also the L4E page](./l4e.md)
+- [See also the CMLL page](./cmll.md)
 
 # Intro
 
