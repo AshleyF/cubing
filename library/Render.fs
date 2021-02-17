@@ -301,6 +301,10 @@ let stringToStep = function
     | "E2'" -> Move E2
     | _ -> failwith "Unknown step notation"
 
+let stringToSteps alg =
+    let split (s: string) (c: char) = s.Split(c)
+    split alg ' ' |> Seq.map stringToStep |> List.ofSeq
+
 let stepToString = function
     | Rotate r -> rotationToString r
     | Move   m -> moveToString m

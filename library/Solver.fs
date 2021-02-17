@@ -37,7 +37,6 @@ let solveWithSteps includedSteps check cube =
     iterativeDeepening 0 |> List.ofSeq
 
 let hybridSolve steps hints patterns goal stage cube =
-    let split (s: string) (c: char) = s.Split(c)
     let matches (cube: string) (pattern: string * bool * bool) =
         let mtch p c =
             p = '.' || p = c || // wildcard or perfect match
@@ -77,7 +76,7 @@ let hybridSolve steps hints patterns goal stage cube =
     match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
     | Some (_, _, algs) ->
         match algs with
-        | a :: _ -> [split a ' ' |> Seq.map stringToStep |> List.ofSeq]
+        | a :: _ -> [stringToSteps a]
         | [] -> [] // skip
     | None ->
         if warnings then printfn "UNMATCHED: %s" (cubeToString cube)
