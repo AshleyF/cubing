@@ -302,6 +302,33 @@ let move = function
     | E'  -> moveE'
     | E2  -> moveE2
 
+let movesRegular = [
+    Move.U; Move.U'; Move.U2
+    Move.D; Move.D'; Move.D2
+    Move.L; Move.L'; Move.L2
+    Move.R; Move.R'; Move.R2
+    Move.F; Move.F'; Move.F2
+    Move.B; Move.B'; Move.B2
+    Move.M; Move.M'; Move.M2]
+
+let movesWide = [
+    Move.UW; Move.UW'; Move.UW2
+    Move.DW; Move.DW'; Move.DW2
+    Move.LW; Move.LW'; Move.LW2
+    Move.RW; Move.RW'; Move.RW2
+    Move.FW; Move.FW'; Move.FW2
+    Move.BW; Move.BW'; Move.BW2]
+
+let movesM = [Move.M; Move.M'; Move.M2]
+
+let movesSlice = movesM @ [
+    Move.S; Move.S'; Move.S2
+    Move.E; Move.E'; Move.E2]
+
+let movesAll = movesRegular @ movesWide @ movesSlice
+
+let movesCommonRoux = movesRegular @ movesWide @ movesM
+
 let step = function
     | Rotate r -> rotate r
     | Move   m -> move m
@@ -324,6 +351,50 @@ type Center = U | D | L | R | F | B
 type Edge = UL | UR | UF | UB | DL | DR | DF | DB | FL | FR | BL | BR
 type Corner = ULF | ULB | URF | URB | DLF | DLB | DRF | DRB
 type Piece = Center of Center | Edge of Edge | Corner of Corner
+
+let isAttachedCenterEdge center edge =
+    match center with
+    | Center.U -> match edge with UL | UR | UF | UB -> true | _ -> false
+    | Center.D -> match edge with DL | DR | DF | DB -> true | _ -> false 
+    | Center.L -> match edge with UL | DL | FL | BL -> true | _ -> false
+    | Center.R -> match edge with UR | DR | FR | BR -> true | _ -> false
+    | Center.F -> match edge with UF | DF | FL | FR -> true | _ -> false
+    | Center.B -> match edge with UB | DB | BL | BR -> true | _ -> false
+
+let isPairedCenterEdge (center, c) (edge, (e0, e1)) =
+    isAttachedCenterEdge center edge && 
+    match edge with
+    | Edge.UL | Edge.UR | Edge.UF | Edge.UB | Edge.DL | Edge.DR | Edge.DF | Edge.DB ->
+        match center with
+        | Center.U | Center.D -> e0 = c // e0 and c represent U/D
+        | Center.L | Center.R | Center.F | Center.B -> e1 = c // e1 and c represent L/R/F/B
+    | Edge.FL | Edge.FR | Edge.BL | Edge.BR -> 
+        match center with
+        | Center.U | Center.D -> failwith "FL/FR/BL/BR edge cannot be attached to U/D center"
+        | Center.L | Center.R -> e1 = c // e1 and c represent L/R
+        | Center.F | Center.B -> e0 = c // e0 and c represent F/B
+
+let isAttachedEdgeCorner edge corner =
+    match edge with
+    | Edge.UL -> match corner with ULF | ULB -> true | _ -> false
+    | Edge.UR -> match corner with URF | URB -> true | _ -> false
+    | Edge.UF -> match corner with ULF | URF -> true | _ -> false
+    | Edge.UB -> match corner with ULB | URB -> true | _ -> false
+    | Edge.DL -> match corner with DLF | DLB -> true | _ -> false
+    | Edge.DR -> match corner with DRF | DRB -> true | _ -> false
+    | Edge.DF -> match corner with DLF | DRF -> true | _ -> false
+    | Edge.DB -> match corner with DLB | DRB -> true | _ -> false
+    | Edge.FL -> match corner with ULF | DLF -> true | _ -> false
+    | Edge.FR -> match corner with URF | DRF -> true | _ -> false
+    | Edge.BL -> match corner with ULB | DLB -> true | _ -> false
+    | Edge.BR -> match corner with URB | DRB -> true | _ -> false
+
+let isPairedEdgeCorner (edge, (e0, e1)) (corner, (ud, lr, fb)) =
+    isAttachedEdgeCorner edge corner && 
+    match edge with
+    | Edge.UL | Edge.UR | Edge.DL | Edge.DR -> e0 = ud && e1 = lr // e0 represent U/D and e1 represents L/R
+    | Edge.UF | Edge.UB | Edge.DF | Edge.DB -> e0 = ud && e1 = fb // e0 represents U/D and e1 represents F/B
+    | Edge.FL | Edge.FR | Edge.BL | Edge.BR -> e0 = fb && e1 = lr // e0 represent F/B and e1 represents L/R
 
 let centerToFaceSticker = function
     | Center.U -> Face.U, Sticker.C
@@ -363,7 +434,7 @@ let searchCenters centers color cube =
     let find c =
         let f, s = centerToFaceSticker c
         look f s cube = color
-    Seq.find find centers
+    Seq.find find centers, color
 let findCenter color cube = searchCenters [Center.U; Center.D; Center.L; Center.R; Center.F; Center.B] color cube
 
 let searchEdges edges color0 color1 cube =
@@ -379,6 +450,23 @@ let searchEdges edges color0 color1 cube =
         | _ -> failwith "Edge not found"
     find edges
 let findEdge color0 color1 cube = searchEdges [UL; UR; UF; UB; DL; DR; DF; DB; FL; FR; BL; BR] color0 color1 cube
+
+let searchCorners corners color0 color1 color2 cube =
+    let rec find = function
+        | c :: t ->
+            match cornerToFaceStickers c with
+            | [f0, s0; f1, s1; f2, s2] ->
+                let l0 = look f0 s0 cube
+                let l1 = look f1 s1 cube
+                let l2 = look f2 s2 cube
+                if (l0 = color0 || l1 = color0 || l2 = color0) &&
+                   (l0 = color1 || l1 = color1 || l2 = color1) &&
+                   (l0 = color2 || l1 = color2 || l2 = color2) then c, (l0, l1, l2)
+                else find t
+            | _ -> failwith "Expected exactly two edge stickers"
+        | _ -> failwith "Edge not found"
+    find corners
+let findCorner color0 color1 color2 cube = searchCorners [ULF; ULB; URF; URB; DLF; DLB; DRF; DRB] color0 color1 color2 cube
 
 let solved =
     let u = faceOfStickers Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W Color.W

@@ -3,7 +3,7 @@
 let numCubes = 10000
 
 Roux.generate numCubes
-// Pairing.generate numCubes
+// CFOP.generate numCubes
 
 let avgTwistCount = float Cube.twistCount / float numCubes;
 printfn "Total Average Twists (STM): %f" avgTwistCount

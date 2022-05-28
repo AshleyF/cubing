@@ -7,3 +7,4 @@
 **/labels.csv
 **/*.bin
 **/model.hdf5
+.DS_Store

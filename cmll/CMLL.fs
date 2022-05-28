@@ -6,6 +6,7 @@ open System.IO
 
 printfn "Generating CMLL Cases"
 
+let misorientedSecondBlock = false
 let mutable count = 0
 
 let gen known cases (name, alg) = seq {
@@ -71,7 +72,7 @@ let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
             sprintf "1. `%s` (%s)" rendered (alg))
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
-    File.WriteAllLines(sprintf "../../../%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
+    File.WriteAllLines(sprintf "%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
     index.WriteLine(sprintf "- [%s](%s.md)" name file)
 
 let oriented cube =
@@ -94,16 +95,18 @@ let algSolvesCmll alg cube =
             Cube.look Face.B Sticker.L  cube = Color.O &&
             Cube.look Face.B Sticker.UL cube = Color.O
         let isSBSolved cube =
+            let frontColor = if misorientedSecondBlock then Color.O else Color.R
+            let backColor = if misorientedSecondBlock then Color.R else Color.O
             Cube.look Face.R Sticker.L  cube = Color.G &&
             Cube.look Face.R Sticker.C  cube = Color.G &&
             Cube.look Face.R Sticker.R  cube = Color.G &&
             Cube.look Face.R Sticker.DL cube = Color.G &&
             Cube.look Face.R Sticker.D  cube = Color.G &&
             Cube.look Face.R Sticker.DR cube = Color.G &&
-            Cube.look Face.F Sticker.R  cube = Color.R &&
-            Cube.look Face.F Sticker.DR cube = Color.R &&
-            Cube.look Face.B Sticker.R  cube = Color.O &&
-            Cube.look Face.B Sticker.UR cube = Color.O
+            Cube.look Face.F Sticker.R  cube = frontColor &&
+            Cube.look Face.F Sticker.DR cube = frontColor &&
+            Cube.look Face.B Sticker.R  cube = backColor &&
+            Cube.look Face.B Sticker.UR cube = backColor
         oriented cube &&
         isFBSolved cube &&
         isSBSolved cube &&
@@ -122,8 +125,8 @@ let algSolvesCmll alg cube =
 
 let case alg = algSolvesCmll (Render.stringToSteps alg)
 
-let index = new StreamWriter(File.OpenWrite "../../../CMLL.md")
-let diagrams = new StreamWriter(File.OpenWrite "../../../Diagrams.js")
+let index = new StreamWriter(File.OpenWrite "CMLL.md")
+let diagrams = new StreamWriter(File.OpenWrite "Diagrams.js")
 
 let writeCaseHeader name =
     index.WriteLine()

@@ -4,7 +4,7 @@ open System
 open Cube
 open Render
 
-let quiet = false
+let quiet = true
 let warnings = true
 
 let scrambleWithMoves (moves: Move list) n =
@@ -168,4 +168,30 @@ let stageStats name numCubes =
 let initScrambledCubes numCubes =
     printfn "Scrambling %i cubes" numCubes
     printfn ""
-    List.init numCubes (fun _ -> printf "."; scramble 20 |> fst)
+    List.init numCubes (fun i -> (if i % 100 = 0 then printf "."); scramble 100 |> fst)
+
+let lookPattern pattern cube =
+    let mtch p c = p = '.' || p = c // wildcard or perfect match
+    Render.cubeToString cube |> Seq.forall2 mtch pattern
+
+let lookPatternAnyOrientation pattern cube =
+    let look = lookPattern pattern
+    let cubeX = Cube.rotateX cube
+    let cubeX' = Cube.rotateX' cube
+    let cubeX2 = Cube.rotateX2 cube
+    let cubeY = Cube.rotateY cube
+    let cubeY' = Cube.rotateY' cube
+    let cubeY2 = Cube.rotateY2 cube
+    look cube ||
+    look cubeX || look cubeX' || look cubeX2 ||
+    look cubeY || look cubeY' || look cubeY2 ||
+    look (Cube.rotateZ cube) || look (Cube.rotateZ' cube) || look (Cube.rotateZ2 cube) ||
+    look (Cube.rotateY cubeX) || look (Cube.rotateY' cubeX) || look (Cube.rotateY2 cubeX) ||
+    look (Cube.rotateZ cubeX) || look (Cube.rotateX cubeY) ||
+    look (Cube.rotateZ2 cubeX) ||
+    look (Cube.rotateY cubeX') ||
+    look (Cube.rotateZ cubeY') ||
+    look (Cube.rotateZ cubeX') || look (Cube.rotateZ' cubeX') ||
+    look (Cube.rotateY cubeX2) || look (Cube.rotateZ cubeX2) ||
+    look (Cube.rotateX2 cubeY) ||
+    look (Cube.rotateZ cubeY2)

@@ -53,36 +53,35 @@ We've started with Roux. Note that the following include first rotating the DL e
 - Full EO cases (better by 4.4 avg, -10 worst).
 - Full LR cases (better by 1.9 avg, -3 worst).
 - Full L4E cases (better by 5.3 avg, -16 worst).
-- More flexible FB/SB (better by 0.1 avg, same worst).
+- F2L-style FB/SB (better by 3.3/5.5 avg, -4/-8 worst, produced by (blocks solver)[../blocks])
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 14.0    |  20   |
-| SB    | 21.1    |  32   |
-| CMLL  | 19.3    |  26   |
-| EO    |  6.5    |  10   |
-| LR    |  5.5    |   7   |
-| L4E   |  4.1    |   5   |
-| Total | 70.5    | 100   |
+| FB    | 10.7    | 16    |
+| SB    | 15.7    | 24    |
+| CMLL  | 19.3    | 26    |
+| EO    |  6.5    | 10    |
+| LR    |  5.5    |  7    |
+| L4E   |  4.1    |  5    |
+| Total | 61.9    | 88    |
 
-## Expert (10,000 solves)
+## Advanced (10,000 solves)
 
 - Full CMLL (better by 8.6 avg, -10 worst).
 
 | Stage | Average | Worst |
 | ----- | ------- | ----- |
-| FB    | 14.0    | 20    |
-| SB    | 21.1    | 32    |
+| FB    | 10.7    | 16    |
+| SB    | 15.7    | 24    |
 | CMLL  | 10.7    | 16    |
 | EO    |  6.5    | 10    |
 | LR    |  5.5    |  7    |
-| L4E   |  4.0    |  5    |
-| Total | 61.8    | 90    |
+| L4E   |  4.1    |  5    |
+| Total | 53.2    | 78    |
 
 # TODO
 
-- Define goals in pattern language rather than `look Face.FOO Sticker.BAR cube` expressions
-- Discover FB/SB cases by *deconstruction* from solved state
+- Intermediate FB/SB pairs with edge in DF/DB flipped either way (multi-strategy)
 - Formalize edge and corner orientations in search
 - Search centers/corners/edges by "ease" (T/F then L/R then D then B
 - Gather metrics (moves, rotations, turns [half/quarter], looks [batch and individual stickers])
@@ -119,4 +118,4 @@ Aside from being solved. Pieces may have other properties and relationships maki
 
 I'm hoping that such an approach will cause the system to do block building or could be influenced by weights to tend to use layer-by-layer, Roux-style, Petrus-style, ZZ-style EO-line, corners first, etc. It may automatically do interesting things like influencing edges during F2L/SB, etc. The hope is to have a solver for first/second block in Roux for example and use pattern matching for the rest and to have solves from which humans can learn (human-like to some degree).
 
-Interesting that with block building, having individual pieces in place can be _bad_. For example, F2L cases where a corner or edge is already in place are _harder_. They need to be pair outside of the "slot" in which they belong and then inserted as a unit.
+Interesting that with block building, having individual pieces in place can be _bad_. For example, F2L cases where a corner or edge is already in place are _harder_. They need to be paired outside of the "slot" in which they belong and then inserted as a unit.

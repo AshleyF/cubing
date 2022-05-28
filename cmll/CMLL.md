@@ -65,3 +65,5 @@
 - [L-Front_commutator](l_front_commutator.md)
 - [L-Diag](l_diag.md)
 - [L-Back-Commutator](l_back_commutator.md)
+ [L-Diag](l_diag.md)
+- [L-Back-Commutator](l_back_commutator.md)

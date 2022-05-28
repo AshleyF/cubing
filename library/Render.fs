@@ -98,63 +98,77 @@ let charToColor = function
     | '.' -> Color.A
     | _ -> failwith "Invalid color character"
 
-let cubeToString (cube: Map<Face, Map<Sticker, Color>>) =
+let piecesToString (cube: Cube) (pieces: Piece list) =
+    let piecesSet = Set.ofList pieces
+    let lookSticker face sticker cube piece =
+        if piecesSet.Contains piece
+        then look face sticker cube |> colorToString
+        else "."
+        // type Center = U | D | L | R | F | B
+        // type Edge = UL | UR | UF | UB | DL | DR | DF | DB | FL | FR | BL | BR
+        // type Corner = ULF | ULB | URF | URB | DLF | DLB | DRF | DRB
     let str = seq {
-        yield look Face.B Sticker.UL cube |> colorToString
-        yield look Face.B Sticker.U  cube |> colorToString
-        yield look Face.B Sticker.UR cube |> colorToString
-        yield look Face.B Sticker.L  cube |> colorToString
-        yield look Face.B Sticker.C  cube |> colorToString
-        yield look Face.B Sticker.R  cube |> colorToString
-        yield look Face.B Sticker.DL cube |> colorToString
-        yield look Face.B Sticker.D  cube |> colorToString
-        yield look Face.B Sticker.DR cube |> colorToString
-        yield look Face.U Sticker.UL cube |> colorToString
-        yield look Face.U Sticker.U  cube |> colorToString
-        yield look Face.U Sticker.UR cube |> colorToString
-        yield look Face.U Sticker.L  cube |> colorToString
-        yield look Face.U Sticker.C  cube |> colorToString
-        yield look Face.U Sticker.R  cube |> colorToString
-        yield look Face.U Sticker.DL cube |> colorToString
-        yield look Face.U Sticker.D  cube |> colorToString
-        yield look Face.U Sticker.DR cube |> colorToString
-        yield look Face.L Sticker.UL cube |> colorToString
-        yield look Face.L Sticker.U  cube |> colorToString
-        yield look Face.L Sticker.UR cube |> colorToString
-        yield look Face.F Sticker.UL cube |> colorToString
-        yield look Face.F Sticker.U  cube |> colorToString
-        yield look Face.F Sticker.UR cube |> colorToString
-        yield look Face.R Sticker.UL cube |> colorToString
-        yield look Face.R Sticker.U  cube |> colorToString
-        yield look Face.R Sticker.UR cube |> colorToString
-        yield look Face.L Sticker.L  cube |> colorToString
-        yield look Face.L Sticker.C  cube |> colorToString
-        yield look Face.L Sticker.R  cube |> colorToString
-        yield look Face.F Sticker.L  cube |> colorToString
-        yield look Face.F Sticker.C  cube |> colorToString
-        yield look Face.F Sticker.R  cube |> colorToString
-        yield look Face.R Sticker.L  cube |> colorToString
-        yield look Face.R Sticker.C  cube |> colorToString
-        yield look Face.R Sticker.R  cube |> colorToString
-        yield look Face.L Sticker.DL cube |> colorToString
-        yield look Face.L Sticker.D  cube |> colorToString
-        yield look Face.L Sticker.DR cube |> colorToString
-        yield look Face.F Sticker.DL cube |> colorToString
-        yield look Face.F Sticker.D  cube |> colorToString
-        yield look Face.F Sticker.DR cube |> colorToString
-        yield look Face.R Sticker.DL cube |> colorToString
-        yield look Face.R Sticker.D  cube |> colorToString
-        yield look Face.R Sticker.DR cube |> colorToString
-        yield look Face.D Sticker.UL cube |> colorToString
-        yield look Face.D Sticker.U  cube |> colorToString
-        yield look Face.D Sticker.UR cube |> colorToString
-        yield look Face.D Sticker.L  cube |> colorToString
-        yield look Face.D Sticker.C  cube |> colorToString
-        yield look Face.D Sticker.R  cube |> colorToString
-        yield look Face.D Sticker.DL cube |> colorToString
-        yield look Face.D Sticker.D  cube |> colorToString
-        yield look Face.D Sticker.DR cube |> colorToString }
+        yield lookSticker Face.B Sticker.UL cube (Corner DLB)
+        yield lookSticker Face.B Sticker.U  cube (Edge DB)
+        yield lookSticker Face.B Sticker.UR cube (Corner DRB)
+        yield lookSticker Face.B Sticker.L  cube (Edge BL)
+        yield lookSticker Face.B Sticker.C  cube (Center B)
+        yield lookSticker Face.B Sticker.R  cube (Edge BR)
+        yield lookSticker Face.B Sticker.DL cube (Corner ULB)
+        yield lookSticker Face.B Sticker.D  cube (Edge UB)
+        yield lookSticker Face.B Sticker.DR cube (Corner URB)
+        yield lookSticker Face.U Sticker.UL cube (Corner ULB)
+        yield lookSticker Face.U Sticker.U  cube (Edge UB)
+        yield lookSticker Face.U Sticker.UR cube (Corner URB)
+        yield lookSticker Face.U Sticker.L  cube (Edge UL)
+        yield lookSticker Face.U Sticker.C  cube (Center U)
+        yield lookSticker Face.U Sticker.R  cube (Edge UR)
+        yield lookSticker Face.U Sticker.DL cube (Corner ULF)
+        yield lookSticker Face.U Sticker.D  cube (Edge UF)
+        yield lookSticker Face.U Sticker.DR cube (Corner URF)
+        yield lookSticker Face.L Sticker.UL cube (Corner ULB)
+        yield lookSticker Face.L Sticker.U  cube (Edge UL)
+        yield lookSticker Face.L Sticker.UR cube (Corner ULF)
+        yield lookSticker Face.F Sticker.UL cube (Corner ULF)
+        yield lookSticker Face.F Sticker.U  cube (Edge UF)
+        yield lookSticker Face.F Sticker.UR cube (Corner URF)
+        yield lookSticker Face.R Sticker.UL cube (Corner URF)
+        yield lookSticker Face.R Sticker.U  cube (Edge UR)
+        yield lookSticker Face.R Sticker.UR cube (Corner URB)
+        yield lookSticker Face.L Sticker.L  cube (Edge BL)
+        yield lookSticker Face.L Sticker.C  cube (Center L)
+        yield lookSticker Face.L Sticker.R  cube (Edge FL)
+        yield lookSticker Face.F Sticker.L  cube (Edge FL)
+        yield lookSticker Face.F Sticker.C  cube (Center F)
+        yield lookSticker Face.F Sticker.R  cube (Edge FR)
+        yield lookSticker Face.R Sticker.L  cube (Edge FR)
+        yield lookSticker Face.R Sticker.C  cube (Center R)
+        yield lookSticker Face.R Sticker.R  cube (Edge BR)
+        yield lookSticker Face.L Sticker.DL cube (Corner DLB)
+        yield lookSticker Face.L Sticker.D  cube (Edge DL)
+        yield lookSticker Face.L Sticker.DR cube (Corner DLF)
+        yield lookSticker Face.F Sticker.DL cube (Corner DLF)
+        yield lookSticker Face.F Sticker.D  cube (Edge DF)
+        yield lookSticker Face.F Sticker.DR cube (Corner DRF)
+        yield lookSticker Face.R Sticker.DL cube (Corner DRF)
+        yield lookSticker Face.R Sticker.D  cube (Edge DR)
+        yield lookSticker Face.R Sticker.DR cube (Corner DRB)
+        yield lookSticker Face.D Sticker.UL cube (Corner DLF)
+        yield lookSticker Face.D Sticker.U  cube (Edge DF)
+        yield lookSticker Face.D Sticker.UR cube (Corner DRF)
+        yield lookSticker Face.D Sticker.L  cube (Edge DL)
+        yield lookSticker Face.D Sticker.C  cube (Center D)
+        yield lookSticker Face.D Sticker.R  cube (Edge DR)
+        yield lookSticker Face.D Sticker.DL cube (Corner DLB)
+        yield lookSticker Face.D Sticker.D  cube (Edge DB)
+        yield lookSticker Face.D Sticker.DR cube (Corner DRB) }
     String.Concat(str)
+
+let cubeToString (cube: Cube) =
+    [ Center U; Center D; Center L; Center R; Center F; Center B
+      Edge UL; Edge UR; Edge UF; Edge UB; Edge DL; Edge DR; Edge DF; Edge DB; Edge FL; Edge FR; Edge BL; Edge BR
+      Corner ULF; Corner ULB; Corner URF; Corner URB; Corner DLF; Corner DLB; Corner DRF; Corner DRB]
+    |> piecesToString cube
 
 let stringToCube (s: string) =
     let c i = charToColor s.[i]
