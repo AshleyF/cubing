@@ -27,10 +27,11 @@ This process is iterated until a complete method (e.g. Roux, CFOP, ZZ, Petrus, .
 
 # Roux
 
-We've started with Roux. Note that the following include first rotating the DL edge into place. These rotations (1.5 average, 2 worst case) have been subtracted from FB.
+We've started with Roux.
 
 ## Beginner (10,000 solves)
 
+- Note that DL edge is done during inspection and not counted (1.5 average, 2 worst case).
 - FB/SB tuck same orientation always in front, bring corner to top always same orientation, pair and insert.
 - CMLL with sune only.
 - EO with M' U' M' only.

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Include="readme.md" />
+    <Compile Include="Utility.fs" />
     <Compile Include="Roux.fs" />
     <Compile Include="CFOP.fs" />
     <Compile Include="Program.fs" />

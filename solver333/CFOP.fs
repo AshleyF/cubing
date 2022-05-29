@@ -2,16 +2,15 @@
 
 open Cube
 open Solver
-
-let level = 0 // 0 = beginner, 1 = intermediate, 2 = advanced
+open Utility
 
 let downCenterPatterns = [
-    "DCenter", (".............Y...................................W....", false, false, false), [] // skip
-    "DCenter", ("....W..........................Y......................", false, false, false), ["x"]
-    "DCenter", ("....Y..........................W......................", false, false, false), ["x'"]
-    "DCenter", (".............W...................................Y....", false, false, false), ["x2"]
-    "DCenter", ("............................Y.....W...................", false, false, false), ["z"]
-    "DCenter", ("............................W.....Y...................", false, false, false), ["z'"]]
+    matchesGeneric, "DCenter", (".............Y...................................W....", false, false, false), [] // skip
+    matchesGeneric, "DCenter", ("....W..........................Y......................", false, false, false), ["x"]
+    matchesGeneric, "DCenter", ("....Y..........................W......................", false, false, false), ["x'"]
+    matchesGeneric, "DCenter", (".............W...................................Y....", false, false, false), ["x2"]
+    matchesGeneric, "DCenter", ("............................Y.....W...................", false, false, false), ["z"]
+    matchesGeneric, "DCenter", ("............................W.....Y...................", false, false, false), ["z'"]]
 
 let cfopBeginnerPatterns = downCenterPatterns
 let cfopIntermediatePatterns = [] // TODO

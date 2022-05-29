@@ -36,45 +36,46 @@ let solveWithSteps includedSteps check cube =
         if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
     iterativeDeepening 0 |> List.ofSeq
 
+let matchesGeneric (cube: Cube) (pattern: string * bool * bool) =
+    let mtch p c =
+        p = '.' || p = c || // wildcard or perfect match
+        (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge (assume Y/W up/down)
+        (p = 'E' && (c = 'W' || c = 'Y')) || // good edge
+        (p = '*' && (c = 'B' || c = 'G')) // B/G for LR
+    let matchPat p = Seq.forall2 mtch p (cubeToString cube)
+    let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
+    let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
+    let cycleSwap = function 'B' -> 'G' | 'G' -> 'B' | 'R' -> 'O' | 'O' -> 'R' | c -> c
+    let rotateCorners p =
+        match List.ofSeq p with
+        | [b0; b1; b2; b3; b4; b5; b6; b7; b8; u0; u1; u2; u3; u4; u5; u6; u7; u8; l0; l1; l2; f0; f1; f2; r0; r1; r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
+            [b0; b1; b2; b3; b4; b5; l2; b7; l0; u6; u1; u0; u3; u4; u5; u8; u7; u2; f0; l1; f2; r0; f1; r2; b8; r1; b6; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
+        | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
+    let cycleCornerColors c p =
+        match List.ofSeq p with
+        | [b0; b1; b2; b3; b4; b5;   b6; b7;   b8;   u0; u1;   u2; u3; u4; u5;   u6; u7;   u8;   l0; l1;   l2;   f0; f1;   f2;   r0; r1;   r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
+            [b0; b1; b2; b3; b4; b5; c b6; b7; c b8; c u0; u1; c u2; u3; u4; u5; c u6; u7; c u8; c l0; l1; c l2; c f0; f1; c f2; c r0; r1; c r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
+        | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
+    let pat, aufNeutral, colorNeutralUpCorners = pattern
+    let patU () = rotateCorners pat
+    let patU2 () = rotateCorners (patU ())
+    let patU' () = rotateCorners (patU2 ())
+    let cw p = cycleCornerColors cycleCW p
+    let ccw p = cycleCornerColors cycleCCW p
+    let swap p = cycleCornerColors cycleSwap p
+    match (aufNeutral, colorNeutralUpCorners) with
+    | true, true ->
+        matchPat       pat  || matchPat       (patU ())  || matchPat       (patU2 ())  || matchPat       (patU' ())  ||
+        matchPat   (cw pat) || matchPat   (cw (patU ())) || matchPat   (cw (patU2 ())) || matchPat   (cw (patU' ())) ||
+        matchPat  (ccw pat) || matchPat  (ccw (patU ())) || matchPat  (ccw (patU2 ())) || matchPat  (ccw (patU' ())) ||
+        matchPat (swap pat) || matchPat (swap (patU ())) || matchPat (swap (patU2 ())) || matchPat (swap (patU' ()))
+    | true, false -> matchPat pat || matchPat (patU ()) || matchPat (patU2 ()) || matchPat (patU' ())
+    | false, true -> matchPat pat || matchPat (cw pat) || matchPat (ccw pat) || matchPat (swap pat) 
+    | false, false -> matchPat pat
+
 let hybridSolve steps hints patterns goal stage cube =
-    let matches (cube: string) (pattern: string * bool * bool) =
-        let mtch p c =
-            p = '.' || p = c || // wildcard or perfect match
-            (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge (assume Y/W up/down)
-            (p = 'E' && (c = 'W' || c = 'Y')) || // good edge
-            (p = '*' && (c = 'B' || c = 'G')) // B/G for LR
-        let matchPat p = Seq.forall2 mtch p cube
-        let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
-        let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
-        let cycleSwap = function 'B' -> 'G' | 'G' -> 'B' | 'R' -> 'O' | 'O' -> 'R' | c -> c
-        let rotateCorners p =
-            match List.ofSeq p with
-            | [b0; b1; b2; b3; b4; b5; b6; b7; b8; u0; u1; u2; u3; u4; u5; u6; u7; u8; l0; l1; l2; f0; f1; f2; r0; r1; r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
-              [b0; b1; b2; b3; b4; b5; l2; b7; l0; u6; u1; u0; u3; u4; u5; u8; u7; u2; f0; l1; f2; r0; f1; r2; b8; r1; b6; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
-            | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
-        let cycleCornerColors c p =
-            match List.ofSeq p with
-            | [b0; b1; b2; b3; b4; b5;   b6; b7;   b8;   u0; u1;   u2; u3; u4; u5;   u6; u7;   u8;   l0; l1;   l2;   f0; f1;   f2;   r0; r1;   r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] ->
-              [b0; b1; b2; b3; b4; b5; c b6; b7; c b8; c u0; u1; c u2; u3; u4; u5; c u6; u7; c u8; c l0; l1; c l2; c f0; f1; c f2; c r0; r1; c r2; l3; l4; l5; f3; f4; f5; r3; r4; r5; l6; l7; l8; f6; f7; f8; r6; r7; r8; d0; d1; d2; d3; d4; d5; d6; d7; d8] |> Seq.ofList // U
-            | invalid -> failwith (sprintf "Invalid pattern: %A" invalid)
-        let pat, aufNeutral, colorNeutralUpCorners = pattern
-        let patU () = rotateCorners pat
-        let patU2 () = rotateCorners (patU ())
-        let patU' () = rotateCorners (patU2 ())
-        let cw p = cycleCornerColors cycleCW p
-        let ccw p = cycleCornerColors cycleCCW p
-        let swap p = cycleCornerColors cycleSwap p
-        match (aufNeutral, colorNeutralUpCorners) with
-        | true, true ->
-            matchPat       pat  || matchPat       (patU ())  || matchPat       (patU2 ())  || matchPat       (patU' ())  ||
-            matchPat   (cw pat) || matchPat   (cw (patU ())) || matchPat   (cw (patU2 ())) || matchPat   (cw (patU' ())) ||
-            matchPat  (ccw pat) || matchPat  (ccw (patU ())) || matchPat  (ccw (patU2 ())) || matchPat  (ccw (patU' ())) ||
-            matchPat (swap pat) || matchPat (swap (patU ())) || matchPat (swap (patU2 ())) || matchPat (swap (patU' ()))
-        | true, false -> matchPat pat || matchPat (patU ()) || matchPat (patU2 ()) || matchPat (patU' ())
-        | false, true -> matchPat pat || matchPat (cw pat) || matchPat (ccw pat) || matchPat (swap pat) 
-        | false, false -> matchPat pat
-    match Seq.tryFind (fun (s, p, _) -> s = stage && matches (cubeToString cube) p) patterns with
-    | Some (_, _, algs) ->
+    match Seq.tryFind (fun (matchFn, s, p, _) -> s = stage && matchFn cube p) patterns with
+    | Some (_, _, _, algs) ->
         match algs with
         | a :: _ -> [stringToSteps a]
         | [] -> [] // skip
@@ -126,8 +127,8 @@ let distinctCases solutions =
     List.zip cases algs |> Seq.iter (fun (c, a) -> (* c |> stringToCube |> render; *) if not quiet then printfn "Algs: %s (%i) \"%s\"" a (a.GetHashCode()) c)
 
 let expandPatternsForAuf patterns =
-    let expand (name, ((pat : string), cornerRotationNeutral, cornerColorNeutral, discoverAuf), algs) = seq {
-        yield name, (pat, cornerRotationNeutral, cornerColorNeutral), algs
+    let expand (matchFn, name, ((pat : string), cornerRotationNeutral, cornerColorNeutral, discoverAuf), algs) = seq {
+        yield matchFn, name, (pat, cornerRotationNeutral, cornerColorNeutral), algs
         if discoverAuf then
             let prepend a algs = if List.length algs = 0 then [a] else List.map (fun alg -> a + " " + alg) algs
             let auf p =
@@ -138,9 +139,9 @@ let expandPatternsForAuf patterns =
             let u = auf pat
             let u2 = auf u
             let u' = auf u2
-            yield name, (String.Join("", u),  cornerRotationNeutral, cornerColorNeutral), (prepend "U'" algs)
-            yield name, (String.Join("", u2), cornerRotationNeutral, cornerColorNeutral), (prepend "U2" algs)
-            yield name, (String.Join("", u'), cornerRotationNeutral, cornerColorNeutral), (prepend "U"  algs) }
+            yield matchFn, name, (String.Join("", u),  cornerRotationNeutral, cornerColorNeutral), (prepend "U'" algs)
+            yield matchFn, name, (String.Join("", u2), cornerRotationNeutral, cornerColorNeutral), (prepend "U2" algs)
+            yield matchFn, name, (String.Join("", u'), cornerRotationNeutral, cornerColorNeutral), (prepend "U"  algs) }
     patterns |> Seq.map expand |> Seq.concat
 
 let solveCase patterns steps name id case scrambled verify =

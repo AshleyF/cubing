@@ -26,7 +26,7 @@ let init = [Render.cubeToString yellowUpRedFront, ([], yellowUpRedFront)]
 let rec iter cases known predicate renderer =
     let rec genCases known cases =
         printfn "Count: %i" (Map.count cases)
-        Cube.movesCommonRoux |> Seq.map (gen known cases predicate renderer) |> Seq.concat
+        Cube.movesAll |> Seq.map (gen known cases predicate renderer) |> Seq.concat
     let initialCount = count
     let cases' = cases |> Map.ofSeq |> genCases (Map.ofSeq known) |> List.ofSeq
     if count > initialCount
@@ -44,24 +44,27 @@ let reportCases name pieces cases =
 
 let genPairInsertCases name colorC colorD colorFB predicate pieces =
     let renderPairPositions cube =
+        let center = Cube.findCenter colorC cube
         let downEdge = Cube.findEdge colorC colorD cube
         let pairEdge = Cube.findEdge colorC colorFB cube
         let corner = Cube.findCorner colorC colorFB colorD cube
-        $"{downEdge} {pairEdge} {corner}"
+        $"{center} {downEdge} {pairEdge} {corner}"
     iter init [] predicate renderPairPositions
-    |> reportCases $"Insert{name}Pair" pieces
+    |> reportCases name pieces
 
-let solvedCDL cube =
-    Cube.look Face.L Sticker.C cube = Color.B &&
-    Cube.look Face.L Sticker.D cube = Color.B &&
-    Cube.look Face.D Sticker.L cube = Color.W
 let piecesCDLAndBL (cube: Cube) =
     let (c, _) = Cube.findCenter Color.B cube
     let (dl, _) = Cube.findEdge Color.B Color.W cube
     let (bl, _) = Cube.findEdge Color.B Color.O cube
     let (dlb, _) = Cube.findCorner Color.B Color.O Color.W cube
     [Center c; Edge dl; Edge bl; Corner dlb]
-//genPairInsertCases "LB" Color.B Color.W Color.O solvedCDL piecesCDLAndBL
+genPairInsertCases "BuildLBSquare" Color.B Color.W Color.O (fun _ -> true) piecesCDLAndBL
+
+let solvedCDL cube =
+    Cube.look Face.L Sticker.C cube = Color.B &&
+    Cube.look Face.L Sticker.D cube = Color.B &&
+    Cube.look Face.D Sticker.L cube = Color.W
+//genPairInsertCases "InsertLBPair" Color.B Color.W Color.O solvedCDL piecesCDLAndBL
 
 let solvedCDLAndBLPair cube =
     solvedCDL cube &&
@@ -74,7 +77,7 @@ let piecesFB (cube: Cube) =
     let (fl, _) = Cube.findEdge Color.B Color.R cube
     let (dbf, _) = Cube.findCorner Color.B Color.R Color.W cube
     piecesCDLAndBL cube @ [Edge fl; Corner dbf]
-//genPairInsertCases "LF" Color.B Color.W Color.R solvedCDLAndBLPair piecesFB
+//genPairInsertCases "InsertLFPair" Color.B Color.W Color.R solvedCDLAndBLPair piecesFB
 
 let solvedFB cube =
     solvedCDLAndBLPair cube &&
@@ -99,7 +102,7 @@ let piecesFBAndCDRAndBR (cube: Cube) =
     let (br, _) = Cube.findEdge Color.G Color.O cube
     let (dbr, _) = Cube.findCorner Color.G Color.O Color.W cube
     piecesFB cube @ [Center c; Edge dr; Edge br; Corner dbr]
-//genPairInsertCases "BR" Color.G Color.W Color.O solvedFBAndCDR piecesFBAndCDRAndBR
+//genPairInsertCases "InsertBRPair" Color.G Color.W Color.O solvedFBAndCDR piecesFBAndCDRAndBR
 
 let solvedFBAndCDRAndBRPair cube =
     solvedFB cube &&
@@ -128,4 +131,4 @@ let piecesFBAndCDRAndBRAndFR (cube: Cube) =
     let (fr, _) = Cube.findEdge Color.G Color.R cube
     let (dfr, _) = Cube.findCorner Color.G Color.R Color.W cube
     piecesFBAndCDRAndBR cube @ [Edge fr; Corner dfr]
-genPairInsertCases "FR" Color.G Color.W Color.R solvedFBAndCDRAndBRPair piecesFBAndCDRAndBRAndFR
+// genPairInsertCases "InsertFRPair" Color.G Color.W Color.R solvedFBAndCDRAndBRPair piecesFBAndCDRAndBRAndFR

@@ -1,4 +1,5 @@
 ﻿open System
+open Utility
 
 let numCubes = 10000
 
