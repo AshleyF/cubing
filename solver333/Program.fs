@@ -1,7 +1,6 @@
 ﻿open System
-open Utility
 
-let numCubes = 10000
+let numCubes = 10
 
 Roux.generate numCubes
 // CFOP.generate numCubes

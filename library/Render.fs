@@ -104,9 +104,6 @@ let piecesToString (cube: Cube) (pieces: Piece list) =
         if piecesSet.Contains piece
         then look face sticker cube |> colorToString
         else "."
-        // type Center = U | D | L | R | F | B
-        // type Edge = UL | UR | UF | UB | DL | DR | DF | DB | FL | FR | BL | BR
-        // type Corner = ULF | ULB | URF | URB | DLF | DLB | DRF | DRB
     let str = seq {
         yield lookSticker Face.B Sticker.UL cube (Corner DLB)
         yield lookSticker Face.B Sticker.U  cube (Edge DB)

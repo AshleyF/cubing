@@ -7,6 +7,10 @@ open Render
 let quiet = true
 let warnings = true
 
+let executeAndReportSteps steps =
+    //steps |> Render.stepsToString |> printfn "EXECUTE: %s"
+    executeSteps steps
+
 let scrambleWithMoves (moves: Move list) n =
     let rand = Random()
     let rec scramble' cube sequence history n =
@@ -83,7 +87,7 @@ let hybridSolve steps hints patterns goal stage cube =
         if warnings then printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
             match Seq.tryHead h with
-            | Some h' -> cube |> executeSteps h' |> goal
+            | Some h' -> cube |> executeAndReportSteps h' |> goal
             | None -> false
         match hints |> Seq.filter tryHint |> Seq.tryHead with
         | Some solution -> solution
@@ -104,10 +108,10 @@ let genCasesAndSolutions patterns steps cubes goal stage =
             let key = if skip then "" else algs |> Seq.sort |> Seq.head
             // printfn "Key: %s" key
             match Map.tryFind key cases with
-            | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeSteps (Seq.head solutions) cube) :: case) cases) hints b' w' remaining
+            | Some case -> gen (Map.add key ((cube, solutions, if skip then cube else executeAndReportSteps (Seq.head solutions) cube) :: case) cases) hints b' w' remaining
             | None ->
                 if not quiet then printfn "New case: %i [\"%s\"] (%s)" (key.GetHashCode()) (String.Join("\"; \"", algs)) (cubeToString cube)
-                let cube' = if skip then cube else executeSteps (Seq.head solutions) cube
+                let cube' = if skip then cube else executeAndReportSteps (Seq.head solutions) cube
                 let hints' = if skip then hints else solutions :: hints
                 gen (Map.add key [cube, solutions, cube'] cases) hints' b' w' remaining
         | _ -> cases, b, w

@@ -80,6 +80,20 @@ We've started with Roux.
 | L4E   |  4.1    |  5    |
 | Total | 53.2    | 78    |
 
+## God (1000 solves - slooow)
+
+- FB: LB Square (in one shot) + LF pair (better by 2.2 avg, -4 worst)
+
+| Stage | Average | Worst |
+| ----- | ------- | ----- |
+| FB    |  8.5    | 12    |
+| SB    | 15.7    | 24    |
+| CMLL  | 10.7    | 16    |
+| EO    |  6.5    | 10    |
+| LR    |  5.5    |  7    |
+| L4E   |  4.1    |  5    |
+| Total | 53.2    | 78    |
+
 # TODO
 
 - Intermediate FB/SB pairs with edge in DF/DB flipped either way (multi-strategy)

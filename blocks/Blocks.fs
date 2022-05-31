@@ -23,34 +23,36 @@ let gen known cases predicate renderer move = seq {
 let yellowUpRedFront = Cube.executeRotation (Cube.executeRotation Cube.solved Rotate.X2) Rotate.Y
 let init = [Render.cubeToString yellowUpRedFront, ([], yellowUpRedFront)]
 
-let rec iter cases known predicate renderer =
+let rec iter moves cases known predicate renderer =
     let rec genCases known cases =
         printfn "Count: %i" (Map.count cases)
-        Cube.movesAll |> Seq.map (gen known cases predicate renderer) |> Seq.concat
+        moves |> Seq.map (gen known cases predicate renderer) |> Seq.concat
     let initialCount = count
     let cases' = cases |> Map.ofSeq |> genCases (Map.ofSeq known) |> List.ofSeq
     if count > initialCount
-    then iter cases' (known @ cases') predicate renderer
+    then iter moves cases' (known @ cases') predicate renderer
     else known
 
-let reportCases name pieces cases =
-    let renderMoveSet (m: string list) = String.Join("; ", List.map (sprintf "\"%s\"") m)
+let reportCases pieces cases =
+    let renderMoveSet (m: string list) = String.Join(";", m)
     let keyMaker cube = cube |> pieces |> Render.piecesToString cube
     cases
     |> List.groupBy (fun (c, (_, _)) -> c) // group by case
     |> List.map (fun (c, x) -> (c, List.map (fun (_, (m, s)) -> m |> List.rev |> Cube.inverseMoves |> Render.movesToString, s) x))
-    |> List.map (fun (_, x) -> $"    \"{name}\", (\"{x |> List.head |> snd |> keyMaker}\", false, false, false), [{x |> List.map fst |> renderMoveSet}]")
+    |> List.map (fun (_, x) -> $"{x |> List.head |> snd |> keyMaker},{x |> List.map fst |> renderMoveSet}")
     |> List.iter (printfn "%s")
 
-let genPairInsertCases name colorC colorD colorFB predicate pieces =
+let genPairInsertCases colorC colorD colorFB predicate pieces =
     let renderPairPositions cube =
         let center = Cube.findCenter colorC cube
         let downEdge = Cube.findEdge colorC colorD cube
         let pairEdge = Cube.findEdge colorC colorFB cube
         let corner = Cube.findCorner colorC colorFB colorD cube
         $"{center} {downEdge} {pairEdge} {corner}"
-    iter init [] predicate renderPairPositions
-    |> reportCases name pieces
+    iter Cube.movesAll init [] predicate renderPairPositions
+    |> reportCases pieces
+
+// FB --------------------------------------------------------------------------------
 
 let piecesCDLAndBL (cube: Cube) =
     let (c, _) = Cube.findCenter Color.B cube
@@ -58,7 +60,7 @@ let piecesCDLAndBL (cube: Cube) =
     let (bl, _) = Cube.findEdge Color.B Color.O cube
     let (dlb, _) = Cube.findCorner Color.B Color.O Color.W cube
     [Center c; Edge dl; Edge bl; Corner dlb]
-genPairInsertCases "BuildLBSquare" Color.B Color.W Color.O (fun _ -> true) piecesCDLAndBL
+//genPairInsertCases "BuildLBSquare" Color.B Color.W Color.O (fun _ -> true) piecesCDLAndBL
 
 let solvedCDL cube =
     Cube.look Face.L Sticker.C cube = Color.B &&
@@ -132,3 +134,25 @@ let piecesFBAndCDRAndBRAndFR (cube: Cube) =
     let (dfr, _) = Cube.findCorner Color.G Color.R Color.W cube
     piecesFBAndCDRAndBR cube @ [Edge fr; Corner dfr]
 // genPairInsertCases "InsertFRPair" Color.G Color.W Color.R solvedFBAndCDRAndBRPair piecesFBAndCDRAndBRAndFR
+
+// LSE --------------------------------------------------------------------------------
+
+(*
+let genLSECases () =
+    let renderPositions cube =
+        let center = Cube.findCenter colorC cube
+        let downEdge = Cube.findEdge colorC colorD cube
+        let pairEdge = Cube.findEdge colorC colorFB cube
+        let corner = Cube.findCorner colorC colorFB colorD cube
+        $"{center} {downEdge} {pairEdge} {corner}"
+    iter Cube.movesAll init [] predicate renderPairPositions
+    |> reportCases pieces
+
+let piecesCDLAndBL (cube: Cube) =
+    let (c, _) = Cube.findCenter Color.B cube
+    let (dl, _) = Cube.findEdge Color.B Color.W cube
+    let (bl, _) = Cube.findEdge Color.B Color.O cube
+    let (dlb, _) = Cube.findCorner Color.B Color.O Color.W cube
+    [Center c; Edge dl; Edge bl; Corner dlb]
+//genPairInsertCases "BuildLBSquare" Color.B Color.W Color.O (fun _ -> true) piecesCDLAndBL
+*)
