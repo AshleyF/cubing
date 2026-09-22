@@ -100,7 +100,7 @@ let sbBeginnerPatterns = drEdgeBeginnerPatterns @ rbPairBeginnerPatterns @ rfPai
 let centerOrientationPatterns = [
     // Orient center - hand authored patterns [2 cases]
     matchesGeneric, "CenterOrientation", ("O.OO.O.......E.............BBBR.RGGGBBBR.RGGGW.WWEWW.W", true, true, false), [] // skip
-    matchesGeneric, "CenterOrientation", ("O.OO.O.......P.............BBBR.RGGGBBBR.RGGGW.WWPWW.W", true, true, false), ["M"]] // or M'
+    matchesGeneric, "CenterOrientation", ("O.OO.O.......P.............BBBR.RGGGBBBR.RGGGW.WWPWW.W", true, true, false), ["M'", "M"]]
 
 let sbIntermediatePatterns = centerOrientationPatterns @ drEdgeBeginnerPatterns @ rbPairIntermediatePatterns @ rfPairIntermediatePatterns
 

@@ -9,12 +9,27 @@ printfn "Generating LSE Cases"
 
 let mutable count = 0
 
+let renderEOLRPosition cube = Render.cubeToStringWithEdgeOrientation cube // generate *just* EOLR cases
+let renderFullPosition cube = Render.cubeToString cube // generate *all* LSE cases
+
 let gen known cases move = seq {
+    //let renderEOLRPosition cube = // generate *just* EOLR cases
+    //    let isOriented c = c = Color.Y || c = Color.W
+    //    let topCenterOriented = Cube.look Face.U Sticker.C cube |> isOriented
+    //    let ubOriented = Cube.look Face.U Sticker.U cube |> isOriented
+    //    let ufOriented = Cube.look Face.U Sticker.D cube |> isOriented
+    //    let ulOriented = Cube.look Face.U Sticker.L cube |> isOriented
+    //    let urOriented = Cube.look Face.U Sticker.R cube |> isOriented
+    //    let dbOriented = Cube.look Face.D Sticker.D cube |> isOriented
+    //    let dfOriented = Cube.look Face.D Sticker.U cube |> isOriented
+    //    let leftEdge = Cube.findEdge Color.Y Color.B cube
+    //    let rightEdge = Cube.findEdge Color.Y Color.G cube
+    //    $"{topCenterOriented} {ubOriented} {ufOriented} {ulOriented} {urOriented} {dbOriented} {dfOriented} {leftEdge} {rightEdge}"
     let newCases =
         cases
         |> Map.toSeq
         |> Seq.map (fun (_, (moves, cube)) -> (move :: moves), Cube.executeMove cube move) // execute move
-        |> Seq.map (fun (moves, cube) -> (Render.cubeToString cube), (moves, cube)) // render case
+        |> Seq.map (fun (moves, cube) -> (renderEOLRPosition cube), (moves, cube)) // render case
         |> Seq.filter (fun (case, _) -> not (Map.containsKey case known)) // filter existing
     newCases |> Seq.iter (fun _ ->
         count <- count + 1
@@ -44,6 +59,15 @@ let rec iter cases known =
 
 let cases = iter init init
 printfn "Total Cases: %i" (List.length cases)
+
+let solverCases =
+    cases
+    |> Seq.map (fun (_, (moves, _)) -> moves)
+    |> Seq.map (fun moves ->
+        let cube = Cube.executeMoves moves yellowUpRedFront
+        $"{renderEOLRPosition cube},{Render.movesToString moves}")
+solverCases |> Seq.take 10 |> Seq.iter (printfn "SOLVER: %A")
+File.WriteAllLines($"LSE.txt", List.ofSeq solverCases)
 
 let sideBlocksAligned cube = // assumes E2/D2
     Cube.look Face.L Sticker.C cube = Color.B &&
@@ -123,9 +147,9 @@ let subset name file (index : StreamWriter) selector =
         |> Seq.map (fun (eolr, _) -> sprintf "1. `%s`" eolr)
         |> List.ofSeq
     let contents =
-        sprintf "# %s [%i cases]" name sub.Length ::
-        "" :: "## Unique Sequences" :: "" ::
-        unique @ 
+        // sprintf "# %s [%i cases]" name sub.Length ::
+        // "" :: "## Unique Sequences" :: "" ::
+        // unique @ 
         "" :: "## Exhaustive List" :: "" ::
         sub
     printfn "%s (%i)" name (List.length sub)

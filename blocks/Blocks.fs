@@ -134,25 +134,3 @@ let piecesFBAndCDRAndBRAndFR (cube: Cube) =
     let (dfr, _) = Cube.findCorner Color.G Color.R Color.W cube
     piecesFBAndCDRAndBR cube @ [Edge fr; Corner dfr]
 // genPairInsertCases "InsertFRPair" Color.G Color.W Color.R solvedFBAndCDRAndBRPair piecesFBAndCDRAndBRAndFR
-
-// LSE --------------------------------------------------------------------------------
-
-(*
-let genLSECases () =
-    let renderPositions cube =
-        let center = Cube.findCenter colorC cube
-        let downEdge = Cube.findEdge colorC colorD cube
-        let pairEdge = Cube.findEdge colorC colorFB cube
-        let corner = Cube.findCorner colorC colorFB colorD cube
-        $"{center} {downEdge} {pairEdge} {corner}"
-    iter Cube.movesAll init [] predicate renderPairPositions
-    |> reportCases pieces
-
-let piecesCDLAndBL (cube: Cube) =
-    let (c, _) = Cube.findCenter Color.B cube
-    let (dl, _) = Cube.findEdge Color.B Color.W cube
-    let (bl, _) = Cube.findEdge Color.B Color.O cube
-    let (dlb, _) = Cube.findCorner Color.B Color.O Color.W cube
-    [Center c; Edge dl; Edge bl; Corner dlb]
-//genPairInsertCases "BuildLBSquare" Color.B Color.W Color.O (fun _ -> true) piecesCDLAndBL
-*)

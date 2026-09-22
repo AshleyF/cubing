@@ -92,7 +92,7 @@ We've started with Roux.
 | EO    |  6.5    | 10    |
 | LR    |  5.5    |  7    |
 | L4E   |  4.1    |  5    |
-| Total | 53.2    | 78    |
+| Total | 51.0    | 74    |
 
 # TODO
 

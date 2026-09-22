@@ -98,10 +98,20 @@ let charToColor = function
     | '.' -> Color.A
     | _ -> failwith "Invalid color character"
 
-let piecesToString (cube: Cube) (pieces: Piece list) =
+let piecesToStringWithEdgeOrientation (cube: Cube) (pieces: Piece list) (edges: Piece list) =
     let piecesSet = Set.ofList pieces
+    let edgeSet = Set.ofList edges
     let lookSticker face sticker cube piece =
-        if piecesSet.Contains piece
+        if edgeSet.Contains piece then
+            let c = look face sticker cube
+            if c = Color.B then "*"
+            elif c = Color.G then "*"
+            else
+                if face = Face.U || face = Face.D then // U/D edge
+                    if c = Color.Y || c = Color.W then "E" else "P"
+                else // L/R/F/B edge
+                    if c = Color.Y || c = Color.W then "P" else "E"
+        elif piecesSet.Contains piece
         then look face sticker cube |> colorToString
         else "."
     let str = seq {
@@ -161,11 +171,20 @@ let piecesToString (cube: Cube) (pieces: Piece list) =
         yield lookSticker Face.D Sticker.DR cube (Corner DRB) }
     String.Concat(str)
 
-let cubeToString (cube: Cube) =
+let piecesToString (cube: Cube) (pieces: Piece list) = piecesToStringWithEdgeOrientation cube pieces []
+
+let piecesAll =
     [ Center U; Center D; Center L; Center R; Center F; Center B
       Edge UL; Edge UR; Edge UF; Edge UB; Edge DL; Edge DR; Edge DF; Edge DB; Edge FL; Edge FR; Edge BL; Edge BR
       Corner ULF; Corner ULB; Corner URF; Corner URB; Corner DLF; Corner DLB; Corner DRF; Corner DRB]
-    |> piecesToString cube
+
+let cubeToString (cube: Cube) = piecesToString cube piecesAll
+
+let cubeToStringWithEdgeOrientation (cube: Cube) =
+    let lastSixEdgesRoux =
+        [ Center U; Center D; Center F; Center B
+          Edge UL; Edge UR; Edge UF; Edge UB; Edge DF; Edge DB ]
+    piecesToStringWithEdgeOrientation cube piecesAll lastSixEdgesRoux
 
 let stringToCube (s: string) =
     let c i = charToColor s.[i]
