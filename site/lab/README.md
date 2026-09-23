@@ -1,6 +1,6 @@
-# RuLab
+# RouxLab
 
-RuLab is the interactive Roux pattern laboratory published by GitHub Pages at:
+RouxLab is the interactive Roux pattern laboratory published by GitHub Pages at:
 
 https://ashleyf.github.io/cubing/site/lab/
 

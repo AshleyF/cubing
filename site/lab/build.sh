@@ -17,4 +17,4 @@ if [[ -z "$catalog" ]]; then
 fi
 printf '%s\n' "$catalog" > "$lab_dir/patterns.json"
 
-echo "Built static RuLab solver in $lab_dir"
+echo "Built static RouxLab solver in $lab_dir"

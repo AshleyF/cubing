@@ -5,11 +5,11 @@
 - Benchmarks are valid only after an exhaustive coverage check succeeds for every enabled pattern set. Never omit, replace, or retry failed cases in statistics.
 - Pair-order pattern sets have distinct preconditions. Back-first patterns cannot stand in for front-first patterns; generate and validate front-first and corresponding last-pair sets explicitly.
 
-# RuLab architecture and continuation notes
+# RouxLab architecture and continuation notes
 
-- This repository is the only canonical home for RuLab. The old standalone Sites repository was accidental and was emptied after migration. Do not recreate a nested Git repository under `site/lab`.
+- This repository is the only canonical home for RouxLab. The old standalone Sites repository was accidental and was emptied after migration. Do not recreate a nested Git repository under `site/lab`.
 - GitHub Pages serves the app at `https://ashleyf.github.io/cubing/site/lab/`. All browser asset URLs must remain relative so the `/cubing/site/lab/` base path works.
-- RuLab is a fully static application. GitHub Pages cannot run Node, .NET, or `/api/*` endpoints. Do not reintroduce a server dependency.
+- RouxLab is a fully static application. GitHub Pages cannot run Node, .NET, or `/api/*` endpoints. Do not reintroduce a server dependency.
 - The production solver remains the F# implementation in `library/` and `solver333/`. `solver333/BrowserSolver.fsproj` links those sources and Fable compiles them to `site/lab/solver/`.
 - `site/lab/solver-worker.js` loads the compiled solver and runs every solve off the UI thread. `site/lab/app.js` communicates with that worker. Settings changes must regenerate the current scramble while leaving the previous result visible until the replacement is ready.
 - External pattern text files are canonical. `solver333/Tools/GenerateBrowserPatternData.mjs` packages them as `site/lab/pattern-data.json`; it does not implement a second solver.
