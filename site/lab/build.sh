@@ -10,6 +10,11 @@ dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disabl
 dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
 
+# Fable writes a blanket ignore file beside its runtime. Keep JavaScript modules
+# versioned because GitHub Pages has no package installation/build step.
+printf '%s\n' '*' '!*/' '!*.js' > "$lab_dir/solver/fable_modules/.gitignore"
+node "$solver_dir/Tools/CheckBrowserModules.mjs"
+
 catalog="$({ cd "$solver_dir"; dotnet bin/Release/net8.0/Solver.dll --patterns; } | sed -n 's/^PATTERN_RESULT|//p')"
 if [[ -z "$catalog" ]]; then
   echo "Pattern catalog generation failed." >&2
