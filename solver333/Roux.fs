@@ -11,6 +11,10 @@ let diagSwap = "r2 D r' U r D' R2 U' F' U' F" // fancy!
 let sexy = "R U R' U'"
 let sledge = "R' F R F'"
 
+// BrowserSolver replaces this while a foreground solve is running. Report
+// only stable phase boundaries, never speculative pair-order branches.
+let mutable progressCallback : (string -> unit) = ignore
+
 let matchesPieces (pieces: Piece list) (cube: Cube) (pattern: string, _: bool, _: bool) =
     pattern = Render.piecesToString cube pieces
 
@@ -513,6 +517,7 @@ let generateFrom scrambled =
         else solveLBFirst solvedLC
 
     Solver.stageStats "FB" numCubes
+    progressCallback "First block"
 
     // Second Block (SB)
 
@@ -708,6 +713,7 @@ let generateFrom scrambled =
         else solveRBFirst solvedDR
 
     Solver.stageStats "SB" numCubes
+    progressCallback "Second block"
 
     // Orient corners (CO) - hand authored patterns
     let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB false
@@ -717,6 +723,7 @@ let generateFrom scrambled =
     let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO true
 
     Solver.stageStats "CMLL" numCubes
+    progressCallback "CMLL"
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let solvedCenterO =
@@ -768,6 +775,7 @@ let generateFrom scrambled =
         else solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
 
     Solver.stageStats "EO" numCubes
+    progressCallback (if useEolr then "EOLR" else "Edge orientation")
 
     // Left/right edges (LR)
 
@@ -788,6 +796,7 @@ let generateFrom scrambled =
             solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedEO true
 
     Solver.stageStats "LR" numCubes
+    progressCallback "Last six edges"
 
     // Last 4 edges (L4E)
     let mud2Moves = [Move Move.M; Move Move.M'; Move Move.M2; Move Move.U2; Move Move.D2]
@@ -802,6 +811,7 @@ let generateFrom scrambled =
     let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
+    progressCallback "Last four edges"
 
 let generate numCubes =
     generateFrom (initScrambledCubes numCubes)

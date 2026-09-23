@@ -16,7 +16,11 @@ type SolveResult = { solution: string; stages: StageResult array }
 
 let setPatterns (keys: string array) (values: string array array) = PatternData.setData keys values
 
-let solve (scramble: string) (config: Config) =
+let private resultFromTrace trace =
+    { solution = trace |> List.collect snd |> Render.stepsToString
+      stages = trace |> List.map (fun (stage, steps) -> { stage = stage; moves = Render.stepsToString steps }) |> List.toArray }
+
+let solveWithProgress (scramble: string) (config: Config) (progress: string -> SolveResult -> unit) =
     Utility.cornerOrientationLevel <- config.co
     Utility.cornerPermutationLevel <- config.cp
     Utility.fullCmll <- config.cmll = 1
@@ -38,8 +42,13 @@ let solve (scramble: string) (config: Config) =
         Solver.solutionTrace
 
     let trace =
-        if not Utility.x2yColorNeutral then solveOne scrambled
+        if not Utility.x2yColorNeutral then
+            Roux.progressCallback <- fun milestone -> progress milestone (resultFromTrace Solver.solutionTrace)
+            solveOne scrambled
         else
+            // Candidate orientations are speculative. Publish only the chosen
+            // first-block prefix, not stages from candidates that lose.
+            Roux.progressCallback <- ignore
             let orientations =
                 [ ""; "y"; "y2"; "y'"; "x2"; "x2 y"; "x2 y2"; "x2 y'" ]
                 |> List.map (fun algorithm -> if algorithm = "" then [] else Render.stringToSteps algorithm)
@@ -50,7 +59,7 @@ let solve (scramble: string) (config: Config) =
                 let colorMap = canonicalCenters |> List.map (fun (face, canonical) -> Cube.look face Sticker.C cube, canonical) |> Map.ofList
                 cube |> Map.map (fun _ face -> face |> Map.map (fun _ color -> Map.find color colorMap))
             let firstBlockStages =
-                set [ "DLEdge"; "LCenter"; "TuckLBtoFD"; "BringDLBtoU"; "InsertLBPair"; "TuckLFtoBD"; "BringDLFtoURF"; "InsertLFPair"
+                set [ "ColorNeutralOrientation"; "DLEdge"; "LCenter"; "TuckLBtoFD"; "BringDLBtoU"; "InsertLBPair"; "TuckLFtoBD"; "BringDLFtoURF"; "InsertLFPair"
                       "TuckLFFirsttoBD"; "BringDLFFirsttoURF"; "InsertLFFirstPair"; "TuckLBLasttoFD"; "BringDLBLasttoU"; "InsertLBLastPair" ]
             orientations
             |> List.map (fun orientation ->
@@ -59,8 +68,13 @@ let solve (scramble: string) (config: Config) =
                 orientation, candidateTrace, firstBlockMoves)
             |> List.minBy (fun (_, _, moves) -> moves)
             |> fun (orientation, candidateTrace, _) ->
-                (if List.isEmpty orientation then [] else ["ColorNeutralOrientation", orientation]) @ candidateTrace
+                let chosen = (if List.isEmpty orientation then [] else ["ColorNeutralOrientation", orientation]) @ candidateTrace
+                let firstBlock = chosen |> List.filter (fst >> firstBlockStages.Contains)
+                progress "First block" (resultFromTrace firstBlock)
+                chosen
 
     Solver.solutionTrace <- trace
-    { solution = trace |> List.collect snd |> Render.stepsToString
-      stages = trace |> List.map (fun (stage, steps) -> { stage = stage; moves = Render.stepsToString steps }) |> List.toArray }
+    Roux.progressCallback <- ignore
+    resultFromTrace trace
+
+let solve (scramble: string) (config: Config) = solveWithProgress scramble config (fun _ _ -> ())
