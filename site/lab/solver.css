@@ -27,7 +27,7 @@
 .config-group { display:grid; grid-template-columns:150px 1fr; border-bottom:1px solid var(--ink); }
 .config-group h2 { margin:0; padding:13px 16px; display:flex; flex-direction:column; gap:5px; font-size:10px; line-height:1.2; letter-spacing:.08em; text-transform:uppercase; border-right:1px solid var(--line); }
 .config-group h2 strong { font:italic 17px Georgia,serif; letter-spacing:0; text-transform:none; }
-.config-row { min-height:39px; display:grid; grid-template-columns:34px minmax(180px,1fr) 72px 88px 58px; align-items:center; border-bottom:1px solid var(--line); cursor:pointer; }
+.config-row { min-height:39px; display:grid; grid-template-columns:34px minmax(180px,1fr) 72px 88px 58px; align-items:center; border-bottom:1px solid var(--line); }
 .config-row:last-child { border-bottom:0; }
 .config-row:hover { background:rgba(0,0,0,.025); }
 .config-row.inspection { background:rgba(37,99,235,.045); box-shadow:inset 3px 0 0 var(--blue); }
