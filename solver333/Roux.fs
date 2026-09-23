@@ -560,6 +560,24 @@ let generateFrom scrambled =
 
     let solveRFFirst input =
         let candidates patterns stage =
+            let toggle = function
+                | Move Move.R -> Some (Move Move.RW) | Move Move.R' -> Some (Move Move.RW') | Move Move.R2 -> Some (Move Move.RW2)
+                | Move Move.RW -> Some (Move Move.R) | Move Move.RW' -> Some (Move Move.R') | Move Move.RW2 -> Some (Move Move.R2)
+                | _ -> None
+            let variants steps =
+                let equivalents =
+                    steps ::
+                    (steps
+                     |> List.mapi (fun index step ->
+                         toggle step
+                         |> Option.map (fun replacement ->
+                             steps
+                             |> List.mapi (fun candidateIndex candidate ->
+                                 if candidateIndex = index then replacement else candidate)))
+                     |> List.choose id)
+                if orientCentersWithSecondBlock then
+                    equivalents @ (equivalents |> List.collect (fun candidate -> [candidate @ [Move Move.M]; candidate @ [Move Move.M']]))
+                else equivalents
             let algorithms =
                 patterns
                 |> List.filter (fun (_, candidateStage, _, _) -> candidateStage = stage)
@@ -569,6 +587,7 @@ let generateFrom scrambled =
             let aufs = [ []; [Move Move.U]; [Move Move.U']; [Move Move.U2] ]
             [ for auf in aufs do
               for algorithm in algorithms do yield auf @ algorithm ]
+            |> List.collect variants
             |> List.distinct
         let solveFromCandidates description stage goal candidates cubes =
             cubes |> List.map (fun cube ->

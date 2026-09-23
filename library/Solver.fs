@@ -74,13 +74,24 @@ let solveShortestWithStepsBy keyOf includedSteps check cube =
 
 let solveShortestWithSteps includedSteps check cube = solveShortestWithStepsBy cubeToString includedSteps check cube
 
+let mutable private lastMatchedCube : Cube option = None
+let mutable private lastMatchedCubeString = ""
+
 let matchesGeneric (cube: Cube) (pattern: string * bool * bool) =
     let mtch p c =
         p = '.' || p = c || // wildcard or perfect match
         (p = 'P' && c <> 'W' && c <> 'Y') || // bad edge (assume Y/W up/down)
         (p = 'E' && (c = 'W' || c = 'Y')) || // good edge
         (p = '*' && (c = 'B' || c = 'G')) // B/G for LR
-    let matchPat p = Seq.forall2 mtch p (cubeToString cube)
+    let cubeString =
+        match lastMatchedCube with
+        | Some cached when obj.ReferenceEquals(cached, cube) -> lastMatchedCubeString
+        | _ ->
+            let rendered = cubeToString cube
+            lastMatchedCube <- Some cube
+            lastMatchedCubeString <- rendered
+            rendered
+    let matchPat p = Seq.forall2 mtch p cubeString
     let cycleCW   = function 'B' -> 'O' | 'O' -> 'G' | 'G' -> 'R' | 'R' -> 'B' | c -> c
     let cycleCCW  = function 'B' -> 'R' | 'R' -> 'G' | 'G' -> 'O' | 'O' -> 'B' | c -> c
     let cycleSwap = function 'B' -> 'G' | 'G' -> 'B' | 'R' -> 'O' | 'O' -> 'R' | c -> c

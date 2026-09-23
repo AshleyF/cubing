@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../library/Cube.fs" Link="Cube.fs" />
+    <Compile Include="../library/Render.fs" Link="Render.fs" />
+    <Compile Include="../library/Solver.fs" Link="Solver.fs" />
+    <Compile Include="PatternData.fs" />
+    <Compile Include="Utility.fs" />
+    <Compile Include="Roux.fs" />
+    <Compile Include="BrowserSolver.fs" />
+  </ItemGroup>
+</Project>

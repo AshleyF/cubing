@@ -5,6 +5,7 @@ open Cube
 
 let interactive = false
 
+#if !FABLE_COMPILER
 let renderWithHighlights highlights cube =
     let renderFace f x y slice =
         let renderSticker s =
@@ -78,6 +79,7 @@ let renderWithHighlights highlights cube =
     printfn ""
 
 let render = renderWithHighlights []
+#endif
 
 let colorToString = function
     | Color.R -> "R"
@@ -340,6 +342,7 @@ let stepToString = function
     | Move   m -> moveToString m
 let stepsToString steps = String.Join(' ', Seq.map stepToString steps)
 
+#if !FABLE_COMPILER
 let pause () =
     if interactive then 
         printfn "Press Enter to continue..."
@@ -351,3 +354,4 @@ let execute steps message cube =
     steps |> stepsToString |> printfn "%s: %s" message
     pause ()
     cube'
+#endif

@@ -1,0 +1,19 @@
+const ready = (async () => {
+  const { setData } = await import('./solver/PatternData.js');
+  const patternData = await fetch('./pattern-data.json').then(response => {
+    if (!response.ok) throw Error('Could not load solver patterns');
+    return response.json();
+  });
+  setData(Object.keys(patternData), Object.values(patternData));
+  return (await import('./solver/BrowserSolver.js')).solve;
+})();
+
+self.onmessage = async event => {
+  const { id, scramble, config } = event.data;
+  try {
+    const solve = await ready;
+    self.postMessage({ id, result: solve(scramble, config) });
+  } catch (error) {
+    self.postMessage({ id, error: error?.message || String(error) });
+  }
+};

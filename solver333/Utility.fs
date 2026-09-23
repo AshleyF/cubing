@@ -1,6 +1,8 @@
 ﻿module Utility
 
+#if !FABLE_COMPILER
 open System.IO
+#endif
 
 let level = 0 // 0 = beginner, 1 = intermediate, 2 = advanced, 3 = god
 let mutable cornerOrientationLevel = 0
@@ -18,7 +20,11 @@ let mutable x2yColorNeutral = false
 let mutable useEolr = false
 
 let readPatterns matchFn method level name cornerRotationNeutral cornerColorNeutral discoverAuf =
+#if FABLE_COMPILER
+    PatternData.read $"{method}/{level}/{name}"
+#else
     File.ReadLines $"Patterns/{method}/{level}/{name}.txt"
+#endif
     |> Seq.map (fun line -> line.Split ',')
     |> Seq.map (fun x ->
         let pattern = x[0]

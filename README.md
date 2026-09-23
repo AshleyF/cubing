@@ -4,6 +4,7 @@ These are my random notes and experiments related to cubing.
 
 * [Notes](https://ashleyf.github.io/cubing/site/notes/)
 * [Video Solve Reconstructions](https://ashleyf.github.io/cubing/site/)
+* [RuLab](https://ashleyf.github.io/cubing/site/lab/)
 * [3x3 Solver (Roux)](solver333)
 * [2x2 _Perfect_ Solver](solver222)
 * [LSE Case Generator](lse)
