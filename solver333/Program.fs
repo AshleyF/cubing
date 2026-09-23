@@ -33,7 +33,7 @@ if args.Length > 0 && args[0] = "--patterns" then
         {| id = "eo"; cases = cases Roux.edgeBeginnerOrientationPatters |}
         {| id = "eo2"; cases = cases Roux.edgeIntermediateOrientationPatters |}
         {| id = "lr"; cases = cases Roux.lrBeginnerPatterns |}
-        {| id = "l4e"; cases = cases Roux.l4eBeginnerPatterns |}
+        {| id = "l4e"; cases = cases Roux.l4eIntermediatePatterns |}
     ]
     printfn "PATTERN_RESULT|%s" (JsonSerializer.Serialize(sets))
 elif args.Length > 0 then

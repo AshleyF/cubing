@@ -349,7 +349,10 @@ let l4eIntermediatePatterns = [
     matchesGeneric, "L4E", ("OROOOOOROYWYYYYYWYBBBRORGGGBBBRRRGGGBBBRORGGGWYWWWWWYW", false, false, false), ["E2 M E2 M"] // dots
     matchesGeneric, "L4E", ("OOOOROOOOYYYYWYYYYBBBRRRGGGBBBRORGGGBBBRRRGGGWWWWYWWWW", false, false, false), ["E2 M E2 M'"]] // dots
 
-let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eBeginnerPatterns
+// Direct L4E is the baseline: it uses only the same intuitive M/U2 move set as
+// the repetitive beginner treatment, without deliberately cycling past a
+// shorter solution. Keep l4eBeginnerPatterns as a historical/comparison bank.
+let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eIntermediatePatterns
 let lseIntermediatePatterns = eolrIntermediatePatterns @ l4eIntermediatePatterns
 
 let rouxBeginnerPatterns = fbBeginnerPatterns @ sbBeginnerPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
@@ -372,7 +375,7 @@ let solve moves description name target cubes search =
             let lf = if lfPairLevel = 0 then lfPairBeginnerPatterns else lfPairIntermediatePatterns
             let rb = if rbPairLevel = 0 then rbPairBeginnerPatterns else rbPairIntermediatePatterns
             let rf = if rfPairLevel = 0 then rfPairBeginnerPatterns else rfPairIntermediatePatterns
-            dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lb @ lf @ drEdgeBeginnerPatterns @ rb @ rf @ corners @ centerOrientationPatterns @ edgeOrientation @ lrBeginnerPatterns @ l4eBeginnerPatterns
+            dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lb @ lf @ drEdgeBeginnerPatterns @ rb @ rf @ corners @ centerOrientationPatterns @ edgeOrientation @ lrBeginnerPatterns @ l4eIntermediatePatterns
         | 1 -> rouxIntermediatePatterns
         | 2 -> rouxAdvancedPatterns
         | 3 -> rouxGodPatterns
