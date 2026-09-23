@@ -7,10 +7,12 @@
 .solver-line.solving i { animation:solver-pulse 1s infinite; }
 .solver-line.ready i { background:#23a85b; }
 .solver-line.error i { background:#f04435; }
-.stage-list { display:flex; flex-wrap:wrap; gap:5px; margin-top:13px; }
-.stage-list button { display:flex; gap:6px; border:1px solid var(--line); background:transparent; padding:5px 7px; font-size:8px; }
-.stage-list button b { font-weight:700; }
-.stage-list button span { color:var(--blue); }
+.solution-text { margin:12px 0; font:12px/1.7 ui-monospace,monospace; color:#444; }
+.solution-line { min-height:1.7em; }
+.solution-move { display:inline; padding:1px 2px; border:0; border-radius:2px; background:transparent; color:inherit; font:inherit; font-weight:600; cursor:pointer; }
+.solution-move:hover { color:var(--blue); background:#1d50ff12; }
+.solution-move.current { color:#fff; background:var(--blue); }
+.solution-comment { color:var(--muted); white-space:nowrap; }
 .control-panel .panel-head { padding-top:18px; padding-bottom:18px; }
 .control-panel .scramble-block { padding-top:16px; padding-bottom:16px; }
 .control-panel textarea { margin-top:0; }

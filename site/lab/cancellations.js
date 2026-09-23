@@ -16,4 +16,13 @@ export function reducePair(left,right){const a=turn(left),b=turn(right),av=layer
 
 export function cancellationCases(){return cancellationBases.flatMap(leftBase=>cancellationAmounts.flatMap(leftAmount=>cancellationBases.flatMap(rightBase=>cancellationAmounts.map(rightAmount=>{const left=notation(leftBase,leftAmount),right=notation(rightBase,rightAmount),reduced=reducePair(left,right);return reduced===null?null:[`${left} ${right}`,reduced]})))).filter(Boolean)}
 
-export function cancelMoves(stages){const stack=[];for(const[stageIndex,stage]of stages.entries())for(const move of stage.moves.trim().split(/\s+/).filter(Boolean)){let current=move;while(stack.length){const reduced=reducePair(stack.at(-1).move,current);if(reduced===null)break;stack.pop();current=reduced;if(!current)break}if(current)stack.push({...turn(current),move:current,stageIndex})}return stack}
+const identity=[1,0,0,0,1,0,0,0,1],rotationMatrices={x:[1,0,0,0,0,-1,0,1,0],y:[0,0,1,0,1,0,-1,0,0],z:[0,1,0,-1,0,0,0,0,1]};
+const multiply=(a,b)=>[0,1,2].flatMap(row=>[0,1,2].map(column=>[0,1,2].reduce((sum,k)=>sum+a[row*3+k]*b[k*3+column],0)));
+const power=(matrix,amount)=>{let result=identity;for(let i=0;i<amount;i++)result=multiply(matrix,result);return result};
+const orientationKey=moves=>moves.reduce((matrix,move)=>{const{base,amount}=turn(move);return multiply(power(rotationMatrices[base],amount),matrix)},identity).join(',');
+const rotationTokens=['x',"x'",'x2','y',"y'",'y2','z',"z'",'z2'];
+const shortestOrientation=new Map([[orientationKey([]),[]]]);
+for(const first of rotationTokens){const one=[first];if(!shortestOrientation.has(orientationKey(one)))shortestOrientation.set(orientationKey(one),one);for(const second of rotationTokens){const two=[first,second];if(!shortestOrientation.has(orientationKey(two)))shortestOrientation.set(orientationKey(two),two)}}
+export function simplifyOrientation(moves){return shortestOrientation.get(orientationKey(moves))??moves}
+
+export function cancelMoves(stages){const stack=[];for(const[stageIndex,stage]of stages.entries())for(const move of stage.moves.trim().split(/\s+/).filter(Boolean)){let current=move;while(stack.length){const reduced=reducePair(stack.at(-1).move,current);if(reduced===null)break;stack.pop();current=reduced;if(!current)break}if(current)stack.push({...turn(current),move:current,stageIndex})}let rotationCount=0;while(rotationCount<stack.length&&rotationMatrices[stack[rotationCount].base])rotationCount++;if(rotationCount>1){const replacement=simplifyOrientation(stack.slice(0,rotationCount).map(entry=>entry.move)),stageIndex=stack[rotationCount-1].stageIndex;stack.splice(0,rotationCount,...replacement.map(move=>({...turn(move),move,stageIndex})))}return stack}
