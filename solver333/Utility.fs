@@ -2,7 +2,20 @@
 
 open System.IO
 
-let level = 3 // 0 = beginner, 1 = intermediate, 2 = advanced, 3 = god
+let level = 0 // 0 = beginner, 1 = intermediate, 2 = advanced, 3 = god
+let mutable cornerOrientationLevel = 0
+let mutable cornerPermutationLevel = 0
+let mutable fullCmll = false
+let mutable edgeOrientationLevel = 0
+let mutable lbPairLevel = 0
+let mutable lfPairLevel = 0
+let mutable rbPairLevel = 0
+let mutable rfPairLevel = 0
+let mutable orientCentersWithSecondBlock = false
+let mutable chooseShortestSecondBlockPairOrder = false
+let mutable chooseShortestFirstBlockPairOrder = false
+let mutable x2yColorNeutral = false
+let mutable useEolr = false
 
 let readPatterns matchFn method level name cornerRotationNeutral cornerColorNeutral discoverAuf =
     File.ReadLines $"Patterns/{method}/{level}/{name}.txt"

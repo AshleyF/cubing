@@ -6,6 +6,8 @@ open Render
 
 let quiet = true
 let warnings = true
+let mutable solutionTrace : (string * Step list) list = []
+let mutable preferGoalMatchingAlgorithm = false
 
 let executeAndReportSteps steps =
     //steps |> Render.stepsToString |> printfn "EXECUTE: %s"
@@ -24,21 +26,53 @@ let scramble =
     let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2] @ [M; M'; M2] @ [S; S'; S2; E; E'; E2] // NOTE: centers don't move without slices
     scrambleWithMoves moves
 
-let solveWithSteps includedSteps check cube =
-    let mutable count = 0
-    let rec solve' max depth steps cube = seq {
-        count <- count + 1
-        if count % 1000 = 0 then printf "."
-        let recurse s = seq { yield! solve' max (depth + 1) (s :: steps) (step s cube) }
-        if check cube then yield Seq.rev steps |> Seq.toList
-        elif depth < max then
-            for s in includedSteps do
-                yield! recurse s }
-    let rec iterativeDeepening depth = seq { // TODO: something more efficient (breadth-first)
-        let solutions = solve' depth 0 [] cube |> List.ofSeq
-        yield! solutions
-        if Seq.length solutions = 0 then yield! iterativeDeepening (depth + 1) }
-    iterativeDeepening 0 |> List.ofSeq
+let solveWithStepsBy keyOf includedSteps check cube =
+    // Pattern generation only needs the shortest first hit. Avoid constructing
+    // every solution at a depth, and never repeat the exact same slice twice.
+    let slice = function
+        | Move m -> Render.moveToString m |> Seq.head
+        | Rotate r -> Render.rotationToString r |> Seq.head
+    let rec atDepth (visited: Collections.Generic.Dictionary<string, int>) remaining previous reversed current =
+        if check current then Some (List.rev reversed)
+        elif remaining = 0 then None
+        else
+            let key = $"{keyOf current}|{previous}"
+            match visited.TryGetValue key with
+            | true, seenRemaining when seenRemaining >= remaining -> None
+            | _ ->
+                visited[key] <- remaining
+                includedSteps
+                |> List.filter (fun candidate -> previous |> Option.forall (fun prior -> slice prior <> slice candidate))
+                |> List.tryPick (fun candidate -> atDepth visited (remaining - 1) (Some candidate) (candidate :: reversed) (step candidate current))
+    let rec deepen depth =
+        let visited = Collections.Generic.Dictionary<string, int>()
+        match atDepth visited depth None [] cube with
+        | Some solution -> [solution]
+        | None -> deepen (depth + 1)
+    deepen 0
+
+let solveWithSteps includedSteps check cube = solveWithStepsBy cubeToString includedSteps check cube
+
+let solveShortestWithStepsBy keyOf includedSteps check cube =
+    let slice = function
+        | Move m -> Render.moveToString m |> Seq.head
+        | Rotate r -> Render.rotationToString r |> Seq.head
+    let queue = Collections.Generic.Queue<Cube * Step list * char option>()
+    let visited = Collections.Generic.HashSet<string>()
+    queue.Enqueue(cube, [], None)
+    visited.Add($"{keyOf cube}|") |> ignore
+    let rec search () =
+        let current, reversed, previous = queue.Dequeue()
+        if check current then List.rev reversed
+        else
+            for candidate in includedSteps do
+                if previous |> Option.forall (fun prior -> prior <> slice candidate) then
+                    let next = step candidate current
+                    if visited.Add($"{keyOf next}|{slice candidate}") then queue.Enqueue(next, candidate :: reversed, Some (slice candidate))
+            search ()
+    search ()
+
+let solveShortestWithSteps includedSteps check cube = solveShortestWithStepsBy cubeToString includedSteps check cube
 
 let matchesGeneric (cube: Cube) (pattern: string * bool * bool) =
     let mtch p c =
@@ -81,8 +115,33 @@ let hybridSolve steps hints patterns goal stage cube =
     match Seq.tryFind (fun (matchFn, s, p, _) -> s = stage && matchFn cube p) patterns with
     | Some (_, _, _, algs) ->
         match algs with
+        | [] -> []
+        | _ when preferGoalMatchingAlgorithm ->
+            let toggle = function
+                | Move Move.R -> Some (Move Move.RW)
+                | Move Move.R' -> Some (Move Move.RW')
+                | Move Move.R2 -> Some (Move Move.RW2)
+                | Move Move.RW -> Some (Move Move.R)
+                | Move Move.RW' -> Some (Move Move.R')
+                | Move Move.RW2 -> Some (Move Move.R2)
+                | _ -> None
+            let withEquivalentWideEndings steps =
+                let equivalents =
+                    steps ::
+                    (steps
+                     |> List.mapi (fun index step ->
+                         toggle step
+                         |> Option.map (fun replacement ->
+                             steps
+                             |> List.mapi (fun candidateIndex candidate ->
+                                 if candidateIndex = index then replacement else candidate)))
+                     |> List.choose id)
+                equivalents @ (equivalents |> List.collect (fun candidate -> [candidate @ [Move Move.M]; candidate @ [Move Move.M']]))
+            let candidates = algs |> List.collect (stringToSteps >> withEquivalentWideEndings) |> List.distinct
+            match candidates |> List.tryFind (fun candidate -> Seq.fold executeStep cube candidate |> goal) with
+            | Some candidate -> [candidate]
+            | None -> failwith $"Matched pattern has no algorithm satisfying its required goal: {cubeToString cube}"
         | a :: _ -> [stringToSteps a]
-        | [] -> [] // skip
     | None ->
         if warnings then printfn "UNMATCHED: %s" (cubeToString cube)
         let tryHint h = 
@@ -105,6 +164,7 @@ let genCasesAndSolutions patterns steps cubes goal stage =
             let algs = Seq.map stepsToString solutions
             // printfn "Algs: %s" algs
             let skip = Seq.length solutions = 0
+            solutionTrace <- solutionTrace @ [stage, (if skip then [] else Seq.head solutions)]
             let key = if skip then "" else algs |> Seq.sort |> Seq.head
             // printfn "Key: %s" key
             match Map.tryFind key cases with

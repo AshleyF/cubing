@@ -1,0 +1,630 @@
+O.OO.O.....................BBBR.RGGGBBBR.RGGGW.WW.WW.W,
+O.WO.W..W..O..O..........GGBBBR...GGBBBR...GGW..W.RW.R,R;r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.WGG.W.OW.OW..,R';r'
+O.WO.WGG.OO.......W........BBBR...GGBBBR...GGW..W.RW.R,U r
+O.WO.W..........OO....GGW..BBBR...GGBBBR...GGW..W.RW.R,U' r
+O.WO.W......O..O...GGW.....BBBR...GGBBBR...GGW..W.RW.R,U2 r
+O..O....O..G....O.....G...WBBBR.RGG.BBBR.RGG.W.WW.WW..,R' U' r
+O..O..GG.OO.......W........BBBR.RGG.BBBR.RGG.W.WW.WW..,R' U r
+O..O........O..O...GGW.....BBBR.RGG.BBBR.RGG.W.WW.WW..,R' U2 r;r' U2 r
+O.GO..........R.OR....GWGG.BBBR.WGG.BBBR....WW..W..W.O,R2 U' r
+O..O..GG.OO...R..RW....WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U r
+O..O........O.RO.R.GGW.WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U2 r;r2 U2 r
+O.WO.W.O..G......O.....GW..BBBR...GGBBBR...GGW..W.RW.R,M U' r;M U' r
+OOWO.WG..O........W........BBBR...GGBBBR...GGW..W.RWGR,M U r;M U r
+O.WO.W...........O.....GW..BBBR...GGBBBRO..GGWG.W.RW.R,M' U' r;M' U' r
+O.WO.WG..O......G.W...O....BBBR...GGBBBR...GGW..W.RW.R,M' U r;M' U r
+OGWO.W...........O.....GW..BBBR...GGBBBR...GGW..W.RWOR,M2 U' r;M2 U' r
+O.WO.WG..O........W........BBBR...GGBBBRG..GGWO.W.RW.R,M2 U r;M2 U r
+O..O...OO.GG..............WBBBR.RGG.BBBR.RGG.W.WW.WW..,r' U' r
+OO.O..G..O........W........BBBR.RGG.BBBR.RGG.W.WW.WWG.,r' U r
+OGGO..........R..R.....WGG.BBBR.WGG.BBBR....WW..W..WOO,r2 U' r
+O..O..G..O....R..RW....WGG.BBBR.WGG.BBBRG....WO.W..W..,r2 U r
+OO.O...........O....GW.....BBBR.RGG.BBBR.RGG.W.WW.WWG.,U r' U r
+O..O..W..G....O...O......G.BBBR.RGG.BBBR.RGG.W.WW.WW..,U R' U' r
+O..O..W..G..G.....OO.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U' r
+O..O............OO....GGW..BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 r;U2 R' U r
+O.WO.W..W..O..............GBBBR...GGBBBRO..GGWG.W.RW.R,U M' U' r
+O.WO.W.........O....GW.....BBBR...GGBBBRG..GGWO.W.RW.R,U M2 U r
+OOWO.W.........O....GW.....BBBR...GGBBBR...GGW..W.RWGR,U M U r
+OGWO.W..W..O..............GBBBR...GGBBBR...GGW..W.RWOR,U M2 U' r
+O.WO.W........GO....GW...O.BBBR...GGBBBR...GGW..W.RW.R,U M' U r;U' M U' r
+O.WO.W..W..OG......O......GBBBR...GGBBBR...GGW..W.RW.R,U M U' r;U' M' U r
+OO.O....W..O..............GBBBR.RGG.BBBR.RGG.W.WW.WWG.,U' r' U r
+O..O........O....G.G...WO..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' R' U' r
+O..O..........G..G.....WOO.BBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U' r
+O..O....W..O..O..........GGBBBR.RGG.BBBR.RGG.W.WW.WW..,U' R' U r;U2 r' U2 r
+O.WO.W.........O....GW.....BBBR...GGBBBRO..GGWG.W.RW.R,U' M' U' r
+O.WO.W..W..O..............GBBBR...GGBBBRG..GGWO.W.RW.R,U' M2 U r
+OOWO.W..W..O..............GBBBR...GGBBBR...GGW..W.RWGR,U' M U r
+OGWO.W.........O....GW.....BBBR...GGBBBR...GGW..W.RWOR,U' M2 U' r
+OO.O.............O.....GW..BBBR.RGG.BBBR.RGG.W.WW.WWG.,U2 r' U r
+O..O...G..O....G....WO.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 R' U' r
+O..O...........GG...WOO....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U' r
+O.WO.WG..O........W........BBBR...GGBBBRO..GGWG.W.RW.R,U2 M' U' r
+O.WO.W...........O.....GW..BBBR...GGBBBRG..GGWO.W.RW.R,U2 M2 U r
+OOWO.W...........O.....GW..BBBR...GGBBBR...GGW..W.RWGR,U2 M U r
+OGWO.WG..O........W........BBBR...GGBBBR...GGW..W.RWOR,U2 M2 U' r
+O..O..G..O........W........BBBR.RGG.BBBRGRGG.WOWW.WW..,R r2 U r;R' M2 U r;M r' U r;M2 R' U r;r' M U r;M r' U r;M2 R' U r
+OG.O....O..G..............WBBBR.RGG.BBBR.RGG.W.WW.WWO.,R r2 U' r;R' M2 U' r;M r' U' r;M2 R' U' r;r' M U' r;M r' U' r;M2 R' U' r
+OO.O..G..O....R..RW....WGG.BBBR.WGG.BBBR.....W..W..WG.,R' r' U r;R2 M U r;M R2 U r;M' r2 U r;r' R' U r;r2 M' U r;M R2 U r;M' r2 U r
+O.GO...O..G...R..R.....WGG.BBBR.WGG.BBBR....WW..W..W.O,R' r' U' r;R2 M U' r;M R2 U' r;M' r2 U' r;r' R' U' r;r2 M' U' r;M R2 U' r;M' r2 U' r
+O..O....O..G..............WBBBR.RGG.BBBRORGG.WGWW.WW..,R' M' U' r;M' R' U' r;M2 r' U' r;r R2 U' r;r' M2 U' r;M' R' U' r;M2 r' U' r
+O..O..G..O......G.W...O....BBBR.RGG.BBBR.RGG.W.WW.WW..,R' M' U r;M' R' U r;M2 r' U r;r R2 U r;r' M2 U r;M' R' U r;M2 r' U r
+O.GO..........R..R.....WGG.BBBR.WGG.BBBRO...WWG.W..W.O,R2 M' U' r;M r2 U' r;M' R2 U' r;r2 M U' r;M r2 U' r;M' R2 U' r
+O..O..G..O....R.GRW...OWGG.BBBR.WGG.BBBR.....W..W..W..,R2 M' U r;M r2 U r;M' R2 U r;r2 M U r;M r2 U r;M' R2 U r
+O..O..W..G........O........BBBR.RGG.BBBRORGG.WGWW.WW..,U M2 r' U' r
+O..O...........O....GW.....BBBR.RGG.BBBRGRGG.WOWW.WW..,U M2 R' U r;R' U M2 U r;M U r' U r;r' U M U r;M U r' U r
+OG.O..W..G........O........BBBR.RGG.BBBR.RGG.W.WW.WWO.,U M2 R' U' r
+O..O..........GO....GW...O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 r' U r
+O..O.............G.....WO..BBBR.RGG.BBBRORGG.WGWW.WW..,U' M2 r' U' r
+O..O....W..O..............GBBBR.RGG.BBBRGRGG.WOWW.WW..,U' M2 R' U r;M U' r' U r;M U' r' U r
+OG.O.............G.....WO..BBBR.RGG.BBBR.RGG.W.WW.WWO.,U' M2 R' U' r
+O..O....W..OG......O......GBBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 r' U r
+O..O...........G....WO.....BBBR.RGG.BBBRORGG.WGWW.WW..,U2 M2 r' U' r
+O..O.............O.....GW..BBBR.RGG.BBBRGRGG.WOWW.WW..,U2 M2 R' U r;M U2 r' U r;M U2 r' U r
+OG.O...........G....WO.....BBBR.RGG.BBBR.RGG.W.WW.WWO.,U2 M2 R' U' r
+O..O...O..G......O.....GW..BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 r' U r;M U2 R' U r;M U2 R' U r
+OOWO.W.....................BBBR...GGBBBR.OWGGW.GW.RWGR,R U2 r' U r
+OOWO.W...........W.....OG..BBBR...GGBBBR...GGW..W.RWGR,R U' r' U r
+O.WO.W.........GG...WOO....BBBR...GGBBBR...GGW..W.RW.R,R U2 r' U' r;r U2 R' U' r
+O.WO.W..........O.....G....BBBR...GGBBBR.OWGGW.GW.RW.R,R U2 R' U r
+O.WO.W.G..O....G....WO.....BBBR...GGBBBR...GGW..W.RW.R,R U2 R' U' r
+O.WO.WW..G..G.....OO.......BBBR...GGBBBR...GGW..W.RW.R,R U r' U' r;r U r' U' r
+O.WO.W......O......G.......BBBR...GGBBBR.GOGGW.WW.RW.R,R U' R' U' r;r U' R' U' r
+O.WO.W.....................BBBR.GOGGBBBR.GOGGW.WW.RW.R,R U' r' U' r;r U' r' U' r
+O.WO.WW..G........O........BBBR.OGGGBBBR...GGW..W.RW.R,R U R' U' r;r U R' U' r
+O.WO.W...........W.....OG..BBBR.OGGGBBBR...GGW..W.RW.R,R U2 r' U2 r;r U2 r' U2 r
+OO.O..........RO.R..GW.WGG.BBBR.WGG.BBBR.....W..W..WG.,R' U r' U r;R2 U M U r
+OO.O....O..G..R..R.....WGGWBBBR.WGG.BBBR.....W..W..WG.,R' U2 r' U r
+OOOO..........R..R.....WGG.BBBR.WGG.BBBR....GW..W..WGW,R' U' r' U r
+O..O..........RGGR..WOOWGG.BBBR.WGG.BBBR.....W..W..W..,R' U2 r' U' r
+O..O....O..G..R.OR....GWGGWBBBR.WGG.BBBR.....W..W..W..,R' U2 R' U r
+O..O...G..O...RG.R..WO.WGG.BBBR.WGG.BBBR.....W..W..W..,R' U2 R' U' r;r' U2 r' U' r
+O..O..W..G..G.R..ROO...WGG.BBBR.WGG.BBBR.....W..W..W..,R' U r' U' r;r' U r' U' r
+O..O....G..WO.R..R.G...WGGOBBBR.WGG.BBBR.....W..W..W..,R' U' R' U' r;r' U' R' U' r
+O..O.G..G..W..R..R.....WGGOBBBR.WGGOBBBR.....W..W..W..,R' U' r' U' r;r' U' r' U' r
+O..O.OW..G....R..RO....WGG.BBBR.WGGGBBBR.....W..W..W..,R' U R' U' r;r' U R' U' r
+O.OO.O........R..R.....WGG.BBBR.WGGGBBBR....GW..W..W.W,R' U2 r' U2 r;r' U2 r' U2 r
+O..O...........O....GW.....BBBR.RGG.BBBRORGG.WGWW.WW..,R' U' M' U' r;r' U' M2 U' r
+O..O..G..O........W........BBBR.RGG.BBBRORGG.WGWW.WW..,R' U2 M' U' r;r' U2 M2 U' r
+O.OO.......................BBBR.RGG.BBBRORGGGWGWW.WW.W,R' U M' U' r;r' U M2 U' r
+O..O....O..G..............WBBBR.RGG.BBBRGRGG.WOWW.WW..,R' U2 M2 U r;r' U2 M U r
+O.OO.......................BBBR.RGG.BBBRGRGGGWOWW.WW.W,R' U' M2 U r;r' U' M U r
+OO.O....O..G..............WBBBR.RGG.BBBR.RGG.W.WW.WWG.,R' U2 M U r
+OOOO.......................BBBR.RGG.BBBR.RGGGW.WW.WWGW,R' U' M U r
+OG.O...........O....GW.....BBBR.RGG.BBBR.RGG.W.WW.WWO.,R' U' M2 U' r
+OG.O..G..O........W........BBBR.RGG.BBBR.RGG.W.WW.WWO.,R' U2 M2 U' r
+OGOO.......................BBBR.RGG.BBBR.RGGGW.WW.WWOW,R' U M2 U' r
+O.OO........G......O.......BBBR.RGG.BBBR.RGGGW.WW.WW.W,R' U' M' U r;r' U' M' U r
+O..O.G.........O....GW.....BBBR.RGGOBBBR.RGG.W.WW.WW..,R' U' M U' r;r' U' M U' r
+O..O..........RO.R..GW.WGG.BBBR.WGG.BBBRO....WG.W..W..,R2 U' M' U' r
+O..O..G..O....R..RW....WGG.BBBR.WGG.BBBRO....WG.W..W..,R2 U2 M' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBROWG..WGOW..W..,R2 U M' U' r
+O..O..........RO.R..GW.WGG.BBBR.WGG.BBBRG....WO.W..W..,R2 U M2 U r;r' U r' U r
+O.GO..........R..R.....WGG.BBBR.WGG.BBBRG...WWO.W..W.O,R2 U2 M2 U r
+O..O..........R..R.....WGG.BBBR.WGG.BBBRGWG..WOOW..W..,R2 U' M2 U r
+OOGO..........R..R.....WGG.BBBR.WGG.BBBR....WW..W..WGO,R2 U2 M U r
+OO.O..........R..R.....WGG.BBBR.WGG.BBBR.WG..W.OW..WG.,R2 U' M U r
+OG.O..........RO.R..GW.WGG.BBBR.WGG.BBBR.....W..W..WO.,R2 U' M2 U' r
+OG.O..G..O....R..RW....WGG.BBBR.WGG.BBBR.....W..W..WO.,R2 U2 M2 U' r
+OG.O..........R..R.....WGG.BBBR.WGG.BBBR.WG..W.OW..WO.,R2 U M2 U' r
+O..O........G.R..R.O...WGG.BBBR.WGG.BBBR.WG..W.OW..W..,R2 U' M' U r;r2 U' M' U r
+O..O..........RO.R..GW.WGG.BBBR.WGG.BBBR...O.W..W.GW..,R2 U' M U' r;r2 U' M U' r
+OO.O...........G....WO.....BBBR.RGG.BBBR.RGG.W.WW.WWG.,M U2 R' U' r;M2 U2 r' U' r;M U2 R' U' r;M2 U2 r' U' r
+O.WO.W.........OO...GWG....BBBR...GGBBBR...GGW..W.RW.R,M U' M' U' r;M2 U' M2 U' r;M U' M' U' r;M2 U' M2 U' r
+O.WO.WG..O......O.W...G....BBBR...GGBBBR...GGW..W.RW.R,M U2 M' U' r;M2 U2 M2 U' r;M U2 M' U' r;M2 U2 M2 U' r
+O.WO.W..W..O....O.....G...GBBBR...GGBBBR...GGW..W.RW.R,M U M' U' r;M2 U M2 U' r;M U M' U' r;M2 U M2 U' r
+O.WO.W.........OG...GWO....BBBR...GGBBBR...GGW..W.RW.R,M U M2 U r;M2 U M U r;M U M2 U r;M2 U M U r
+O.WO.W..........GO....OGW..BBBR...GGBBBR...GGW..W.RW.R,M U2 M2 U r;M2 U2 M U r;M U2 M2 U r;M2 U2 M U r
+O.WO.W..W..O....G.....O...GBBBR...GGBBBR...GGW..W.RW.R,M U' M2 U r;M2 U' M U r;M U' M2 U r;M2 U' M U r
+O..O...G..O....O....GW.....BBBR.RGG.BBBR.RGG.W.WW.WW..,M' U r' U r;M' U r' U r
+O..O...G..O......O.....GW..BBBR.RGG.BBBR.RGG.W.WW.WW..,M' U2 r' U r;M' U2 r' U r
+O..O...GW.OO..............GBBBR.RGG.BBBR.RGG.W.WW.WW..,M' U' r' U r;M' U' r' U r
+O..O...........G....WO.....BBBR.RGG.BBBRGRGG.WOWW.WW..,M' U2 r' U' r;M2 U2 R' U' r;M' U2 r' U' r;M2 U2 R' U' r
+O..O.............O.....GW..BBBR.RGG.BBBRORGG.WGWW.WW..,M' U2 R' U r;M' U2 R' U r
+O.WO.W.G..O....O....GW.....BBBR...GGBBBR...GGW..W.RW.R,M' U M U r;M2 U M2 U r;r U r' U r;M' U M U r;M2 U M2 U r
+O.WO.W.G..O......O.....GW..BBBR...GGBBBR...GGW..W.RW.R,M' U2 M U r;M2 U2 M2 U r;M' U2 M U r;M2 U2 M2 U r
+O.WO.W.GW.OO..............GBBBR...GGBBBR...GGW..W.RW.R,M' U' M U r;M2 U' M2 U r;M' U' M U r;M2 U' M2 U r
+O.WO.W.O..G....O....GW.....BBBR...GGBBBR...GGW..W.RW.R,M' U' M2 U' r;M2 U' M' U' r;M' U' M2 U' r;M2 U' M' U' r
+O.WO.WGO.OG.......W........BBBR...GGBBBR...GGW..W.RW.R,M' U2 M2 U' r;M2 U2 M' U' r;M' U2 M2 U' r;M2 U2 M' U' r
+O.WO.W.OW.GO..............GBBBR...GGBBBR...GGW..W.RW.R,M' U M2 U' r;M2 U M' U' r;M' U M2 U' r;M2 U M' U' r
+O..O...........OG...GWO....BBBR.RGG.BBBR.RGG.W.WW.WW..,M2 U r' U r;r' U M2 U r;M2 U r' U r
+O..O............GO....OGW..BBBR.RGG.BBBR.RGG.W.WW.WW..,M2 U2 r' U r;M2 U2 r' U r
+O..O....W..O....G.....O...GBBBR.RGG.BBBR.RGG.W.WW.WW..,M2 U' r' U r;M2 U' r' U r
+OG.O.............O.....GW..BBBR.RGG.BBBR.RGG.W.WW.WWO.,M2 U2 R' U r;M2 U2 R' U r
+O.WO.W.G..O................BBBR...GGBBBR.OWGGW.GW.RW.R,r U2 r' U r
+O.WO.W.G..O......W.....OG..BBBR...GGBBBR...GGW..W.RW.R,r U' r' U r
+O.WO.W.........G....WO.....BBBR...GGBBBRG..GGWO.W.RW.R,r U2 r' U' r
+O.WO.W.....................BBBR...GGBBBROOWGGWGGW.RW.R,r U2 R' U r
+O..O....O..G..R..R.....WGGWBBBR.WGG.BBBRG....WO.W..W..,r' U2 r' U r
+O.OO..........R..R.....WGG.BBBR.WGG.BBBRG...GWO.W..W.W,r' U' r' U r
+O..O...OO.GG..R..R.....WGGWBBBR.WGG.BBBR.....W..W..W..,r' U2 R' U r
+OO.O..........RG.R..WO.WGG.BBBR.WGG.BBBR.....W..W..WG.,r' U2 R' U' r
+O..O...........OO...GWG....BBBR.RGG.BBBR.RGG.W.WW.WW..,r' U' M' U' r
+O..O..G..O......O.W...G....BBBR.RGG.BBBR.RGG.W.WW.WW..,r' U2 M' U' r
+O.OO............O.....G....BBBR.RGG.BBBR.RGGGW.WW.WW.W,r' U M' U' r
+O..O....O..G....G.....O...WBBBR.RGG.BBBR.RGG.W.WW.WW..,r' U2 M2 U r
+O.OO............G.....O....BBBR.RGG.BBBR.RGGGW.WW.WW.W,r' U' M2 U r
+O..O...O..G...RO.R..GW.WGG.BBBR.WGG.BBBR.....W..W..W..,r2 U' M' U' r
+O..O..GO.OG...R..RW....WGG.BBBR.WGG.BBBR.....W..W..W..,r2 U2 M' U' r
+O..O...O..G...R..R.....WGG.BBBR.WGG.BBBR.WG..W.OW..W..,r2 U M' U' r
+O..O...G..O...RO.R..GW.WGG.BBBR.WGG.BBBR.....W..W..W..,r2 U M2 U r
+O.GO...G..O...R..R.....WGG.BBBR.WGG.BBBR....WW..W..W.O,r2 U2 M2 U r
+O..O...G..O...R..R.....WGG.BBBR.WGG.BBBR.WG..W.OW..W..,r2 U' M2 U r
+O..O..........ROGR..GWOWGG.BBBR.WGG.BBBR.....W..W..W..,r2 U M U r
+O.GO..........R.GR....OWGG.BBBR.WGG.BBBR....WW..W..W.O,r2 U2 M U r
+O..O..........R.GR....OWGG.BBBR.WGG.BBBR.WG..W.OW..W..,r2 U' M U r
+O..O..........ROOR..GWGWGG.BBBR.WGG.BBBR.....W..W..W..,r2 U' M2 U' r
+O..O..G..O....R.ORW...GWGG.BBBR.WGG.BBBR.....W..W..W..,r2 U2 M2 U' r
+O..O..........R.OR....GWGG.BBBR.WGG.BBBR.WG..W.OW..W..,r2 U M2 U' r
+O..O....W..O..............GBBBR.RGG.BBBRORGG.WGWW.WW..,U M' U2 R' U r;U' r' U2 M2 U' r;U2 r' U' M2 U' r
+O..O.............G.....WO..BBBR.RGG.BBBRGRGG.WOWW.WW..,U M2 U2 R' U' r;U' r' U2 M U r
+O..O..W..G........O........BBBR.RGG.BBBRGRGG.WOWW.WW..,U r' U2 M U r;U' M2 U2 R' U' r
+OO.O.............G.....WO..BBBR.RGG.BBBR.RGG.W.WW.WWG.,U M2 U2 r' U' r;U' R' U2 M U r
+OO.O..W..G........O........BBBR.RGG.BBBR.RGG.W.WW.WWG.,U R' U2 M U r;U' M2 U2 r' U' r
+OG.O....W..O..............GBBBR.RGG.BBBR.RGG.W.WW.WWO.,U M2 U2 R' U r;U' R' U2 M2 U' r;U2 R' U' M2 U' r
+O..O.G...........O.....GW..BBBR.RGGOBBBR.RGG.W.WW.WW..,U r' U' M U' r
+O.OO..........G..........O.BBBR.RGG.BBBR.RGGGW.WW.WW.W,U r' U' M2 U r;U2 r' U' M' U r
+O..O..........G..O.....GWO.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U r' U r
+O..O....W..O..G..........OGBBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U2 r' U r
+O..O..W..G....G...O......O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 M2 U r
+O..O..G..O....G...W......O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U' r' U r
+O.OO..........O..........G.BBBR.RGG.BBBR.RGGGW.WW.WW.W,U r' U M' U' r
+O..O..........O..O.....GWG.BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U' M' U' r;U' M' U' r' U r
+O..O..........OO....GW...G.BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 M' U' r;U' M' U2 r' U r
+O..O........O....O.G...GW..BBBR.RGG.BBBR.RGG.W.WW.WW..,U M' U r' U r
+O..O....W..OO......G......GBBBR.RGG.BBBR.RGG.W.WW.WW..,U M' U2 r' U r;U' r' U2 M' U' r
+O..O..G..O..O.....WG.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U M' U' r' U r;U' r' U' M' U' r
+O.WO.W.........G....WO.....BBBR.OGGGBBBR...GGW..W.RW.R,U r U R' U' r
+O.WO.W..G..W..............OBBBR.OGGGBBBR...GGW..W.RW.R,U r U2 r' U2 r
+O.WO.W...........G.....WO..BBBR...GGBBBRG..GGWO.W.RW.R,U r U2 r' U' r
+OOWO.W..G..W..............OBBBR...GGBBBR...GGW..W.RWGR,U R U' r' U r
+O.WO.W........G..G.....WOO.BBBR...GGBBBR...GGW..W.RW.R,U r U2 R' U' r;U2 r U r' U' r
+O.WO.W........G..O.....GWO.BBBR...GGBBBR...GGW..W.RW.R,U M2 U M U r;U' M2 U M' U' r
+O.WO.W..W..O..G..........OGBBBR...GGBBBR...GGW..W.RW.R,U M2 U2 M U r;U' M2 U2 M' U' r
+O.WO.WG..O....G...W......O.BBBR...GGBBBR...GGW..W.RW.R,U M2 U' M U r;U' M2 U' M' U' r
+O.WO.W........O..........G.BBBR...GGBBBR.OWGGW.GW.RW.R,U R U2 R' U r;U' r U2 r' U r
+O.WO.W........O..O.....GWG.BBBR...GGBBBR...GGW..W.RW.R,U M2 U' M2 U' r;U' M2 U' M2 U r
+O.WO.W........OO....GW...G.BBBR...GGBBBR...GGW..W.RW.R,U M2 U2 M2 U' r;U' M2 U2 M2 U r
+O.WO.WG..O....O...W......G.BBBR...GGBBBR...GGW..W.RW.R,U M2 U M2 U' r;U' M2 U M2 U r
+O.WO.W......G....O.O...GW..BBBR...GGBBBR...GGW..W.RW.R,U M2 U' M' U' r;U' M2 U' M U r
+O.WO.W......G..O...OGW.....BBBR...GGBBBR...GGW..W.RW.R,U M2 U2 M' U' r;U' M2 U2 M U r
+O.WO.WG..O..G.....WO.......BBBR...GGBBBR...GGW..W.RW.R,U M2 U M' U' r;U' M2 U M U r
+O.WO.W......O......G.......BBBR...GGBBBR.OWGGW.GW.RW.R,U r U2 r' U r;U' R U2 R' U r
+O.WO.W......O....G.G...WO..BBBR...GGBBBR...GGW..W.RW.R,U R U2 R' U' r
+O.WO.W......O....O.G...GW..BBBR...GGBBBR...GGW..W.RW.R,U M2 U M2 U r;U' M2 U M2 U' r
+O.WO.W..W..OO......G......GBBBR...GGBBBR...GGW..W.RW.R,U M2 U2 M2 U r;U' M2 U2 M2 U' r
+O.WO.W..G..WO......G......OBBBR...GGBBBR...GGW..W.RW.R,U r U' r' U r
+O.WO.WG..O..O.....WG.......BBBR...GGBBBR...GGW..W.RW.R,U M2 U' M2 U r;U' M2 U' M2 U' r
+O.WO.W..........O.....G....BBBR...GGBBBR.GOGGW.WW.RW.R,U r U' R' U' r
+O..O.GG..O........W........BBBR.RGGOBBBR.RGG.W.WW.WW..,U' r' U' M U' r
+O..O..G..O..G.....WO.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U r' U r
+O..O........G..O...OGW.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U2 r' U r
+O..O........G....G.O...WO..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U2 M2 U r
+O..O........G....O.O...GW..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U' r' U r
+O.OO........O......G.......BBBR.RGG.BBBR.RGGGW.WW.WW.W,U' r' U M' U' r
+O..O..G..O....O...W......G.BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M' U r' U r
+O.OO...O..G................BBBR.RGG.BBBR.RGGGW.WW.WW.W,U' r' U' M' U r;U2 r' U' M2 U r;R r2 U M' U' r;R' M2 U M' U' r;M r' U M' U' r;M' R' U M2 U' r;M2 r' U M2 U' r;r R2 U M2 U' r;r' M2 U M2 U' r;M r' U M' U' r;M' R' U M2 U' r;M2 r' U M2 U' r
+O.WO.W..O..G..............WBBBR.OGGGBBBR...GGW..W.RW.R,U' r U R' U' r
+O.WO.W.........W....OG.....BBBR.OGGGBBBR...GGW..W.RW.R,U' r U2 r' U2 r
+O.WO.WW..G........O........BBBR...GGBBBRG..GGWO.W.RW.R,U' r U2 r' U' r
+OOWO.W.........W....OG.....BBBR...GGBBBR...GGW..W.RWGR,U' R U' r' U r
+O.WO.WW..G....O...O......G.BBBR...GGBBBR...GGW..W.RW.R,U' R U2 R' U' r
+O.WO.W........OW....OG...G.BBBR...GGBBBR...GGW..W.RW.R,U' r U' r' U r
+O.WO.W.OO.GG..............WBBBR...GGBBBR...GGW..W.RW.R,U' r U r' U' r;U2 r U2 R' U' r
+O.WO.W.G..O................BBBR...GGBBBR.GOGGW.WW.RW.R,U' r U' R' U' r
+O..O.G..W..O..............GBBBR.RGGOBBBR.RGG.W.WW.WW..,U2 r' U' M U' r
+O..O...OW.GO..............GBBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U r' U r
+O..O..GO.OG.......W........BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U2 r' U r;R r2 U2 M' U' r;R' M2 U2 M' U' r;M r' U2 M' U' r;M' R' U2 M2 U' r;M2 r' U2 M2 U' r;r R2 U2 M2 U' r;r' M2 U2 M2 U' r;M r' U2 M' U' r;M' R' U2 M2 U' r;M2 r' U2 M2 U' r
+O..O...O..G....G....WO.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U2 M2 U r;M' U2 M2 R' U' r;M2 U2 M2 r' U' r;M' U2 M2 R' U' r;M2 U2 M2 r' U' r
+O..O...O..G....O....GW.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U' r' U r;R r2 U' M' U' r;R' M2 U' M' U' r;M r' U' M' U' r;M' R' U' M2 U' r;M2 r' U' M2 U' r;r R2 U' M2 U' r;r' M2 U' M2 U' r;M r' U' M' U' r;M' R' U' M2 U' r;M2 r' U' M2 U' r
+O.OO...G..O................BBBR.RGG.BBBR.RGGGW.WW.WW.W,U2 r' U M' U' r;R r2 U' M2 U r;R' M2 U' M2 U r;M r' U' M2 U r;M' R' U' M U r;M2 r' U' M U r;r R2 U' M U r;r' M2 U' M U r;M r' U' M2 U r;M' R' U' M U r;M2 r' U' M U r
+O..O....W..O....O.....G...GBBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M' U r' U r
+O.WO.W...........G.....WO..BBBR.OGGGBBBR...GGW..W.RW.R,U2 r U R' U' r
+O.WO.WO..W........G........BBBR.OGGGBBBR...GGW..W.RW.R,U2 r U2 r' U2 r
+O.WO.W..O..G..............WBBBR...GGBBBRG..GGWO.W.RW.R,U2 r U2 r' U' r
+OOWO.WO..W........G........BBBR...GGBBBR...GGW..W.RWGR,U2 R U' r' U r
+O.WO.W..O..G....O.....G...WBBBR...GGBBBR...GGW..W.RW.R,U2 R U2 R' U' r
+O.WO.WO..W......O.G...G....BBBR...GGBBBR...GGW..W.RW.R,U2 r U' r' U r
+O.WO.W........O..........G.BBBR...GGBBBR.GOGGW.WW.RW.R,U2 r U' R' U' r
+O..O...GO.OG..............WBBBR.RGG.BBBR.RGG.W.WW.WW..,R r2 U2 M2 U r;R' M2 U2 M2 U r;M r' U2 M2 U r;M' R' U2 M U r;M2 r' U2 M U r;r R2 U2 M U r;r' M2 U2 M U r;M r' U2 M2 U r;M' R' U2 M U r;M2 r' U2 M U r
+O.WO.W.........G....WO.....BBBR...GGBBBRO..GGWG.W.RW.R,R U2 M2 r' U' r
+O.WO.WW..G........O........BBBR...GGBBBRO..GGWG.W.RW.R,R U M2 r' U' r
+O.WO.W.....................BBBR...GGBBBROGOGGWGWW.RW.R,R U' M2 r' U' r
+O.WO.W.....................BBBR...GGBBBRGOWGGWOGW.RW.R,R M U2 r' U r;R2 r' U2 r' U r;M R U2 r' U r;M2 r U2 r' U r;r M2 U2 r' U r;M R U2 r' U r;M2 r U2 r' U r
+O.WO.W...........W.....OG..BBBR...GGBBBRG..GGWO.W.RW.R,R M U' r' U r;R2 r' U' r' U r;M R U' r' U r;M2 r U' r' U r;r M2 U' r' U r;M R U' r' U r;M2 r U' r' U r
+OOWO.W.........G....WO.....BBBR...GGBBBR...GGW..W.RWGR,R M2 U2 r' U' r;R2 r' U2 R' U' r;M R U2 R' U' r;M' r U2 r' U' r;M2 r U2 R' U' r;r M2 U2 R' U' r;r2 R' U2 r' U' r;M R U2 R' U' r;M' r U2 r' U' r;M2 r U2 R' U' r
+OGWO.W.........G....WO.....BBBR...GGBBBR...GGW..W.RWOR,R U2 M2 R' U' r;r U2 M2 r' U' r
+OGWO.WW..G........O........BBBR...GGBBBR...GGW..W.RWOR,R U M2 R' U' r;r U M2 r' U' r
+OGWO.W.....................BBBR...GGBBBR.GOGGW.WW.RWOR,R U' M2 R' U' r;r U' M2 r' U' r
+OGWO.W.....................BBBR...GGBBBR.OWGGW.GW.RWOR,R M2 U2 R' U r;M' r U2 R' U r;M2 R U2 R' U r;r M' U2 R' U r;r2 R' U2 R' U r;M' r U2 R' U r;M2 R U2 R' U r
+O.WO.W..........G.....O....BBBR...GGBBBR.OWGGW.GW.RW.R,R M2 U2 r' U r;M' r U2 r' U r;M2 R U2 r' U r;r M' U2 r' U r;r2 R' U2 r' U r;M' r U2 r' U r;M2 R U2 r' U r
+O.WO.W..........GW....OOG..BBBR...GGBBBR...GGW..W.RW.R,R M2 U' r' U r;M' r U' r' U r;M2 R U' r' U r;r M' U' r' U r;r2 R' U' r' U r;M' r U' r' U r;M2 R U' r' U r
+O.WO.W.O..G................BBBR...GGBBBR.OWGGW.GW.RW.R,R M U2 R' U r;R2 r' U2 R' U r;M R U2 R' U r;M2 r U2 R' U r;r M2 U2 R' U r;M R U2 R' U r;M2 r U2 R' U r
+O.WO.W......G....W.O...OG..BBBR...GGBBBR...GGW..W.RW.R,R U' M2 r' U r;r U' M2 r' U r
+O.WO.W.........O....GW.....BBBR.GOGGBBBR...GGW..W.RW.R,R U M2 r' U r;r U M2 r' U r
+O..O..........RG.R..WO.WGG.BBBR.WGG.BBBRO....WG.W..W..,R' U2 M2 r' U' r;r' U2 M2 R' U' r
+O..O..W..G....R..RO....WGG.BBBR.WGG.BBBRO....WG.W..W..,R' U M2 r' U' r;r' U M2 R' U' r
+O..O....G..W..R..R.....WGGOBBBR.WGG.BBBRO....WG.W..W..,R' U' M2 r' U' r;r' U' M2 R' U' r
+O..O....O..G..R..R.....WGGWBBBR.WGG.BBBRO....WG.W..W..,R' M' U2 R' U r;R2 r U2 R' U r;M' R' U2 R' U r;M2 r' U2 R' U r;r' M2 U2 R' U r;M' R' U2 R' U r;M2 r' U2 R' U r
+O..O..........RG.R..WO.WGG.BBBR.WGG.BBBRG....WO.W..W..,R' M2 U2 R' U' r;R2 r U2 r' U' r;M r' U2 R' U' r;M' R' U2 r' U' r;M2 r' U2 r' U' r;r' M2 U2 r' U' r;r2 R U2 R' U' r;M r' U2 R' U' r;M' R' U2 r' U' r;M2 r' U2 r' U' r
+OG.O..........RG.R..WO.WGG.BBBR.WGG.BBBR.....W..W..WO.,R' U2 M2 R' U' r
+OG.O..W..G....R..RO....WGG.BBBR.WGG.BBBR.....W..W..WO.,R' U M2 R' U' r
+OG.O....G..W..R..R.....WGGOBBBR.WGG.BBBR.....W..W..WO.,R' U' M2 R' U' r
+OG.O....O..G..R..R.....WGGWBBBR.WGG.BBBR.....W..W..WO.,R' M2 U2 R' U r;M r' U2 R' U r;M2 R' U2 R' U r;r' M U2 R' U r;r2 R U2 R' U r;M r' U2 R' U r;M2 R' U2 R' U r
+O..O....O..G..R.GR....OWGGWBBBR.WGG.BBBR.....W..W..W..,R' M2 U2 r' U r;M r' U2 r' U r;M2 R' U2 r' U r;r' M U2 r' U r;r2 R U2 r' U r;M r' U2 r' U r;M2 R' U2 r' U r
+O.OO..........R.GR....OWGG.BBBR.WGG.BBBR....GW..W..W.W,R' M2 U' r' U r;M r' U' r' U r;M2 R' U' r' U r;r' M U' r' U r;r2 R U' r' U r;M r' U' r' U r;M2 R' U' r' U r
+O..O...GO.OG..R..R.....WGGWBBBR.WGG.BBBR.....W..W..W..,R' M' U2 r' U r;R2 r U2 r' U r;M' R' U2 r' U r;M2 r' U2 r' U r;r' M2 U2 r' U r;M' R' U2 r' U r;M2 r' U2 r' U r
+O.OO...G..O...R..R.....WGG.BBBR.WGG.BBBR....GW..W..W.W,R' M' U' r' U r;R2 r U' r' U r;M' R' U' r' U r;M2 r' U' r' U r;r' M2 U' r' U r;M' R' U' r' U r;M2 r' U' r' U r
+O.OO........G.R..R.O...WGG.BBBR.WGG.BBBR....GW..W..W.W,R' U' M2 r' U r;r' U' M2 r' U r
+O..O.G........RO.R..GW.WGG.BBBR.WGGOBBBR.....W..W..W..,R' U M2 r' U r;r' U M2 r' U r
+O..O...........GO...WOG....BBBR.RGG.BBBR.RGG.W.WW.WW..,M U2 M2 r' U' r;M2 U2 M2 R' U' r;M U2 M2 r' U' r;M2 U2 M2 R' U' r
+O..O..W..G......O.O...G....BBBR.RGG.BBBR.RGG.W.WW.WW..,M U M2 r' U' r;M2 U M2 R' U' r;M U M2 r' U' r;M2 U M2 R' U' r
+O..O............OG....GWO..BBBR.RGG.BBBR.RGG.W.WW.WW..,M U' M2 r' U' r;M2 U' M2 R' U' r;M U' M2 r' U' r;M2 U' M2 R' U' r
+O..O..WO.GG.......O........BBBR.RGG.BBBR.RGG.W.WW.WW..,M' U M2 R' U' r;M2 U M2 r' U' r;M' U M2 R' U' r;M2 U M2 r' U' r
+O..O...O..G......G.....WO..BBBR.RGG.BBBR.RGG.W.WW.WW..,M' U' M2 R' U' r;M2 U' M2 r' U' r;M' U' M2 R' U' r;M2 U' M2 r' U' r
+O.WO.W.O..G....G....WO.....BBBR...GGBBBR...GGW..W.RW.R,r U2 M2 R' U' r
+O.WO.WWO.GG.......O........BBBR...GGBBBR...GGW..W.RW.R,r U M2 R' U' r
+O.WO.W.O..G................BBBR...GGBBBR.GOGGW.WW.RW.R,r U' M2 R' U' r
+O..O..........RGOR..WOGWGG.BBBR.WGG.BBBR.....W..W..W..,r' U2 M2 r' U' r
+O..O..W..G....R.ORO...GWGG.BBBR.WGG.BBBR.....W..W..W..,r' U M2 r' U' r
+O..O....G..W..R.OR....GWGGOBBBR.WGG.BBBR.....W..W..W..,r' U' M2 r' U' r
+O..O..........O..G.....WOG.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U2 M2 R' U' r;U' M2 r' U2 M U r
+O..O..........OG....WO...G.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U M2 R' U' r;R' U r U R' U' r;r' U r U R' U' r
+O..O....O..G..O..........GWBBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U' M2 R' U' r
+O..O........G..G...OWO.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U M2 r' U' r
+O..O....O..GG......O......WBBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 U' M2 r' U' r;R' U' M2 U' M U r;r' U' M2 U' M U r
+O..O..W..G..O.....OG.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 r' U2 M U r;U' M2 U2 M2 R' U' r
+O.WO.W...........O.....GW..BBBR.GOGGBBBR...GGW..W.RW.R,U r U M2 r' U r
+O.WO.W...........G.....WO..BBBR...GGBBBRO..GGWG.W.RW.R,U R U2 M2 r' U' r;U2 R U M2 r' U' r
+O.WO.W..G..W..............OBBBR...GGBBBRG..GGWO.W.RW.R,U M2 r U' r' U r;M U R U' r' U r;M U R U' r' U r
+OOWO.W...........G.....WO..BBBR...GGBBBR...GGW..W.RWGR,U M2 r U2 R' U' r;M' U r U2 r' U' r;M' U r U2 r' U' r
+OGWO.W...........G.....WO..BBBR...GGBBBR...GGW..W.RWOR,U r U2 M2 r' U' r;U2 r U M2 r' U' r
+O.WO.W........G..........O.BBBR...GGBBBR.OWGGW.GW.RW.R,U M2 R U2 r' U r;U' M2 r U2 R' U r;R U r' U' M U' r;r U r' U' M U' r
+O.WO.W..G..W..G..........OOBBBR...GGBBBR...GGW..W.RW.R,U M2 R U' r' U r
+O.WO.W......G......O.......BBBR...GGBBBR.OWGGW.GW.RW.R,U M2 r U2 R' U r;U' M2 R U2 r' U r;R U' M2 U' r' U r;r U' M2 U' r' U r
+O.WO.W......G......O.......BBBR...GGBBBR.GOGGW.WW.RW.R,U r U' M2 R' U' r;R U' r' U2 M2 U r;r U' r' U2 M2 U r
+O.WO.W......G....G.O...WO..BBBR...GGBBBR...GGW..W.RW.R,U r U2 M2 R' U' r
+O.WO.W......G..G...OWO.....BBBR...GGBBBR...GGW..W.RW.R,U r U M2 R' U' r
+O.WO.W..G..W....G.....O...OBBBR...GGBBBR...GGW..W.RW.R,U r U' M2 r' U r;M2 U R U' r' U r;M2 U R U' r' U r
+O..O....O..GO......G......WBBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U M2 R' U' r;R' U' M2 U M2 U' r;r' U' M2 U M2 U' r
+O..O........O..G...GWO.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U' M2 R' U' r
+O..O....O..G..G..........OWBBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U M2 r' U' r
+O..O..........GG....WO...O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 U' M2 r' U' r
+O.WO.WG..O........W........BBBR.GOGGBBBR...GGW..W.RW.R,U' r U M2 r' U r;R U M2 U' r' U r;r U M2 U' r' U r
+O.WO.W..O..G..............WBBBR...GGBBBRO..GGWG.W.RW.R,U' R U M2 r' U' r;U2 R U2 M2 r' U' r;M' U2 R U2 R' U' r;M2 U2 r U2 R' U' r;M' U2 R U2 R' U' r;M2 U2 r U2 R' U' r
+O.WO.W.........W....OG.....BBBR...GGBBBRG..GGWO.W.RW.R,U' M2 r U' r' U r;M U' R U' r' U r;M U' R U' r' U r
+OOWO.WW..G........O........BBBR...GGBBBR...GGW..W.RWGR,U' M2 r U2 R' U' r;R U' M2 U2 r' U' r;M' U' r U2 r' U' r;r U' M2 U2 R' U' r;M' U' r U2 r' U' r
+OGWO.W..O..G..............WBBBR...GGBBBR...GGW..W.RWOR,U' r U M2 r' U' r;U2 r U2 M2 r' U' r;M U2 r U2 R' U' r;M2 U2 R U2 R' U' r;M U2 r U2 R' U' r;M2 U2 R U2 R' U' r
+O.WO.W......G..W...OOG.....BBBR...GGBBBR...GGW..W.RW.R,U' M2 R U' r' U r
+O.WO.W........G..........O.BBBR...GGBBBR.GOGGW.WW.RW.R,U' r U' M2 R' U' r
+O.WO.WW..G....G...O......O.BBBR...GGBBBR...GGW..W.RW.R,U' r U2 M2 R' U' r
+O.WO.W..O..G..G..........OWBBBR...GGBBBR...GGW..W.RW.R,U' r U M2 R' U' r
+O.WO.W.O..G....W....OG.....BBBR...GGBBBR...GGW..W.RW.R,U' r U' M2 r' U r
+O..O...G..O......G.....WO..BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U M2 R' U' r;R' U' r U' R' U' r;M' U' R' U2 M U r;M2 U' r' U2 M U r;M' U' R' U2 M U r;M2 U' r' U2 M U r
+O..O..WG.GO.......O........BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U' M2 R' U' r;M' U' M2 U2 r' U' r;M2 U' M2 U2 R' U' r;M' U' M2 U2 r' U' r;M2 U' M2 U2 R' U' r
+O..O............GG....OWO..BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U M2 r' U' r;M U' r' U2 M U r;M2 U' R' U2 M U r;M U' r' U2 M U r;M2 U' R' U2 M U r
+O..O..W..G......G.O...O....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 U' M2 r' U' r;M U' M2 U2 R' U' r;M2 U' M2 U2 r' U' r;r' U' r U2 r' U' r;M U' M2 U2 R' U' r;M2 U' M2 U2 r' U' r
+O.WO.W..W..O..............GBBBR.GOGGBBBR...GGW..W.RW.R,U2 r U M2 r' U r;R U2 r' U' M' U r;r U2 r' U' M' U r
+O.WO.WO..W........G........BBBR...GGBBBRG..GGWO.W.RW.R,U2 M2 r U' r' U r;M U2 R U' r' U r;M U2 R U' r' U r
+OOWO.W..O..G..............WBBBR...GGBBBR...GGW..W.RWGR,U2 M2 r U2 R' U' r;M' U2 r U2 r' U' r;M' U2 r U2 r' U' r
+O.WO.WOO.WG.......G........BBBR...GGBBBR...GGW..W.RW.R,U2 M2 R U' r' U r;M U2 r U' r' U r;M U2 r U' r' U r
+O.WO.W..........G.....O....BBBR...GGBBBR.GOGGW.WW.RW.R,U2 r U' M2 R' U' r;M' U' r U' R' U' r;M' U' r U' R' U' r
+O.WO.W..O..G....G.....O...WBBBR...GGBBBR...GGW..W.RW.R,U2 r U2 M2 R' U' r;M U2 r U2 r' U' r;M U2 r U2 r' U' r
+O.WO.W..........GG....OWO..BBBR...GGBBBR...GGW..W.RW.R,U2 r U M2 R' U' r;M U r U2 r' U' r;M U r U2 r' U' r
+O.WO.WO..W....G...G......O.BBBR...GGBBBR...GGW..W.RW.R,U2 r U' M2 r' U r
+O.WO.W...........W.....OG..BBBR...GGBBBRO..GGWG.W.RW.R,R U2 r' U' M2 U' r;r U2 M' U r' U r
+O.WO.W.....................BBBR...GGBBBRGGOGGWOWW.RW.R,R U' r' U2 M U r;M2 U' r U' R' U' r;M2 U' r U' R' U' r
+OOWO.W.....................BBBR...GGBBBR.GOGGW.WW.RWGR,R U' R' U2 M U r;M U' r U' R' U' r;r U' r' U2 M U r;M U' r U' R' U' r
+OGWO.W...........W.....OG..BBBR...GGBBBR...GGW..W.RWOR,R U2 R' U' M2 U' r;r U2 r' U' M2 U' r
+O.WO.W........G..W.....OGO.BBBR...GGBBBR...GGW..W.RW.R,R U2 r' U' M U' r;r U2 r' U' M U' r
+O.WO.W.........GO...WOG....BBBR...GGBBBR...GGW..W.RW.R,R M2 U2 M2 R' U' r;R2 r' U2 M2 r' U' r;M R U2 M2 r' U' r;M' r U2 M2 R' U' r;M2 r U2 M2 r' U' r;r M2 U2 M2 r' U' r;r2 R' U2 M2 R' U' r;M R U2 M2 r' U' r;M' r U2 M2 R' U' r;M2 r U2 M2 r' U' r
+O.WO.WW..G......O.O...G....BBBR...GGBBBR...GGW..W.RW.R,R M2 U M2 R' U' r;R2 r' U M2 r' U' r;M R U M2 r' U' r;M' r U M2 R' U' r;M2 r U M2 r' U' r;r M2 U M2 r' U' r;r2 R' U M2 R' U' r;M R U M2 r' U' r;M' r U M2 R' U' r;M2 r U M2 r' U' r
+O.WO.W..........OW....GOG..BBBR...GGBBBR...GGW..W.RW.R,R U2 M' U r' U r;r U2 M2 U r' U r
+O.WO.W.O..G......W.....OG..BBBR...GGBBBR...GGW..W.RW.R,R U2 M2 U r' U r;r U2 R' U' M2 U' r
+O.WO.W......O....W.G...OG..BBBR...GGBBBR...GGW..W.RW.R,R U' r' U2 M' U' r;r U' r' U2 M' U' r
+O.WO.WW..G........O........BBBR.GOGGBBBR...GGW..W.RW.R,R U r' U2 M2 U r;r U r' U2 M2 U r
+O.WO.W.....................BBBR.GOGGBBBR.OWGGW.GW.RW.R,R U M2 U r' U r;r U M2 U r' U r
+O.WO.W...........W.....OG..BBBR.GOGGBBBR...GGW..W.RW.R,R U M2 U2 r' U r;r U M2 U2 r' U r
+O.WO.W..W..O..............GBBBR.OGGGBBBR...GGW..W.RW.R,R U r' U M' U' r;r U r' U M' U' r
+O.WO.W.........O....GW.....BBBR.OGGGBBBR...GGW..W.RW.R,R U' M' U2 r' U r;r U' M' U2 r' U r
+O.WO.WG..O........W........BBBR.OGGGBBBR...GGW..W.RW.R,R U' M' U r' U r;r U' M' U r' U r
+O.WO.W.....................BBBR.OGGGBBBR.OWGGW.GW.RW.R,R U' M' U' r' U r;r U' M' U' r' U r
+O.OO..........R..R.....WGG.BBBR.WGG.BBBRO...GWG.W..W.W,R' U2 r' U' M2 U' r;r' U2 R' U' M2 U' r
+O..O..W..G....R..RO....WGG.BBBR.WGG.BBBRG....WO.W..W..,R' U' M2 U2 R' U' r;R2 U' r U2 r' U' r;r' U' M2 U2 r' U' r
+O..O....G..W..R..R.....WGGOBBBR.WGG.BBBRG....WO.W..W..,R' U' r' U2 M U r;r' U' R' U2 M U r;r2 U' r U' R' U' r
+OO.O..W..G....R..RO....WGG.BBBR.WGG.BBBR.....W..W..WG.,R' U' M2 U2 r' U' r
+OO.O....G..W..R..R.....WGGOBBBR.WGG.BBBR.....W..W..WG.,R' U' R' U2 M U r
+OGOO..........R..R.....WGG.BBBR.WGG.BBBR....GW..W..WOW,R' U2 R' U' M2 U' r;r' U2 M2 U r' U r
+O..O..G..O....R..RW....WGG.BBBR.WGG.BBBR...O.W..W.GW..,R' U' r' U' M U' r;R2 U' M2 U' M' U' r;r' U' r' U' M U' r;r2 U' M2 U' M' U' r
+O..O....O..G..R..R.....WGGWBBBR.WGG.BBBR...O.W..W.GW..,R' U r' U' M U' r;r' U r' U' M U' r
+O.OO..........R..R.....WGG.BBBR.WGG.BBBR...OGW..W.GW.W,R' U2 r' U' M U' r;r' U2 r' U' M U' r
+O.OO..........R.OR....GWGG.BBBR.WGG.BBBR....GW..W..W.W,R' U2 M' U r' U r;r' U2 r' U' M2 U' r
+O..O...O..G...RG.R..WO.WGG.BBBR.WGG.BBBR.....W..W..W..,R' M2 U2 M2 r' U' r;R2 r U2 M2 R' U' r;M r' U2 M2 r' U' r;M' R' U2 M2 R' U' r;M2 r' U2 M2 R' U' r;r' M2 U2 M2 R' U' r;r2 R U2 M2 r' U' r;M r' U2 M2 r' U' r;M' R' U2 M2 R' U' r;M2 r' U2 M2 R' U' r
+O..O..WO.GG...R..RO....WGG.BBBR.WGG.BBBR.....W..W..W..,R' M2 U M2 r' U' r;R2 r U M2 R' U' r;M r' U M2 r' U' r;M' R' U M2 R' U' r;M2 r' U M2 R' U' r;r' M2 U M2 R' U' r;r2 R U M2 r' U' r;M r' U M2 r' U' r;M' R' U M2 R' U' r;M2 r' U M2 R' U' r
+O..O...OG.GW..R..R.....WGGOBBBR.WGG.BBBR.....W..W..W..,R' M2 U' M2 r' U' r;R2 r U' M2 R' U' r;M r' U' M2 r' U' r;M' R' U' M2 R' U' r;M2 r' U' M2 R' U' r;r' M2 U' M2 R' U' r;r2 R U' M2 r' U' r;M r' U' M2 r' U' r;M' R' U' M2 R' U' r;M2 r' U' M2 R' U' r
+O.OO...O..G...R..R.....WGG.BBBR.WGG.BBBR....GW..W..W.W,R' U2 M2 U r' U r;r' U2 M' U r' U r
+O..O........G.RO.R.OGW.WGG.BBBR.WGG.BBBR.....W..W..W..,R' U' M2 U2 r' U r;R2 U' M2 U2 M U r;r' U' M2 U2 r' U r;r2 U' M2 U2 M U r
+O..O..G..O..G.R..RWO...WGG.BBBR.WGG.BBBR.....W..W..W..,R' U' M2 U r' U r;R2 U' M2 U M U r;r' U' M2 U r' U r;r2 U' M2 U M U r
+O..O....G..WG.R..R.O...WGGOBBBR.WGG.BBBR.....W..W..W..,R' U' r' U2 M2 U r;r' U' r' U2 M2 U r
+O..O....O..GG.R..R.O...WGGWBBBR.WGG.BBBR.....W..W..W..,R' U' M2 U' r' U r;r' U' M2 U' r' U r
+O..O........O.R..R.G...WGG.BBBR.WGG.BBBR.WG..W.OW..W..,R' U' r' U M' U' r;R2 U' M2 U2 M2 U' r;r' U' r' U M' U' r;r2 U' M2 U2 M2 U' r
+O..O..G..O..O.R..RWG...WGG.BBBR.WGG.BBBR.....W..W..W..,R' U' r' U' M' U' r;R2 U' M2 U' M2 U' r;r' U' r' U' M' U' r;r2 U' M2 U' M2 U' r
+O..O....O..GO.R..R.G...WGGWBBBR.WGG.BBBR.....W..W..W..,R' U M' U r' U r;R2 U' R U2 R' U r;r' U M' U r' U r;r2 U' R U2 R' U r
+O.OO........O.R..R.G...WGG.BBBR.WGG.BBBR....GW..W..W.W,R' U' r' U2 M' U' r;r' U' r' U2 M' U' r
+O..O.G........R..R.....WGG.BBBR.WGGOBBBR.WG..W.OW..W..,R' U2 r' U' M' U r;r' U2 r' U' M' U r
+O..O.GW..G....R..RO....WGG.BBBR.WGGOBBBR.....W..W..W..,R' U r' U2 M2 U r;r' U r' U2 M2 U r
+O..O.GG..O....R..RW....WGG.BBBR.WGGOBBBR.....W..W..W..,R' U M2 U' r' U r;r' U M2 U' r' U r
+O..O.G..O..G..R..R.....WGGWBBBR.WGGOBBBR.....W..W..W..,R' U M2 U r' U r;r' U M2 U r' U r
+O.OO.G........R..R.....WGG.BBBR.WGGOBBBR....GW..W..W.W,R' U M2 U2 r' U r;r' U M2 U2 r' U r
+O..O.O........R..R.....WGG.BBBR.WGGGBBBR.WG..W.OW..W..,R' U r' U M' U' r;r' U r' U M' U' r
+O..O.O........RO.R..GW.WGG.BBBR.WGGGBBBR.....W..W..W..,R' U' M' U2 r' U r;r' U' M' U2 r' U r
+O..O.OG..O....R..RW....WGG.BBBR.WGGGBBBR.....W..W..W..,R' U' M' U r' U r;r' U' M' U r' U r
+O..O.O..O..G..R..R.....WGGWBBBR.WGGGBBBR.....W..W..W..,R' U' M' U' r' U r;r' U' M' U' r' U r
+O..O..........OW....OG...G.BBBR.RGG.BBBR.RGG.W.WW.WW..,R' U' r U2 r' U2 r;r' U' r U2 r' U2 r
+O..O..O..W....O...G......G.BBBR.RGG.BBBR.RGG.W.WW.WW..,R' U2 r U2 r' U2 r;r' U2 r U2 r' U2 r
+O..O....G..W..O..........GOBBBR.RGG.BBBR.RGG.W.WW.WW..,R' U2 r U R' U' r;r' U2 r U R' U' r
+O.GO..........O..........G.BBBR.RGG.BBBR.RGGWW.WW.WW.O,R' U' r U R' U' r;r' U' r U R' U' r
+O.WO..........O..........G.BBBR.RGG.BBBR.RGGOW.WW.WW.G,R' U r U2 r' U2 r;r' U r U2 r' U2 r
+O..O....G..W..............OBBBR.RGG.BBBRGRGG.WOWW.WW..,R' U r U2 r' U' r
+O.GO.......................BBBR.RGG.BBBRGRGGWWOWW.WW.O,R' U2 r U2 r' U' r
+OO.O...........W....OG.....BBBR.RGG.BBBR.RGG.W.WW.WWG.,R' U' R U' r' U r
+OO.O..O..W........G........BBBR.RGG.BBBR.RGG.W.WW.WWG.,R' U2 R U' r' U r
+OOWO.......................BBBR.RGG.BBBR.RGGOW.WW.WWGG,R' U R U' r' U r
+O..O..O..W......O.G...G....BBBR.RGG.BBBR.RGG.W.WW.WW..,R' U2 r U' r' U r
+O.GO............O.....G....BBBR.RGG.BBBR.RGGWW.WW.WW.O,R' U2 R U2 R' U' r
+O.GO...O..G................BBBR.RGG.BBBR.RGGWW.WW.WW.O,R' U2 r U2 R' U' r;r' U2 R U2 R' U' r
+O..O....G..WO......G......OBBBR.RGG.BBBR.RGG.W.WW.WW..,R' U R U2 R' U' r;r' U R U2 R' U' r
+O.WO........O......G.......BBBR.RGG.BBBR.RGGOW.WW.WW.G,R' U r U' r' U r;r' U r U' r' U r
+O..O.G..G..W..............OBBBR.RGGOBBBR.RGG.W.WW.WW..,R' U2 r U r' U' r;r' U2 r U r' U' r
+O..O.G..O..G..............WBBBR.RGGOBBBR.RGG.W.WW.WW..,R' U' M2 U M' U' r;r' U' M2 U M' U' r
+O.OO.G.....................BBBR.RGGOBBBR.RGGGW.WW.WW.W,R' U' M2 U2 M' U' r;r' U' M2 U2 M' U' r
+O..O.O...........O.....GW..BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' r U2 r' U r;r' U' r U2 r' U r
+O..O.O...........G.....WO..BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U2 r U' R' U' r;r' U2 r U' R' U' r
+O..O.O.........O....GW.....BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' M2 U2 M2 U r;r' U' M2 U2 M2 U r
+O..O.O.........W....OG.....BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' r U' r' U r;r' U' r U' r' U r
+O..O.OW..G........O........BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' R U2 R' U' r;r' U' R U2 R' U' r
+O..O.OG..O........W........BBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' M2 U M2 U r;r' U' M2 U M2 U r
+O..O.O..O..G..............WBBBR.RGGGBBBR.RGG.W.WW.WW..,R' U' M2 U' M2 U r;r' U' M2 U' M2 U r
+O..O.O........RG.R..WO.WGG.BBBR.WGGGBBBR.....W..W..W..,R2 U r U R' U' r;r2 U r U R' U' r
+O..O.O........RW.R..OG.WGG.BBBR.WGGGBBBR.....W..W..W..,R2 U' r U2 r' U2 r;r2 U' r U2 r' U2 r
+O..O.OO..W....R..RG....WGG.BBBR.WGGGBBBR.....W..W..W..,R2 U2 r U2 r' U2 r;r2 U2 r U2 r' U2 r
+O.WO.O........R..R.....WGG.BBBR.WGGGBBBR....OW..W..W.G,R2 U2 r U R' U' r;r2 U2 r U R' U' r
+O..O.O........R..R.....WGG.BBBR.WGGGBBBR.OW..W.GW..W..,R2 U' r U R' U' r;r2 U' r U R' U' r
+O..O.O........R..R.....WGG.BBBR.WGGGBBBR.GO..W.WW..W..,R2 U r U2 r' U2 r;r2 U r U2 r' U2 r
+O.WO..........R..R.....WGG.BBBR.WGG.BBBRG...OWO.W..W.G,R2 U r U2 r' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBRGOW..WOGW..W..,R2 U2 r U2 r' U' r
+OO.O..........RW.R..OG.WGG.BBBR.WGG.BBBR.....W..W..WG.,R2 U' R U' r' U r
+OO.O..O..W....R..RG....WGG.BBBR.WGG.BBBR.....W..W..WG.,R2 U2 R U' r' U r
+OO.O..........R..R.....WGG.BBBR.WGG.BBBR.GO..W.WW..WG.,R2 U R U' r' U r
+O..O..O..W....R.ORG...GWGG.BBBR.WGG.BBBR.....W..W..W..,R2 U2 r U' r' U r
+O..O..........R.OR....GWGG.BBBR.WGG.BBBR.OW..W.GW..W..,R2 U2 R U2 R' U' r
+O..O...O..G...R..R.....WGG.BBBR.WGG.BBBR.OW..W.GW..W..,R2 U2 r U2 R' U' r
+O..O...GG.OW..R..R.....WGGOBBBR.WGG.BBBR.....W..W..W..,R2 U' r U' R' U' r
+O.GO........G.R..R.O...WGG.BBBR.WGG.BBBR....WW..W..W.O,R2 U' M2 U' M U r;r2 U' M2 U' M U r
+O.WO........O.R..R.G...WGG.BBBR.WGG.BBBR....OW..W..W.G,R2 U R U2 R' U' r;r2 U R U2 R' U' r
+O.GO........O.R..R.G...WGG.BBBR.WGG.BBBR....WW..W..W.O,R2 U' M2 U M2 U' r;r2 U' M2 U M2 U' r
+O..O........O.R..R.G...WGG.BBBR.WGG.BBBR.GO..W.WW..W..,R2 U r U' r' U r;r2 U r U' r' U r
+O.WO..........R..R.....WGG.BBBR.WGG.BBBR...OOW..W.GW.G,R2 U2 r U r' U' r;r2 U2 r U r' U' r
+O.GO..........R..R.....WGG.BBBR.WGG.BBBR...OWW..W.GW.O,R2 U' M2 U M' U' r;r2 U' M2 U M' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.WGO.W.OW.GW..,R2 U' M2 U2 M' U' r;r2 U' M2 U2 M' U' r
+O..O....O..G..R..R.....WGGWBBBR.WGG.BBBR...G.W..W.OW..,R2 U' r U2 r' U r;r2 U' r U2 r' U r
+O..O....G..W..R..R.....WGGOBBBR.WGG.BBBR...G.W..W.OW..,R2 U2 r U' R' U' r;r2 U2 r U' R' U' r
+O..O..........RO.R..GW.WGG.BBBR.WGG.BBBR...G.W..W.OW..,R2 U' M2 U2 M2 U r;r2 U' M2 U2 M2 U r
+O..O..........RW.R..OG.WGG.BBBR.WGG.BBBR...G.W..W.OW..,R2 U' r U' r' U r;r2 U' r U' r' U r
+O..O..W..G....R..RO....WGG.BBBR.WGG.BBBR...G.W..W.OW..,R2 U' R U2 R' U' r;r2 U' R U2 R' U' r
+O..O..G..O....R..RW....WGG.BBBR.WGG.BBBR...G.W..W.OW..,R2 U' M2 U M2 U r;r2 U' M2 U M2 U r
+O.GO..........R..R.....WGG.BBBR.WGG.BBBR...GWW..W.OW.O,R2 U' M2 U' M2 U r;r2 U' M2 U' M2 U r
+O.WO.WW..G......G.O...O....BBBR...GGBBBR...GGW..W.RW.R,M U' r U2 r' U' r;M U' r U2 r' U' r
+O.WO.W.G..O....W....OG.....BBBR...GGBBBR...GGW..W.RW.R,M' U' R U' r' U r;M' U' R U' r' U r
+O.WO.WOG.WO.......G........BBBR...GGBBBR...GGW..W.RW.R,M' U2 R U' r' U r;M' U2 R U' r' U r
+O.WO.W.GG.OW..............OBBBR...GGBBBR...GGW..W.RW.R,M' U R U' r' U r;M' U R U' r' U r
+O.WO.WO..W........G........BBBR...GGBBBRO..GGWG.W.RW.R,M' U2 r U' r' U r;M' U2 r U' r' U r
+O.WO.WWG.GO.......O........BBBR...GGBBBR...GGW..W.RW.R,M2 U' r U2 r' U' r;r U' M2 U2 r' U' r;M2 U' r U2 r' U' r
+O.WO.W.G..O......G.....WO..BBBR...GGBBBR...GGW..W.RW.R,M2 U r U2 r' U' r;M2 U r U2 r' U' r
+O.WO.W.GO.OG..............WBBBR...GGBBBR...GGW..W.RW.R,M2 U2 r U2 r' U' r;M2 U2 r U2 r' U' r
+O.WO.W.........WG...OGO....BBBR...GGBBBR...GGW..W.RW.R,M2 U' R U' r' U r;M2 U' R U' r' U r
+O.WO.WO..W......G.G...O....BBBR...GGBBBR...GGW..W.RW.R,M2 U2 R U' r' U r;M2 U2 R U' r' U r
+OGWO.WO..W........G........BBBR...GGBBBR...GGW..W.RWOR,M2 U2 r U' r' U r;M2 U2 r U' r' U r
+O..O..W..G....R.GRO...OWGG.BBBR.WGG.BBBR.....W..W..W..,r' U' M2 U2 R' U' r
+O..O....G..W..R.GR....OWGGOBBBR.WGG.BBBR.....W..W..W..,r' U' r' U2 M U r
+O..O....G..W....G.....O...OBBBR.RGG.BBBR.RGG.W.WW.WW..,r' U r U2 r' U' r
+O.GO............G.....O....BBBR.RGG.BBBR.RGGWW.WW.WW.O,r' U2 r U2 r' U' r
+O..O...........W....OG.....BBBR.RGG.BBBRGRGG.WOWW.WW..,r' U' R U' r' U r
+O..O..O..W........G........BBBR.RGG.BBBRGRGG.WOWW.WW..,r' U2 R U' r' U r
+O.WO.......................BBBR.RGG.BBBRGRGGOWOWW.WW.G,r' U R U' r' U r
+O..O..OO.WG.......G........BBBR.RGG.BBBR.RGG.W.WW.WW..,r' U2 r U' r' U r
+OGGO.......................BBBR.RGG.BBBR.RGGWW.WW.WWOO,r' U2 r U2 R' U' r
+O..O..WG.GO...R..RO....WGG.BBBR.WGG.BBBR.....W..W..W..,r2 U' r U2 r' U' r
+O.WO...G..O...R..R.....WGG.BBBR.WGG.BBBR....OW..W..W.G,r2 U r U2 r' U' r
+O..O...G..O...R..R.....WGG.BBBR.WGG.BBBR.OW..W.GW..W..,r2 U2 r U2 r' U' r
+O..O..........RWGR..OGOWGG.BBBR.WGG.BBBR.....W..W..W..,r2 U' R U' r' U r
+O..O..O..W....R.GRG...OWGG.BBBR.WGG.BBBR.....W..W..W..,r2 U2 R U' r' U r
+O..O..........R.GR....OWGG.BBBR.WGG.BBBR.GO..W.WW..W..,r2 U R U' r' U r
+OG.O..O..W....R..RG....WGG.BBBR.WGG.BBBR.....W..W..WO.,r2 U2 r U' r' U r
+OG.O..........R..R.....WGG.BBBR.WGG.BBBR.OW..W.GW..WO.,r2 U2 R U2 R' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBROOW..WGGW..W..,r2 U2 r U2 R' U' r
+O..O.............W.....OG..BBBR.RGG.BBBRGRGG.WOWW.WW..,U r' U' R U' r' U r;U' R' U r U2 r' U' r;U2 r' U2 R U' r' U r
+OO.O.............W.....OG..BBBR.RGG.BBBR.RGG.W.WW.WWG.,U R' U' R U' r' U r;U2 R' U2 R U' r' U r
+O..O.GW..G........O........BBBR.RGGOBBBR.RGG.W.WW.WW..,U r' U' M2 U M' U' r;R' U' r U2 M2 R' U' r;r' U' r U2 M2 R' U' r
+O..O.GO..W........G........BBBR.RGGOBBBR.RGG.W.WW.WW..,U r' U2 r U r' U' r;R' U2 r U' M2 r' U r;r' U2 r U' M2 r' U r
+O..O.O...........W.....OG..BBBR.RGGGBBBR.RGG.W.WW.WW..,U r' U' r U' r' U r
+O..O.O.........G....WO.....BBBR.RGGGBBBR.RGG.W.WW.WW..,U r' U' R U2 R' U' r;U' r' U2 r U' R' U' r;U2 r' U' M2 U' M2 U r
+O..O.O..W..O..............GBBBR.RGGGBBBR.RGG.W.WW.WW..,U r' U' r U2 r' U r;U' r' U' M2 U M2 U r;U2 r' U' M2 U2 M2 U r
+O.GO..........G..........O.BBBR.RGG.BBBR.RGGWW.WW.WW.O,U r' U2 r U2 r' U' r;U' r' U2 R U2 R' U' r
+O..O..O..W....G...G......O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U r U2 r' U' r
+O.GO........G......O.......BBBR.RGG.BBBR.RGGWW.WW.WW.O,U r' U2 R U2 R' U' r;U' r' U2 r U2 r' U' r
+O..O........G..W...OOG.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 r U' r' U r;R' U' M2 R U' r' U r;r' U' M2 R U' r' U r
+O.WO............O.....G....BBBR.RGG.BBBR.RGGOW.WW.WW.G,U r' U r U' r' U r;U' r' U r U2 r' U2 r
+O.WO...G..O................BBBR.RGG.BBBR.RGGOW.WW.WW.G,U r' U r U2 r' U2 r;U' r' U r U' r' U r;R' M' U R U' r' U r;M' R' U R U' r' U r;M2 r' U R U' r' U r;r R2 U R U' r' U r;r' M2 U R U' r' U r;M' R' U R U' r' U r;M2 r' U R U' r' U r
+O.GO...G..O................BBBR.RGG.BBBR.RGGWW.WW.WW.O,U r' U' r U R' U' r;U2 R' U2 R U2 R' U' r;R r2 U2 r U2 r' U' r;R' M2 U2 r U2 r' U' r;M r' U2 r U2 r' U' r;M2 R' U2 r U2 r' U' r;r' M U2 r U2 r' U' r;M r' U2 r U2 r' U' r;M2 R' U2 r U2 r' U' r
+O..O...G..O......W.....OG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U' r U2 r' U2 r;U' r' U R U2 R' U' r;U2 R' U2 r U' r' U r
+O..O...G..O....W....OG.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 r U2 r' U2 r;R' M' U' R U' r' U r;M' R' U' R U' r' U r;M2 r' U' R U' r' U r;r R2 U' R U' r' U r;r' M2 U' R U' r' U r;M' R' U' R U' r' U r;M2 r' U' R U' r' U r
+O..O..OG.WO.......G........BBBR.RGG.BBBR.RGG.W.WW.WW..,U r' U2 r U R' U' r;R' M' U2 R U' r' U r;M' R' U2 R U' r' U r;M2 r' U2 R U' r' U r;r R2 U2 R U' r' U r;r' M2 U2 R U' r' U r;M' R' U2 R U' r' U r;M2 r' U2 R U' r' U r
+O.WO.W.........G....WO.....BBBR.GOGGBBBR...GGW..W.RW.R,U r U r' U2 M2 U r;R U' M2 U' M2 r' U' r;r U' M2 U' M2 r' U' r
+O.WO.W..G..W..............OBBBR.GOGGBBBR...GGW..W.RW.R,U r U M2 U2 r' U r
+O.WO.W...........O.....GW..BBBR.OGGGBBBR...GGW..W.RW.R,U r U' M' U2 r' U r;U' r U r' U M' U' r;U2 r U' M' U r' U r;R U M2 U' M2 R' U' r;r U M2 U' M2 R' U' r
+O.WO.W.........W....OG.....BBBR...GGBBBRO..GGWG.W.RW.R,U M' U2 r U' r' U r;U' r U2 M' U r' U r;M2 U' r U' M2 r' U r;M2 U' r U' M2 r' U r
+O.WO.W..G..W..............OBBBR...GGBBBRO..GGWG.W.RW.R,U r U2 M' U r' U r;U' M' U2 r U' r' U r
+OGWO.W.........W....OG.....BBBR...GGBBBR...GGW..W.RWOR,U M2 U2 r U' r' U r;U' r U2 r' U' M2 U' r;M U' r U' M2 r' U r;M U' r U' M2 r' U r
+OGWO.W..G..W..............OBBBR...GGBBBR...GGW..W.RWOR,U r U2 r' U' M2 U' r;U' M2 U2 r U' r' U r
+O.WO.W........GG....WO...O.BBBR...GGBBBR...GGW..W.RW.R,U M U' r U2 r' U' r
+O.WO.W........GW....OG...O.BBBR...GGBBBR...GGW..W.RW.R,U M2 U2 R U' r' U r;U' r U2 R' U' M2 U' r
+O.WO.W........O..G.....WOG.BBBR...GGBBBR...GGW..W.RW.R,U M2 r U2 M2 r' U' r;U' M2 U2 r U2 r' U' r
+O.WO.W........OG....WO...G.BBBR...GGBBBR...GGW..W.RW.R,U M2 r U M2 r' U' r;U' M2 U r U2 r' U' r
+O.WO.W..G..W..O..........GOBBBR...GGBBBR...GGW..W.RW.R,U r U2 M2 U r' U r;U' M' U2 R U' r' U r
+O.WO.W..G..WG......O......OBBBR...GGBBBR...GGW..W.RW.R,U r U2 R' U' M2 U' r;U' M2 U2 R U' r' U r
+O.WO.W......O..G...GWO.....BBBR...GGBBBR...GGW..W.RW.R,U M2 U' r U2 r' U' r;R U' M2 U' M2 R' U' r;r U' M2 U' M2 R' U' r
+O.WO.W......O..W...GOG.....BBBR...GGBBBR...GGW..W.RW.R,U M' U2 R U' r' U r;U' r U2 M2 U r' U r
+O.WO.W..O..GO......G......WBBBR...GGBBBR...GGW..W.RW.R,U M2 U r U2 r' U' r;U' M2 r U M2 r' U' r
+O.WO.WW..G..O.....OG.......BBBR...GGBBBR...GGW..W.RW.R,U M2 U2 r U2 r' U' r;U' M2 r U2 M2 r' U' r;R U' M2 U2 M2 R' U' r;r U' M2 U2 M2 R' U' r
+O.WO.WO..W..O.....GG.......BBBR...GGBBBR...GGW..W.RW.R,U M' U R U' r' U r
+O.WO.W..G..W....O.....G...OBBBR...GGBBBR...GGW..W.RW.R,U r U' r' U2 M' U' r;U2 M' U' R U' r' U r
+O.WO.W.OG.GW..............OBBBR...GGBBBR...GGW..W.RW.R,U r U2 r' U' M U' r;U2 M2 U' R U' r' U r
+OO.O....G..W..............OBBBR.RGG.BBBR.RGG.W.WW.WWG.,U' R' U2 R U' r' U r;U2 R' U' R U' r' U r;R' M' U r U2 r' U' r;M' R' U r U2 r' U' r;M2 r' U r U2 r' U' r;r R2 U r U2 r' U' r;r' M2 U r U2 r' U' r;M' R' U r U2 r' U' r;M2 r' U r U2 r' U' r
+O..O.G...........G.....WO..BBBR.RGGOBBBR.RGG.W.WW.WW..,U' r' U' M2 U M' U' r;R' U' r U' M2 R' U' r;r' U' r U' M2 R' U' r
+O..O.G...........W.....OG..BBBR.RGGOBBBR.RGG.W.WW.WW..,U' r' U2 r U r' U' r
+O..O.OO..W........G........BBBR.RGGGBBBR.RGG.W.WW.WW..,U' r' U' r U' r' U r
+O..O........G....W.O...OG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U r U2 r' U' r
+O.GO........O......G.......BBBR.RGG.BBBR.RGGWW.WW.WW.O,U' R' U2 R U2 R' U' r;U2 r' U' r U R' U' r
+O..O....G..W..G..........OOBBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U2 r U' r' U r
+O..O....G..W....O.....G...OBBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U2 r U2 r' U2 r;r' U2 R U M2 r' U' r
+O..O............OW....GOG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U2 r U R' U' r
+O.WO.W..O..G..............WBBBR.GOGGBBBR...GGW..W.RW.R,U' r U r' U2 M2 U r
+O.WO.W.........W....OG.....BBBR.GOGGBBBR...GGW..W.RW.R,U' r U M2 U2 r' U r
+O.WO.WO..W..G.....GO.......BBBR...GGBBBR...GGW..W.RW.R,U' M2 U' R U' r' U r;U2 r U2 r' U' M U' r
+O.WO.W..O..GG......O......WBBBR...GGBBBR...GGW..W.RW.R,U' M U' r U2 r' U' r
+O.WO.WO..W....O...G......G.BBBR...GGBBBR...GGW..W.RW.R,U' M' U' R U' r' U r;U2 r U' r' U2 M' U' r
+O.WO.W..O..G..O..........GWBBBR...GGBBBR...GGW..W.RW.R,U' M2 U' r U2 r' U' r
+O.WO.W........O..W.....OGG.BBBR...GGBBBR...GGW..W.RW.R,U' M' U R U' r' U r
+O..O.G.........G....WO.....BBBR.RGGOBBBR.RGG.W.WW.WW..,U2 r' U' M2 U M' U' r
+O..O.G.........W....OG.....BBBR.RGGOBBBR.RGG.W.WW.WW..,U2 r' U2 r U r' U' r
+O..O.O..G..W..............OBBBR.RGGGBBBR.RGG.W.WW.WW..,U2 r' U' r U' r' U r
+O..O...O..G....W....OG.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U r U2 r' U' r;R' U' r U' M2 r' U r
+O..O............GW....OOG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U2 r U' r' U r
+O..O........O....W.G...OG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U2 r U2 r' U2 r
+O..O........O..W...GOG.....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 r' U2 r U R' U' r
+O.WO.W...........G.....WO..BBBR.GOGGBBBR...GGW..W.RW.R,U2 r U r' U2 M2 U r
+O.WO.WO..W........G........BBBR.GOGGBBBR...GGW..W.RW.R,U2 r U M2 U2 r' U r
+O.WO.W.O..G......G.....WO..BBBR...GGBBBR...GGW..W.RW.R,U2 M U' r U2 r' U' r;M' U2 r U M2 r' U' r;M2 U2 R U M2 r' U' r;M' U2 r U M2 r' U' r;M2 U2 R U M2 r' U' r
+O.WO.W..........OG....GWO..BBBR...GGBBBR...GGW..W.RW.R,U2 M2 U' r U2 r' U' r;M U2 R U M2 r' U' r;M2 U2 r U M2 r' U' r;M U2 R U M2 r' U' r;M2 U2 r U M2 r' U' r
+O.WO.W.........WO...OGG....BBBR...GGBBBR...GGW..W.RW.R,U2 M' U R U' r' U r;M' U' r U' M2 r' U r;M' U' r U' M2 r' U r
+O.GO.......................BBBR.RGG.BBBRORGGWWGWW.WW.O,R r2 U2 r U2 R' U' r;R' M2 U2 r U2 R' U' r;M r' U2 r U2 R' U' r;M' R' U2 R U2 R' U' r;M2 r' U2 R U2 R' U' r;r R2 U2 R U2 R' U' r;r' M2 U2 R U2 R' U' r;M r' U2 r U2 R' U' r;M' R' U2 R U2 R' U' r;M2 r' U2 R U2 R' U' r
+OG.O..O..W........G........BBBR.RGG.BBBR.RGG.W.WW.WWO.,R r2 U2 r U' r' U r;R' M2 U2 r U' r' U r;M r' U2 r U' r' U r;M2 R' U2 r U' r' U r;r' M U2 r U' r' U r;M r' U2 r U' r' U r;M2 R' U2 r U' r' U r
+O.WO............G.....O....BBBR.RGG.BBBR.RGGOW.WW.WW.G,R r2 U R U' r' U r;R' M2 U R U' r' U r;M r' U R U' r' U r;M2 R' U R U' r' U r;r' M U R U' r' U r;M r' U R U' r' U r;M2 R' U R U' r' U r
+O..O...........WG...OGO....BBBR.RGG.BBBR.RGG.W.WW.WW..,R r2 U' R U' r' U r;R' M2 U' R U' r' U r;M r' U' R U' r' U r;M2 R' U' R U' r' U r;r' M U' R U' r' U r;M r' U' R U' r' U r;M2 R' U' R U' r' U r
+O..O..O..W......G.G...O....BBBR.RGG.BBBR.RGG.W.WW.WW..,R r2 U2 R U' r' U r;R' M2 U2 R U' r' U r;M r' U2 R U' r' U r;M2 R' U2 R U' r' U r;r' M U2 R U' r' U r;M r' U2 R U' r' U r;M2 R' U2 R U' r' U r
+O..O...GG.OW..............OBBBR.RGG.BBBR.RGG.W.WW.WW..,R r2 U r U2 r' U' r;R' M2 U r U2 r' U' r;M r' U r U2 r' U' r;M2 R' U r U2 r' U' r;r' M U r U2 r' U' r;M r' U r U2 r' U' r;M2 R' U r U2 r' U' r
+O.WO.W.....................BBBR.OGGGBBBR.GOGGW.WW.RW.R,R U' M2 r' U2 M U r;r U' M2 r' U2 M U r
+O..O..........R..R.....WGG.BBBR.WGG.BBBRGGO..WOWW..W..,R' r' U R U' r' U r;R2 M U R U' r' U r;M R2 U R U' r' U r;M' r2 U R U' r' U r;r' R' U R U' r' U r;r2 M' U R U' r' U r;M R2 U R U' r' U r;M' r2 U R U' r' U r
+O..O..........RW.R..OG.WGG.BBBR.WGG.BBBRG....WO.W..W..,R' r' U' R U' r' U r;R2 M U' R U' r' U r;M R2 U' R U' r' U r;M' r2 U' R U' r' U r;r' R' U' R U' r' U r;r2 M' U' R U' r' U r;M R2 U' R U' r' U r;M' r2 U' R U' r' U r
+O..O..O..W....R..RG....WGG.BBBR.WGG.BBBRG....WO.W..W..,R' r' U2 R U' r' U r;R2 M U2 R U' r' U r;M R2 U2 R U' r' U r;M' r2 U2 R U' r' U r;r' R' U2 R U' r' U r;r2 M' U2 R U' r' U r;M R2 U2 R U' r' U r;M' r2 U2 R U' r' U r
+O..O..........R.GR....OWGG.BBBR.WGG.BBBR.OW..W.GW..W..,R' r' U2 r U2 r' U' r;R2 M U2 r U2 r' U' r;M R2 U2 r U2 r' U' r;M' r2 U2 r U2 r' U' r;r' R' U2 r U2 r' U' r;r2 M' U2 r U2 r' U' r;M R2 U2 r U2 r' U' r;M' r2 U2 r U2 r' U' r
+O.WO..........R.GR....OWGG.BBBR.WGG.BBBR....OW..W..W.G,R' r' U r U2 r' U' r;R2 M U r U2 r' U' r;M R2 U r U2 r' U' r;M' r2 U r U2 r' U' r;r' R' U r U2 r' U' r;r2 M' U r U2 r' U' r;M R2 U r U2 r' U' r;M' r2 U r U2 r' U' r
+O..O..OO.WG...R..RG....WGG.BBBR.WGG.BBBR.....W..W..W..,R' r' U2 r U' r' U r;R2 M U2 r U' r' U r;M R2 U2 r U' r' U r;M' r2 U2 r U' r' U r;r' R' U2 r U' r' U r;r2 M' U2 r U' r' U r;M R2 U2 r U' r' U r;M' r2 U2 r U' r' U r
+O..O........G.RG.R.OWO.WGG.BBBR.WGG.BBBR.....W..W..W..,R' U M2 U M2 r' U' r;R2 U r U M2 R' U' r;r' U M2 U M2 r' U' r;r2 U r U M2 R' U' r
+O..O........O.RG.R.GWO.WGG.BBBR.WGG.BBBR.....W..W..W..,R' U' M2 U' M2 R' U' r;r' U' M2 U' M2 R' U' r
+O..O..W..G..O.R..ROG...WGG.BBBR.WGG.BBBR.....W..W..W..,R' U' M2 U2 M2 R' U' r;r' U' M2 U2 M2 R' U' r
+O..O.G........RG.R..WO.WGG.BBBR.WGGOBBBR.....W..W..W..,R' U' M2 U' M2 r' U' r;r' U' M2 U' M2 r' U' r
+O.GO.G........R..R.....WGG.BBBR.WGGOBBBR....WW..W..W.O,R' U' M2 U M2 r' U' r;R2 U r U M2 r' U r;r' U' M2 U M2 r' U' r;r2 U r U M2 r' U r
+O..O.O..G..W..R..R.....WGGOBBBR.WGGGBBBR.....W..W..W..,R' U' M2 r' U2 M U r;r' U' M2 r' U2 M U r
+O.GO.O........R..R.....WGG.BBBR.WGGGBBBR....WW..W..W.O,R' U M2 U' M2 R' U' r;r' U M2 U' M2 R' U' r
+O..O..O..W........G........BBBR.RGG.BBBRORGG.WGWW.WW..,R' M' U2 r U' r' U r;M' R' U2 r U' r' U r;M2 r' U2 r U' r' U r;r R2 U2 r U' r' U r;r' M2 U2 r U' r' U r;M' R' U2 r U' r' U r;M2 r' U2 r U' r' U r
+O..O....G..W..............OBBBR.RGG.BBBRORGG.WGWW.WW..,R' U2 R U M2 r' U' r;r' U2 r U M2 r' U' r
+OOGO.......................BBBR.RGG.BBBR.RGGWW.WW.WWGO,R' M' U2 r U2 r' U' r;M' R' U2 r U2 r' U' r;M2 r' U2 r U2 r' U' r;r R2 U2 r U2 r' U' r;r' M2 U2 r U2 r' U' r;M' R' U2 r U2 r' U' r;M2 r' U2 r U2 r' U' r
+OG.O....G..W..............OBBBR.RGG.BBBR.RGG.W.WW.WWO.,R' U2 r U M2 r' U' r
+O..O....G..WG......O......OBBBR.RGG.BBBR.RGG.W.WW.WW..,R' U r U2 M2 R' U' r;r' U r U2 M2 R' U' r
+O.GO.G.....................BBBR.RGGOBBBR.RGGWW.WW.WW.O,R' U' r U M2 R' U' r;r' U' r U M2 R' U' r
+O.WO.G.....................BBBR.RGGOBBBR.RGGOW.WW.WW.G,R' U M2 R U' r' U r;r' U M2 R U' r' U r
+O..O..O..W....R..RG....WGG.BBBR.WGG.BBBRO....WG.W..W..,R2 M' U2 r U' r' U r;M r2 U2 r U' r' U r;M' R2 U2 r U' r' U r;r2 M U2 r U' r' U r;M r2 U2 r U' r' U r;M' R2 U2 r U' r' U r
+O.WO..........R..R.....WGG.BBBR.WGG.BBBRO...OWG.W..W.G,R2 U2 R U M2 r' U' r
+OOWO..........R..R.....WGG.BBBR.WGG.BBBR....OW..W..WGG,R2 M' U r U2 r' U' r;M r2 U r U2 r' U' r;M' R2 U r U2 r' U' r;r2 M U r U2 r' U' r;M r2 U r U2 r' U' r;M' R2 U r U2 r' U' r
+OO.O..........R..R.....WGG.BBBR.WGG.BBBR.OW..W.GW..WG.,R2 M' U2 r U2 r' U' r;M r2 U2 r U2 r' U' r;M' R2 U2 r U2 r' U' r;r2 M U2 r U2 r' U' r;M r2 U2 r U2 r' U' r;M' R2 U2 r U2 r' U' r
+OGWO..........R..R.....WGG.BBBR.WGG.BBBR....OW..W..WOG,R2 U2 r U M2 r' U' r
+O..O...O..G...RW.R..OG.WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U' r U' M2 r' U r
+O..O...G..O...RW.R..OG.WGG.BBBR.WGG.BBBR.....W..W..W..,R2 M' U' R U' r' U r;M r2 U' R U' r' U r;M' R2 U' R U' r' U r;r2 M U' R U' r' U r;M r2 U' R U' r' U r;M' R2 U' R U' r' U r
+O..O..OG.WO...R..RG....WGG.BBBR.WGG.BBBR.....W..W..W..,R2 M' U2 R U' r' U r;M r2 U2 R U' r' U r;M' R2 U2 R U' r' U r;r2 M U2 R U' r' U r;M r2 U2 R U' r' U r;M' R2 U2 R U' r' U r
+O..O...G..O...R..R.....WGG.BBBR.WGG.BBBR.GO..W.WW..W..,R2 M' U R U' r' U r;M r2 U R U' r' U r;M' R2 U R U' r' U r;r2 M U R U' r' U r;M r2 U R U' r' U r;M' R2 U R U' r' U r
+O..O........G.RW.R.OOG.WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U' M2 R U' r' U r;r2 U' M2 R U' r' U r
+O.WO........G.R..R.O...WGG.BBBR.WGG.BBBR....OW..W..W.G,R2 U r U2 M2 R' U' r;r2 U r U2 M2 R' U' r
+O..O....G..W..R..R.....WGGOBBBR.WGG.BBBR...O.W..W.GW..,R2 U' r U' M2 R' U' r;r2 U' r U' M2 R' U' r
+O..O..W..G....R..RO....WGG.BBBR.WGG.BBBR...O.W..W.GW..,R2 U' r U2 M2 R' U' r;r2 U' r U2 M2 R' U' r
+O..O..O..W....R..RG....WGG.BBBR.WGG.BBBR...O.W..W.GW..,R2 U2 r U' M2 r' U r;r2 U2 r U' M2 r' U r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.OWO.W.GW.GW..,R2 U' r U M2 R' U' r;r2 U' r U M2 R' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.GOO.W.WW.GW..,R2 U M2 R U' r' U r;r2 U M2 R U' r' U r
+OG.O...........W....OG.....BBBR.RGG.BBBR.RGG.W.WW.WWO.,r' U' r U' M2 r' U r
+O.WO...O..G...R..R.....WGG.BBBR.WGG.BBBR....OW..W..W.G,r2 U2 R U M2 r' U' r
+O.WO..........R.OR....GWGG.BBBR.WGG.BBBR....OW..W..W.G,r2 U2 r U M2 r' U' r
+O..O..........RW.R..OG.WGG.BBBR.WGG.BBBRO....WG.W..W..,r2 U' r U' M2 r' U r
+O..O...........W....OG.....BBBR.RGG.BBBRORGG.WGWW.WW..,U M2 r' U2 r U' r' U r;U2 r' U2 r U M2 r' U' r;R r2 U' r U' M2 r' U r;R' M2 U' r U' M2 r' U r;M r' U' r U' M2 r' U r;M2 R' U' r U' M2 r' U r;r' M U' r U' M2 r' U r;M r' U' r U' M2 r' U r;M2 R' U' r U' M2 r' U r
+OG.O.............W.....OG..BBBR.RGG.BBBR.RGG.W.WW.WWO.,U r' U' r U' M2 r' U r;U' R' U2 r U M2 r' U' r;U2 M2 R' U2 r U' r' U r;M2 U' r' U2 r U R' U' r;M2 U' r' U2 r U R' U' r
+O.WO..........G..........O.BBBR.RGG.BBBR.RGGOW.WW.WW.G,U M2 R' U R U' r' U r;R' U r U M2 U2 r' U r;r' U r U M2 U2 r' U r
+O..O..........G..W.....OGO.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 R' U' R U' r' U r
+O..O..........GW....OG...O.BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 R' U2 R U' r' U r;U2 r' U r U2 M2 R' U' r;R' U' r U M2 U2 r' U r;r' U' r U M2 U2 r' U r
+O..O..O..W..O.....GG.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U M2 R' U r U2 r' U' r;R' U M' U R U' r' U r;r' U M' U R U' r' U r
+O..O.............W.....OG..BBBR.RGG.BBBRORGG.WGWW.WW..,U' r' U2 r U M2 r' U' r;U2 M2 r' U2 r U' r' U r;M' U' r' U2 r U R' U' r;M' U' r' U2 r U R' U' r
+O.WO........G......O.......BBBR.RGG.BBBR.RGGOW.WW.WW.G,U' M2 R' U R U' r' U r;R' U' M2 U2 R U' r' U r;r' U' M2 U2 R U' r' U r
+O..O..O..W..G.....GO.......BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 R' U' R U' r' U r;R' U2 r U2 r' U' M U' r;r' U2 r U2 r' U' M U' r
+O..O..........O..W.....OGG.BBBR.RGG.BBBR.RGG.W.WW.WW..,U' M2 R' U r U2 r' U' r
+O..O...O..G......W.....OG..BBBR.RGG.BBBR.RGG.W.WW.WW..,U' r' U r U2 M2 R' U' r;U2 M2 R' U2 R U' r' U r;M U' r' U2 r U R' U' r;M U' r' U2 r U R' U' r
+O.WO...O..G................BBBR.RGG.BBBR.RGGOW.WW.WW.G,U2 M2 R' U R U' r' U r;R' U2 M2 U' R U' r' U r;M U' r' U r U2 r' U2 r;r' U2 M' U' R U' r' U r;M U' r' U r U2 r' U2 r
+O..O...OG.GW..............OBBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 R' U' R U' r' U r;R r2 U2 R U M2 r' U' r;R' M2 U2 R U M2 r' U' r;M r' U2 R U M2 r' U' r;M' R' U2 r U M2 r' U' r;M2 r' U2 r U M2 r' U' r;r R2 U2 r U M2 r' U' r;r' M2 U2 r U M2 r' U' r;M r' U2 R U M2 r' U' r;M' R' U2 r U M2 r' U' r;M2 r' U2 r U M2 r' U' r
+O..O...........WO...OGG....BBBR.RGG.BBBR.RGG.W.WW.WW..,U2 M2 R' U r U2 r' U' r;R' M' U' r U' M2 r' U r;M' R' U' r U' M2 r' U r;M2 r' U' r U' M2 r' U r;r R2 U' r U' M2 r' U r;r' M2 U' r U' M2 r' U r;M' R' U' r U' M2 r' U r;M2 r' U' r U' M2 r' U r
+O.WO.W.....................BBBR...GGBBBRGWGGGWOOW.RW.R,R U2 r' U2 R U' r' U r;r U2 r' U2 r U' r' U r
+OOWO.W.....................BBBR...GGBBBR.WGGGW.OW.RWGR,R U2 R' U2 R U' r' U r;r U2 r' U2 R U' r' U r
+O.WO.W........G..........O.BBBR...GGBBBR.WGGGW.OW.RW.R,R U' r' U2 r U r' U' r;r U' r' U2 r U r' U' r
+O.WO.W........O..........G.BBBR...GGBBBR.WGGGW.OW.RW.R,R U r' U' r U' r' U r;r U r' U' r U' r' U r
+O.WO.W..........G.....O....BBBR...GGBBBR.WGGGW.OW.RW.R,R U2 r' U2 r U' r' U r;r U2 R' U2 r U' r' U r
+O.WO.W..........O.....G....BBBR...GGBBBR.WGGGW.OW.RW.R,R U' r' U2 r U R' U' r
+O.WO.W.G..O................BBBR...GGBBBR.WGGGW.OW.RW.R,R U2 R' U2 r U' r' U r;r U2 R' U2 R U' r' U r
+O.WO.W......G......O.......BBBR...GGBBBR.WGGGW.OW.RW.R,R U' r' U r U2 r' U' r;r U' r' U r U2 r' U' r
+O.WO.W......O......G.......BBBR...GGBBBR.WGGGW.OW.RW.R,R U2 r' U2 r U2 r' U2 r;r U2 r' U2 r U2 r' U2 r
+O..O....W..O..R..R.....WGGGBBBR.WGG.BBBRG....WO.W..W..,R' U2 r' U2 R U' r' U r;r' U2 R' U2 R U' r' U r
+OO.O....W..O..R..R.....WGGGBBBR.WGG.BBBR.....W..W..WG.,R' U2 R' U2 R U' r' U r;r' U2 R' U2 r U' r' U r
+OG.O..........RW.R..OG.WGG.BBBR.WGG.BBBR.....W..W..WO.,R' r' U' r U' M2 r' U r;R2 M U' r U' M2 r' U r;M R2 U' r U' M2 r' U r;M' r2 U' r U' M2 r' U r;r' R' U' r U' M2 r' U r;r2 M' U' r U' M2 r' U r;M R2 U' r U' M2 r' U r;M' r2 U' r U' M2 r' U r
+O..O..........RG.R..WO.WGG.BBBR.WGG.BBBR...O.W..W.GW..,R' U2 r' U' M2 U M' U' r;R2 U M U' r U2 r' U' r;r' U2 r' U' M2 U M' U' r;r2 U M U' r U2 r' U' r
+O..O..........RW.R..OG.WGG.BBBR.WGG.BBBR...O.W..W.GW..,R' U2 r' U2 r U r' U' r;R2 U' r U2 R' U' M2 U' r;r' U2 r' U2 r U r' U' r;r2 U' r U2 R' U' M2 U' r
+O..O....W..O..R..R.....WGGGBBBR.WGG.BBBR...O.W..W.GW..,R' U' r' U2 r U r' U' r;r' U' r' U2 r U r' U' r
+O..O..........RG.R..WO.WGG.BBBR.WGG.BBBR...G.W..W.OW..,R' U2 r' U' M2 U' M2 U r;R2 U' M2 U r U2 r' U' r;r' U2 r' U' M2 U' M2 U r;r2 U' M2 U r U2 r' U' r
+O..O..O..W....R..RG....WGG.BBBR.WGG.BBBR...G.W..W.OW..,R' U' r' U' r U' r' U r;R2 U2 r U' r' U2 M' U' r;r' U' r' U' r U' r' U r;r2 U2 r U' r' U2 M' U' r
+O..O....W..O..R..R.....WGGGBBBR.WGG.BBBR...G.W..W.OW..,R' U r' U' r U' r' U r;r' U r' U' r U' r' U r
+O.OO..........R..R.....WGG.BBBR.WGG.BBBR...GGW..W.OW.W,R' U2 r' U' M2 U2 M2 U r;R2 U' M' U R U' r' U r;r' U2 r' U' M2 U2 M2 U r;r2 U' M' U R U' r' U r
+O.WO..........R..R.....WGG.BBBR.WGG.BBBR...GOW..W.OW.G,R' U2 r' U' r U' r' U r;R2 U' M2 U2 r U2 r' U' r;r' U2 r' U' r U' r' U r;r2 U' M2 U2 r U2 r' U' r
+O..O....W..O..R.GR....OWGGGBBBR.WGG.BBBR.....W..W..W..,R' U2 r' U2 r U' r' U r;r' U2 r' U2 R U' r' U r
+O..O..........R.OR....GWGG.BBBR.WGG.BBBR.GO..W.WW..W..,R' U' r' U r U2 r' U2 r;R2 U2 M' U' R U' r' U r;r2 U' M2 U2 r U' r' U r
+O..O....W..O..R.OR....GWGGGBBBR.WGG.BBBR.....W..W..W..,R' U' r' U2 r U R' U' r
+O..O...GW.OO..R..R.....WGGGBBBR.WGG.BBBR.....W..W..W..,R' U2 R' U2 r U' r' U r;r' U2 r' U2 r U' r' U r
+O..O........G.R..R.O...WGG.BBBR.WGG.BBBR.OW..W.GW..W..,R' U' r' U2 r U2 r' U' r;R2 U' M U' r U2 r' U' r;r' U' r' U2 r U2 r' U' r;r2 U' M U' r U2 r' U' r
+O..O....W..OG.R..R.O...WGGGBBBR.WGG.BBBR.....W..W..W..,R' U' r' U r U2 r' U' r;r' U' r' U r U2 r' U' r
+O..O........O.R..R.G...WGG.BBBR.WGG.BBBR.OW..W.GW..W..,R' U2 r' U' r U R' U' r;R2 U' M2 r U M2 r' U' r;r' U2 r' U' r U R' U' r;r2 U' M2 r U M2 r' U' r
+O..O........O.RW.R.GOG.WGG.BBBR.WGG.BBBR.....W..W..W..,R' U2 r' U2 r U R' U' r;R2 U' r U2 M2 U r' U r;r' U2 r' U2 r U R' U' r;r2 U' r U2 M2 U r' U r
+O..O....W..OO.R..R.G...WGGGBBBR.WGG.BBBR.....W..W..W..,R' U2 r' U2 r U2 r' U2 r;r' U2 r' U2 r U2 r' U2 r
+O..O.G........R..R.....WGG.BBBR.WGGOBBBR.OW..W.GW..W..,R' U' r' U2 R U2 R' U' r;R2 U' r U r' U2 M2 U r;r' U' r' U2 R U2 R' U' r;r2 U' r U r' U2 M2 U r
+O..O.GO..W....R..RG....WGG.BBBR.WGGOBBBR.....W..W..W..,R' U r' U r U2 r' U' r;R2 U2 r U M2 U2 r' U r;r' U r' U r U2 r' U' r;r2 U2 r U M2 U2 r' U r
+O.WO.G........R..R.....WGG.BBBR.WGGOBBBR....OW..W..W.G,R' U' r' U2 r U' r' U r;R2 U2 r U r' U2 M2 U r;r' U' r' U2 r U' r' U r;r2 U2 r U r' U2 M2 U r
+O.WO.......................BBBR.RGG.BBBRORGGOWGWW.WW.G,R' U' M' U2 r U' r' U r;M' U' r' U r U2 r' U2 r;r' U' M2 U2 r U' r' U r;M' U' r' U r U2 r' U2 r
+OGWO.......................BBBR.RGG.BBBR.RGGOW.WW.WWOG,R' U' M2 U2 r U' r' U r;M2 U' r' U r U2 r' U2 r;r' U2 M2 U' R U' r' U r;M2 U' r' U r U2 r' U2 r
+O.GO.O.....................BBBR.RGGGBBBR.RGGWW.WW.WW.O,R' U' M2 U' r U2 r' U' r;r' U' M2 U' r U2 r' U' r
+O.WO.O.....................BBBR.RGGGBBBR.RGGOW.WW.WW.G,R' U' M' U2 R U' r' U r;r' U' M' U2 R U' r' U r
+O..O.G........RW.R..OG.WGG.BBBR.WGGOBBBR.....W..W..W..,R2 U' r U M2 U2 r' U r;r2 U' r U M2 U2 r' U r
+O..O.G........R..R.....WGG.BBBR.WGGOBBBR.GO..W.WW..W..,R2 U r U M2 U2 r' U r;r2 U r U M2 U2 r' U r
+O..O..........R..R.....WGG.BBBR.WGG.BBBROGO..WGWW..W..,R2 U' M' U2 r U' r' U r;r2 U2 M2 U' R U' r' U r
+OG.O..........R..R.....WGG.BBBR.WGG.BBBR.GO..W.WW..WO.,R2 U' M2 U2 r U' r' U r;r2 U2 M' U' R U' r' U r
+O..O..........RWOR..OGGWGG.BBBR.WGG.BBBR.....W..W..W..,R2 M' U' r U' M2 r' U r;M r2 U' r U' M2 r' U r;M' R2 U' r U' M2 r' U r;r2 M U' r U' M2 r' U r;M r2 U' r U' M2 r' U r;M' R2 U' r U' M2 r' U r
+O..O...O..G...R..R.....WGG.BBBR.WGG.BBBR.GO..W.WW..W..,R2 U2 M2 U' R U' r' U r;r' U' r' U r U2 r' U2 r;r2 U' M' U2 r U' r' U r
+O..O..O..W..G.R..RGO...WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U2 r U2 r' U' M U' r;r2 U2 r U2 r' U' M U' r
+O..O........G.R..R.O...WGG.BBBR.WGG.BBBR.GO..W.WW..W..,R2 U' M2 U2 R U' r' U r;r2 U' M2 U2 R U' r' U r
+O..O..O..W..O.R..RGG...WGG.BBBR.WGG.BBBR.....W..W..W..,R2 U M' U R U' r' U r;r2 U M' U R U' r' U r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.OWG.W.GW.OW..,R2 U' M2 U' r U2 r' U' r;r2 U' M2 U' r U2 r' U' r
+O..O..........R..R.....WGG.BBBR.WGG.BBBR.GOG.W.WW.OW..,R2 U' M' U2 R U' r' U r;r2 U' M' U2 R U' r' U r
+O.WO.W.....................BBBR...GGBBBROWGGGWGOW.RW.R,r U' r' U2 r U R' U' r
+O..O...OW.GO..R..R.....WGGGBBBR.WGG.BBBR.....W..W..W..,r' U' r' U2 r U R' U' r
+O.WO.W.O..G................BBBR...GGBBBR.WGGGW.OW.RW.R,U r U' r' U2 r U r' U' r;U' r U' r' U r U2 r' U' r;U2 r U2 R' U2 r U' r' U r;R M U' r' U2 r U R' U' r;R2 r' U' r' U2 r U R' U' r;M R U' r' U2 r U R' U' r;M2 r U' r' U2 r U R' U' r;r M2 U' r' U2 r U R' U' r;M R U' r' U2 r U R' U' r;M2 r U' r' U2 r U R' U' r
+OGWO.W.....................BBBR...GGBBBR.WGGGW.OW.RWOR,R M2 U' r' U2 r U R' U' r;M' r U' r' U2 r U R' U' r;M2 R U' r' U2 r U R' U' r;r M' U' r' U2 r U R' U' r;r2 R' U' r' U2 r U R' U' r;M' r U' r' U2 r U R' U' r;M2 R U' r' U2 r U R' U' r
+O.WO.W.....................BBBR.GOGGBBBR.WGGGW.OW.RW.R,R U M2 R' U' R U' r' U r;r U M2 R' U' R U' r' U r
+O.WO.W.....................BBBR.OGGGBBBR.WGGGW.OW.RW.R,R U' M2 R' U r U2 r' U' r;r U' M2 R' U r U2 r' U' r
+O..O....W..O..R..R.....WGGGBBBR.WGG.BBBRO....WG.W..W..,R' M' U' r' U2 r U R' U' r;R2 r U' r' U2 r U R' U' r;M' R' U' r' U2 r U R' U' r;M2 r' U' r' U2 r U R' U' r;r' M2 U' r' U2 r U R' U' r;M' R' U' r' U2 r U R' U' r;M2 r' U' r' U2 r U R' U' r
+OG.O....W..O..R..R.....WGGGBBBR.WGG.BBBR.....W..W..WO.,R' M2 U' r' U2 r U R' U' r;M r' U' r' U2 r U R' U' r;M2 R' U' r' U2 r U R' U' r;r' M U' r' U2 r U R' U' r;r2 R U' r' U2 r U R' U' r;M r' U' r' U2 r U R' U' r;M2 R' U' r' U2 r U R' U' r
+O..O.G..W..O..R..R.....WGGGBBBR.WGGOBBBR.....W..W..W..,R' U M2 R' U' R U' r' U r;r' U M2 R' U' R U' r' U r
+O..O.O..W..O..R..R.....WGGGBBBR.WGGGBBBR.....W..W..W..,R' U' M2 R' U r U2 r' U' r;r' U' M2 R' U r U2 r' U' r

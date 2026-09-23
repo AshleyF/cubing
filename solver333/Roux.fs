@@ -42,6 +42,8 @@ let lfPairBeginnerPatterns =
     tuckLFtoBD @ bringDLFtoURF @ insertLFPair
 
 let lfPairIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertLFPair" false false false
+let lfPairFirstIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertLFFirstPair" false false false
+let lbPairLastIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertLBLastPair" false false false
 
 let fbBeginnerPatterns = dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lbPairBeginnerPatterns @ lfPairBeginnerPatterns
 let fbIntermediatePatterns = dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lbPairIntermediatePatterns @ lfPairIntermediatePatterns
@@ -94,13 +96,15 @@ let rfPairBeginnerPatterns = [
     matchesGeneric, "InsertRFPair", ("OGOO.O.........R....WG.....BBBR...GGBBBR...GGW..W.WWRW", false, false, false), ["R M2 U' R'"; "R M2 U' r'"; "R' r2 U' R'"; "R' r2 U' r'"; "r M' U' R'"; "r M' U' r'"; "r2 R' U' R'"; "r2 R' U' r'"; "M' r U' R'"; "M' r U' r'"; "M2 R U' R'"; "M2 R U' r'"]]
 
 let rfPairIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertRFPair" false false false
+let rfPairFirstIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertRFFirstPair" false false false
+let rbPairLastIntermediatePatterns = readPatterns matchesGeneric "Roux" "Intermediate" "InsertRBLastPair" false false false
 
 let sbBeginnerPatterns = drEdgeBeginnerPatterns @ rbPairBeginnerPatterns @ rfPairBeginnerPatterns
 
 let centerOrientationPatterns = [
     // Orient center - hand authored patterns [2 cases]
     matchesGeneric, "CenterOrientation", ("O.OO.O.......E.............BBBR.RGGGBBBR.RGGGW.WWEWW.W", true, true, false), [] // skip
-    matchesGeneric, "CenterOrientation", ("O.OO.O.......P.............BBBR.RGGGBBBR.RGGGW.WWPWW.W", true, true, false), ["M'", "M"]]
+    matchesGeneric, "CenterOrientation", ("O.OO.O.......P.............BBBR.RGGGBBBR.RGGGW.WWPWW.W", true, true, false), ["M'"; "M"]]
 
 let sbIntermediatePatterns = centerOrientationPatterns @ drEdgeBeginnerPatterns @ rbPairIntermediatePatterns @ rfPairIntermediatePatterns
 
@@ -349,18 +353,31 @@ let rouxIntermediatePatterns = fbIntermediatePatterns @ sbIntermediatePatterns @
 let rouxAdvancedPatterns = fbIntermediatePatterns @ sbIntermediatePatterns @ cmllAdvancedPatterns @ lseIntermediatePatterns // 65 STM with CMLL
 let rouxGodPatterns = fbGodPatterns @ sbIntermediatePatterns @ cmllAdvancedPatterns @ lseIntermediatePatterns // 65 STM with CMLL
 
-let solve =
+let solve moves description name target cubes search =
     let patterns =
-        match level with 
-        | 0 -> rouxBeginnerPatterns
+        match level with
+        | 0 ->
+            let corners =
+                if fullCmll then cmllAdvancedPatterns
+                else
+                    let cornerOrientation = if cornerOrientationLevel = 0 then coBeginnerPatterns else coIntermediatePatterns
+                    let cornerPermutation = if cornerPermutationLevel = 0 then cpBeginnerPatterns else cpIntermediatePatterns
+                    cornerOrientation @ cornerPermutation
+            let edgeOrientation = if edgeOrientationLevel = 0 then edgeBeginnerOrientationPatters else edgeIntermediateOrientationPatters
+            let lb = if lbPairLevel = 0 then lbPairBeginnerPatterns else lbPairIntermediatePatterns
+            let lf = if lfPairLevel = 0 then lfPairBeginnerPatterns else lfPairIntermediatePatterns
+            let rb = if rbPairLevel = 0 then rbPairBeginnerPatterns else rbPairIntermediatePatterns
+            let rf = if rfPairLevel = 0 then rfPairBeginnerPatterns else rfPairIntermediatePatterns
+            dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lb @ lf @ drEdgeBeginnerPatterns @ rb @ rf @ corners @ centerOrientationPatterns @ edgeOrientation @ lrBeginnerPatterns @ l4eBeginnerPatterns
         | 1 -> rouxIntermediatePatterns
         | 2 -> rouxAdvancedPatterns
         | 3 -> rouxGodPatterns
         | _ -> failwith "Unknown level"
-    patterns |> expandPatternsForAuf |> solveCase
+    let configuredSolve = patterns |> expandPatternsForAuf |> solveCase
+    configuredSolve moves description name target cubes search
 
-let generate numCubes =
-    let scrambled = initScrambledCubes numCubes
+let generateFrom scrambled =
+    let numCubes = List.length scrambled
     //let scrambled = [
     //    ("R' U' F B L' U R2 B2 F2 D R2 F2 L2 R2 U F2 D' R' F' L2 F2 L' B' F' R' U' F"
     //    |> Render.stringToSteps |> Cube.executeSteps) Cube.solved ]
@@ -376,37 +393,28 @@ let generate numCubes =
     let movesS = [Move Move.S; Move Move.S'; Move Move.S2]
     let movesE = [Move Move.E; Move Move.E'; Move Move.E2]
     let moves = movesU @ movesD @ movesL @ movesR @ movesF @ movesB @ movesM @ movesS @ movesE
-    let solvedLBPair =
-        let caseLBPair = Solver.lookPattern "O..O.......................BB.......BB..........W..W.." // LB pair inserted
-        if level < 3 then
-            // DL
-            let caseDL = Solver.lookPattern ".....................................B..........W....."
-            let rotations = [Rotate X; Rotate X'; Rotate X2; Rotate Y; Rotate Y'; Rotate Y2; Rotate Z; Rotate Z'; Rotate Z2]
-            let solvedDL = solve rotations "Solve DL edge (during inspection)" "DLEdge" caseDL scrambled false
-            Solver.stageStats "Inspection" numCubes
+    let caseLBPair = Solver.lookPattern "O..O.......................BB.......BB..........W..W.." // LB pair inserted
+    let caseLFPair = Solver.lookPattern "............................BBR......BBR.....W..W....."
+    let caseSolvedFB = Solver.lookPattern "O..O.......................BBBR.....BBBR.....W..W..W.."
+    let caseDL = Solver.lookPattern ".....................................B..........W....."
+    let rotations = [Rotate X; Rotate X'; Rotate X2; Rotate Y; Rotate Y'; Rotate Y2; Rotate Z; Rotate Z'; Rotate Z2]
+    let solvedDL = solve rotations "Solve DL edge (during inspection)" "DLEdge" caseDL scrambled false
+    Solver.stageStats "Inspection" numCubes
+    let caseLC = Solver.lookPattern "............................B........B..........W....."
+    let solvedLC = solve moves "Solve L center" "LCenter" caseLC solvedDL false
 
-            // center
-            let caseLC = Solver.lookPattern "............................B........B..........W....."
-            let solvedLC = solve moves "Solve L center" "LCenter" caseLC solvedDL false
-
-            // LB pair
-            if level = 0 then
+    let solveLBFirst input =
+        let solvedLBPair =
+          if level = 0 && lbPairLevel = 0 then
                 let caseLBtoFD = Solver.lookPattern "............................B........B..B.....O.W....." // OB edge in DF position
-                let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD solvedLC false
+                let solvedLBtoFD = solve moves "Tuck LB to FD" "TuckLBtoFD" caseLBtoFD input false
                 let caseDLBtoUFR = Solver.lookPattern ".................B.....OW............................."
                 let caseDLBtoUBR = Solver.lookPattern "........B..O..............W..........................."
                 let caseDLBtoU c = caseLBtoFD c && (caseDLBtoUBR c || (if level > 0 then caseDLBtoUFR c else false))
                 let solvedDLBtoURB = solve moves "Bring DLB corner to URB" "BringDLBtoU" caseDLBtoU solvedLBtoFD false
                 solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedDLBtoURB false
-            else // level > 0 : intermediate+ (solve LB pair directly)
-                solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair solvedLC true
-        else // god
-            solve moves "Build LB square" "BuildLBSquare" caseLBPair scrambled true
-
-    // LF pair
-    let caseSolvedFB = Solver.lookPattern "O..O.......................BBBR.....BBBR.....W..W..W.."
-    let solvedFB =
-        if level = 0 then
+          else solve moves "Pair and insert LB pair" "InsertLBPair" caseLBPair input true
+        if level = 0 && lfPairLevel = 0 then
             let caseLFtoBD = Solver.lookPattern "OB.O.......................BB.......BB..........W..WR."
             let solvedLFtoBD = solve moves "Tuck LF to BD" "TuckLFtoBD" caseLFtoBD solvedLBPair false
             let caseDLFtoURF = Solver.lookPattern "OB.O.............R.....BW..BB.......BB..........W..WR."
@@ -414,6 +422,95 @@ let generate numCubes =
             solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedDLFtoURF true
         else
             solve moves "Pair and insert LF pair (complete FB)" "InsertLFPair" caseSolvedFB solvedLBPair true
+
+    let solveLFFirst input =
+        let candidates patterns stage =
+            let algorithms = patterns |> List.filter (fun (_, candidateStage, _, _) -> candidateStage = stage) |> List.collect (fun (_, _, _, values) -> if List.isEmpty values then [""] else values) |> List.distinct |> List.map (fun algorithm -> if System.String.IsNullOrWhiteSpace algorithm then [] else algorithm.Split(' ', System.StringSplitOptions.RemoveEmptyEntries) |> fun tokens -> System.String.Join(" ", tokens) |> Render.stringToSteps)
+            let aufs = [ []; [Move Move.U]; [Move Move.U']; [Move Move.U2] ]
+            [ for auf in aufs do for algorithm in algorithms do yield auf @ algorithm ] |> List.distinct
+        let solveCandidates description stage goal algorithms cubes =
+            cubes |> List.map (fun cube ->
+                match algorithms |> List.filter (fun algorithm -> Cube.executeSteps algorithm cube |> goal) |> List.sortBy List.length |> List.tryHead with
+                | Some algorithm -> Solver.solutionTrace <- Solver.solutionTrace @ [stage, algorithm]; Cube.executeSteps algorithm cube
+                | None -> failwith $"No {description} candidate preserves the completed block")
+        let solvedLFPair =
+            if lfPairLevel = 0 then
+                let lfAtBD = Solver.lookPattern ".B..........................B........B..........W...R."
+                let tucked = solveCandidates "LF tuck" "TuckLFFirsttoBD" lfAtBD (candidates lfPairBeginnerPatterns "TuckLFtoBD") input
+                let dlfAtURF = Solver.lookPattern ".B...............R.....BW...B........B..........W...R."
+                let ready = solveCandidates "LF corner setup" "BringDLFFirsttoURF" dlfAtURF (candidates lfPairBeginnerPatterns "BringDLFtoURF") tucked
+                solveCandidates "LF-first" "InsertLFFirstPair" caseLFPair (candidates lfPairBeginnerPatterns "InsertLFPair") ready
+            else solveCandidates "LF-first" "InsertLFFirstPair" caseLFPair (candidates lfPairFirstIntermediatePatterns "InsertLFFirstPair") input
+        if lbPairLevel = 0 then
+            let lbAtFD = Solver.lookPattern "............................BBR......BBRB....WO.W....."
+            let tucked = solveCandidates "LB tuck" "TuckLBLasttoFD" lbAtFD (candidates lbPairBeginnerPatterns "TuckLBtoFD") solvedLFPair
+            let dlbAtU = Solver.lookPattern "........B..O..............W.BBR......BBRB....WO.W....."
+            let ready = solveCandidates "LB corner setup" "BringDLBLasttoU" dlbAtU (candidates lbPairBeginnerPatterns "BringDLBtoU") tucked
+            solveCandidates "LB-last" "InsertLBLastPair" caseSolvedFB (candidates lbPairBeginnerPatterns "InsertLBPair") ready
+        else solveCandidates "LB-last" "InsertLBLastPair" caseSolvedFB (candidates lbPairLastIntermediatePatterns "InsertLBLastPair") solvedLFPair
+
+    let solvedFB =
+        if level >= 3 then solve moves "Build LB square" "BuildLBSquare" caseLBPair scrambled true
+        elif chooseShortestFirstBlockPairOrder && numCubes = 1 then
+            let prefix = Solver.solutionTrace
+            let backFirst = solveLBFirst solvedLC
+            let backTrace = Solver.solutionTrace |> List.skip prefix.Length
+            Solver.solutionTrace <- prefix
+            let frontFirst = solveLFFirst solvedLC
+            let frontTrace = Solver.solutionTrace |> List.skip prefix.Length
+            let moveCount trace = trace |> List.sumBy (snd >> List.length)
+            if moveCount backTrace <= moveCount frontTrace then Solver.solutionTrace <- prefix @ backTrace; backFirst
+            else Solver.solutionTrace <- prefix @ frontTrace; frontFirst
+        elif chooseShortestFirstBlockPairOrder then
+            let prefix = Solver.solutionTrace
+            let backFirst = solveLBFirst solvedLC
+            let backTrace = Solver.solutionTrace |> List.skip prefix.Length
+            let perCube count trace =
+                [0 .. count - 1]
+                |> List.map (fun cubeIndex ->
+                    trace
+                    |> List.mapi (fun index (_, steps) -> index, steps)
+                    |> List.choose (fun (index, steps) -> if index % count = cubeIndex then Some steps else None)
+                    |> List.concat)
+            let rec tryFront inputs =
+                Solver.solutionTrace <- prefix
+                try
+                    let solved = solveLFFirst inputs
+                    let moves = Solver.solutionTrace |> List.skip prefix.Length |> perCube inputs.Length
+                    List.map2 (fun cube steps -> Some (cube, steps)) solved moves
+                with _ ->
+                    match inputs with
+                    | [_] -> [None]
+                    | _ ->
+                        let left, right = List.splitAt (inputs.Length / 2) inputs
+                        tryFront left @ tryFront right
+            let tryApplyPattern goal patterns cube =
+                patterns
+                |> List.tryFind (fun (matcher, _, (pattern, auf, colors, _), _) -> matcher cube (pattern, auf, colors))
+                |> Option.bind (fun (_, _, _, values) ->
+                    (if List.isEmpty values then [[]] else values |> List.map Render.stringToSteps)
+                    |> List.filter (fun algorithm -> Cube.executeSteps algorithm cube |> goal)
+                    |> List.sortBy List.length
+                    |> List.tryHead)
+                |> Option.map (fun algorithm -> Cube.executeSteps algorithm cube, algorithm)
+            let frontOptions =
+                if lfPairLevel > 0 && lbPairLevel > 0 then
+                    solvedLC
+                    |> List.map (fun cube ->
+                        tryApplyPattern caseLFPair lfPairFirstIntermediatePatterns cube
+                        |> Option.bind (fun (lfSolved, lfMoves) ->
+                            tryApplyPattern caseSolvedFB lbPairLastIntermediatePatterns lfSolved
+                            |> Option.map (fun (solved, lbMoves) -> solved, lfMoves @ lbMoves)))
+                else tryFront solvedLC
+            let backMoves = perCube numCubes backTrace
+            match List.tryFindIndex Option.isNone frontOptions with
+            | Some index -> failwith $"Missing front-first first-block pattern for state: {Render.cubeToString solvedLC[index]}"
+            | None -> ()
+            let choices = List.map2 (fun back front -> List.length (snd (Option.get front)) < List.length back) backMoves frontOptions
+            let chosenMoves = List.map3 (fun useFront back front -> if useFront then snd (Option.get front) else back) choices backMoves frontOptions
+            Solver.solutionTrace <- prefix @ (chosenMoves |> List.map (fun steps -> "FirstBlockPairs", steps))
+            List.map3 (fun useFront back front -> if useFront then fst (Option.get front) else back) choices backFirst frontOptions
+        else solveLBFirst solvedLC
 
     Solver.stageStats "FB" numCubes
 
@@ -428,35 +525,168 @@ let generate numCubes =
                    Move Move.M; Move Move.M'; Move Move.M2]
     let solvedDR = solve sbMoves "Solve DR edge" "DREdge" caseDR solvedFB false
 
-    // RB pair
+    // Pair goals. The mirrored goals support the optional RF-first route.
     let caseRBPair = Solver.lookPattern "O.OO.O.....................BBBR....GBBBR...GGW..W.WW.W"
-    let solvedRBPair =
-        if level = 0 then
+    let caseRFPair = Solver.lookPattern "O..O.......................BBBR.RG..BBBR.RGG.W.WW.WW.."
+    let caseSolvedSB = Solver.lookPattern "O.OO.O.....................BBBR.RG.GBBBR.RGGGW.WW.WW.W" // F2B complete
+    let caseSolvedSBWithCenters c = caseSolvedSB c && (look Face.U Sticker.C c = Color.W || look Face.U Sticker.C c = Color.Y)
+    let finishingGoal = if orientCentersWithSecondBlock then caseSolvedSBWithCenters else caseSolvedSB
+    let solveSecondBlockFinishingPair description stage input =
+        Solver.preferGoalMatchingAlgorithm <- orientCentersWithSecondBlock
+        // If a bank lacks an equivalent center-fixing ending, keep its normal insertion;
+        // the later CenterOrientation stage remains the safe fallback.
+        let solved = solve sbMoves description stage finishingGoal input (not orientCentersWithSecondBlock)
+        Solver.preferGoalMatchingAlgorithm <- false
+        solved
+
+    let solveRBFirst input =
+        let solvedRBPair =
+          if level = 0 && rbPairLevel = 0 then
             let caseRBtoFD = Solver.lookPattern "O..O.......................BBBR.....BBBRG..G.WO.W.WW.."
-            let solvedRBtoFD = solve sbMoves "Tuck RB to FD" "TuckRBtoFD" caseRBtoFD solvedDR false
+            let solvedRBtoFD = solve sbMoves "Tuck RB to FD" "TuckRBtoFD" caseRBtoFD input false
             let caseDRBtoULB = Solver.lookPattern "O..O..G.....O.....W........BBBR.....BBBRG..G.WO.W.WW.."
             let solvedDRBtoULB = solve sbMoves "Bring DRB to ULB" "BringDRBtoULB" caseDRBtoULB solvedRBtoFD false
             solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair solvedDRBtoULB false
+          else
+            solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair input true
+        if level = 0 && rfPairLevel = 0 then
+            let caseRFtoBD = Solver.lookPattern "OGOO.O.....................BBBR....GBBBR...GGW..W.WWRW"
+            let solvedRFtoBD = solve sbMoves "Tuck RF to BD" "TuckRFtoBD" caseRFtoBD solvedRBPair false
+            let caseDRFtoULF = Solver.lookPattern "OGOO.O.........R....WG.....BBBR....GBBBR...GGW..W.WWRW"
+            let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD false
+            solveSecondBlockFinishingPair "Pair and insert RF pair (complete SB)" "InsertRFPair" solvedDRFtoULF
         else
-            solve sbMoves "Pair and insert RB pair" "InsertRBPair" caseRBPair solvedDR true
+            solveSecondBlockFinishingPair "Pair and insert RF pair (complete SB)" "InsertRFPair" solvedRBPair
 
-    // RF pair
+    let solveRFFirst input =
+        let candidates patterns stage =
+            let algorithms =
+                patterns
+                |> List.filter (fun (_, candidateStage, _, _) -> candidateStage = stage)
+                |> List.collect (fun (_, _, _, values) -> if List.isEmpty values then [""] else values)
+                |> List.distinct
+                |> List.map (fun algorithm -> if System.String.IsNullOrWhiteSpace algorithm then [] else algorithm.Split(' ', System.StringSplitOptions.RemoveEmptyEntries) |> fun tokens -> System.String.Join(" ", tokens) |> Render.stringToSteps)
+            let aufs = [ []; [Move Move.U]; [Move Move.U']; [Move Move.U2] ]
+            [ for auf in aufs do
+              for algorithm in algorithms do yield auf @ algorithm ]
+            |> List.distinct
+        let solveFromCandidates description stage goal candidates cubes =
+            cubes |> List.map (fun cube ->
+                match candidates |> List.filter (fun algorithm -> Cube.executeSteps algorithm cube |> goal) |> List.sortBy List.length |> List.tryHead with
+                | Some algorithm ->
+                    Solver.solutionTrace <- Solver.solutionTrace @ [stage, algorithm]
+                    Cube.executeSteps algorithm cube
+                | None -> failwith $"No {description} candidate preserves the completed block")
+        let solvedRFPair =
+            if rfPairLevel = 0 then
+                let rfAtBD = Solver.lookPattern "OG.O.......................BBBR.....BBBR...G.W..W.WWR."
+                let tucked = solveFromCandidates "RF tuck" "TuckRFFirsttoBD" rfAtBD (candidates rfPairBeginnerPatterns "TuckRFtoBD") input
+                let drfAtULF = Solver.lookPattern "OG.O...........R....WG.....BBBR.....BBBR...G.W..W.WWR."
+                let cornerReady = solveFromCandidates "RF corner setup" "BringDRFFirsttoULF" drfAtULF (candidates rfPairBeginnerPatterns "BringDRFtoULF") tucked
+                solveFromCandidates "RF-first" "InsertRFFirstPair" caseRFPair (candidates rfPairBeginnerPatterns "InsertRFPair") cornerReady
+            else solveFromCandidates "RF-first" "InsertRFFirstPair" caseRFPair (candidates rfPairFirstIntermediatePatterns "InsertRFFirstPair") input
+        if rbPairLevel = 0 then
+            let rbAtFD = Solver.lookPattern "O..O.......................BBBR.RG..BBBRGRGG.WOWW.WW.."
+            let tucked = solveFromCandidates "RB tuck" "TuckRBLasttoFD" rbAtFD (candidates rbPairBeginnerPatterns "TuckRBtoFD") solvedRFPair
+            let drbAtULB = Solver.lookPattern "O..O..G.....O.....W........BBBR.RG..BBBRGRGG.WOWW.WW.."
+            let cornerReady = solveFromCandidates "RB corner setup" "BringDRBLasttoULB" drbAtULB (candidates rbPairBeginnerPatterns "BringDRBtoULB") tucked
+            solveFromCandidates "RB-last" "InsertRBLastPair" finishingGoal (candidates rbPairBeginnerPatterns "InsertRBPair") cornerReady
+        else solveFromCandidates "RB-last" "InsertRBLastPair" finishingGoal (candidates rbPairLastIntermediatePatterns "InsertRBLastPair") solvedRFPair
+
     let mMoves = [Move Move.M; Move Move.M'; Move Move.M2]
     let caseCO = Solver.lookPattern "O.OO.O...Y.Y...Y.Y.........BBBR.RG.GBBBR.RGGGW.WW.WW.W"
     let caseCP c = caseCO c && (look Face.L Sticker.UL c = look Face.L Sticker.UR c) && (look Face.R Sticker.UL c = look Face.R Sticker.UR c) // check left/right "pairs"
     let caseCenterO c = caseCP c && (look Face.U Sticker.C c = Color.W || look Face.U Sticker.C c = Color.Y)
 
-    let caseSolvedSB = Solver.lookPattern "O.OO.O.....................BBBR.RG.GBBBR.RGGGW.WW.WW.W" // F2B complete
     let solvedSB =
-        if level = 0 then
-            let caseRFtoBD = Solver.lookPattern "OGOO.O.....................BBBR....GBBBR...GGW..W.WWRW"
-            let solvedRFtoBD = solve sbMoves "Tuck RF to BD" "TuckRFtoBD" caseRFtoBD solvedRBPair false
-            let caseDRFtoULF = Solver.lookPattern "OGOO.O.........R....WG.....BBBR....GBBBR...GGW..W.WWRW"
-            let solvedDRFtoULF = solve sbMoves "Bring DRF to ULF" "BringDRFtoULF" caseDRFtoULF solvedRFtoBD false
-            solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedDRFtoULF true
-        else
-            let solvedRF = solve sbMoves "Pair and insert RF pair (complete SB)" "InsertRFPair" caseSolvedSB solvedRBPair true
-            solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedRF false
+        if chooseShortestSecondBlockPairOrder && numCubes = 1 then
+            let prefix = Solver.solutionTrace
+            let backFirst = solveRBFirst solvedDR
+            let backTrace = Solver.solutionTrace |> List.skip prefix.Length
+            Solver.solutionTrace <- prefix
+            let frontFirst = solveRFFirst solvedDR
+            let frontTrace = Solver.solutionTrace |> List.skip prefix.Length
+            let moveCount trace = trace |> List.sumBy (snd >> List.length)
+            if moveCount backTrace <= moveCount frontTrace then
+                Solver.solutionTrace <- prefix @ backTrace
+                backFirst
+            else
+                Solver.solutionTrace <- prefix @ frontTrace
+                frontFirst
+        elif chooseShortestSecondBlockPairOrder then
+            let prefix = Solver.solutionTrace
+            let backFirst = solveRBFirst solvedDR
+            let backTrace = Solver.solutionTrace |> List.skip prefix.Length
+            let perCube count trace =
+                [0 .. count - 1]
+                |> List.map (fun cubeIndex ->
+                    trace
+                    |> List.mapi (fun index (_, steps) -> index, steps)
+                    |> List.choose (fun (index, steps) -> if index % count = cubeIndex then Some steps else None)
+                    |> List.concat)
+            let rec tryFront inputs =
+                Solver.solutionTrace <- prefix
+                try
+                    let solved = solveRFFirst inputs
+                    let moves = Solver.solutionTrace |> List.skip prefix.Length |> perCube inputs.Length
+                    List.map2 (fun cube steps -> Some (cube, steps)) solved moves
+                with _ ->
+                    match inputs with
+                    | [_] -> [None]
+                    | _ ->
+                        let left, right = List.splitAt (inputs.Length / 2) inputs
+                        tryFront left @ tryFront right
+            let matchingAlgorithms patterns cube =
+                let toggle = function
+                    | Move Move.R -> Some (Move Move.RW) | Move Move.R' -> Some (Move Move.RW') | Move Move.R2 -> Some (Move Move.RW2)
+                    | Move Move.RW -> Some (Move Move.R) | Move Move.RW' -> Some (Move Move.R') | Move Move.RW2 -> Some (Move Move.R2)
+                    | _ -> None
+                let variants steps =
+                    let equivalents =
+                        steps ::
+                        (steps
+                         |> List.mapi (fun index step ->
+                             toggle step
+                             |> Option.map (fun replacement ->
+                                 steps
+                                 |> List.mapi (fun candidateIndex candidate ->
+                                     if candidateIndex = index then replacement else candidate)))
+                         |> List.choose id)
+                    if orientCentersWithSecondBlock then equivalents @ (equivalents |> List.collect (fun candidate -> [candidate @ [Move Move.M]; candidate @ [Move Move.M']])) else equivalents
+                patterns
+                |> List.tryFind (fun (matcher, _, (pattern, auf, colors, _), _) -> matcher cube (pattern, auf, colors))
+                |> Option.map (fun (_, _, _, values) ->
+                    (if List.isEmpty values then [[]] else values |> List.map Render.stringToSteps)
+                    |> List.collect variants
+                    |> List.distinct)
+                |> Option.defaultValue []
+            let frontOptions =
+                if rfPairLevel > 0 && rbPairLevel > 0 then
+                    solvedDR
+                    |> List.map (fun cube ->
+                        matchingAlgorithms rfPairFirstIntermediatePatterns cube
+                        |> List.choose (fun rfMoves ->
+                            let rfSolved = Cube.executeSteps rfMoves cube
+                            if not (caseRFPair rfSolved) then None
+                            else
+                                matchingAlgorithms rbPairLastIntermediatePatterns rfSolved
+                                |> List.choose (fun rbMoves ->
+                                    let solved = Cube.executeSteps rbMoves rfSolved
+                                    if finishingGoal solved then Some (solved, rfMoves @ rbMoves) else None)
+                                |> List.sortBy (snd >> List.length)
+                                |> List.tryHead)
+                        |> List.sortBy (snd >> List.length)
+                        |> List.tryHead)
+                else tryFront solvedDR
+            let backMoves = perCube numCubes backTrace
+            match List.tryFindIndex Option.isNone frontOptions with
+            | Some index -> failwith $"Missing front-first second-block pattern for state: {Render.cubeToString solvedDR[index]}"
+            | None -> ()
+            let choices = List.map2 (fun back front -> List.length (snd (Option.get front)) < List.length back) backMoves frontOptions
+            let chosenMoves = List.map3 (fun useFront back front -> if useFront then snd (Option.get front) else back) choices backMoves frontOptions
+            Solver.solutionTrace <- prefix @ (chosenMoves |> List.map (fun steps -> "SecondBlockPairs", steps))
+            List.map3 (fun useFront back front -> if useFront then fst (Option.get front) else back) choices backFirst frontOptions
+        else solveRBFirst solvedDR
 
     Solver.stageStats "SB" numCubes
 
@@ -484,23 +714,52 @@ let generate numCubes =
                    (look Face.U Sticker.D c = Color.W || look Face.U Sticker.D c = Color.Y) &&
                    (look Face.D Sticker.U c = Color.W || look Face.D Sticker.U c = Color.Y) &&
                    (look Face.D Sticker.D c = Color.W || look Face.D Sticker.D c = Color.Y)
-    let solvedEO = solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
+    let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
+    let caseLRBottom c = caseLtoDF c && look Face.B Sticker.U c = Color.G
+    let caseLRBottomEither c =
+        let front, back = look Face.F Sticker.D c, look Face.B Sticker.U c
+        caseEO c && ((front = Color.B && back = Color.G) || (front = Color.G && back = Color.B))
+    let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G &&
+                                     look Face.L Sticker.UL c = Color.B && look Face.R Sticker.UR c = Color.G &&
+                                     look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
+    let caseEolr c = caseLRBottomEither c || caseLRSolved c
+    let solvedEO =
+        if useEolr then
+            let lseEdges = [Edge UL; Edge UR; Edge UF; Edge UB; Edge DF; Edge DB]
+            let directEoAlgorithms =
+                edgeIntermediateOrientationPatters
+                |> List.collect (fun (_, _, _, algorithms) -> if List.isEmpty algorithms then [""] else algorithms)
+                |> List.distinct
+                |> List.map (fun algorithm -> if System.String.IsNullOrWhiteSpace algorithm then [] else Render.stringToSteps algorithm)
+            let aufs = [ []; [Move Move.U]; [Move Move.U']; [Move Move.U2] ]
+            let eoCandidates = [for auf in aufs do for algorithm in directEoAlgorithms do yield auf @ algorithm] |> List.distinct
+            solvedCenterO |> List.map (fun cube ->
+                let key state = $"{look Face.U Sticker.C state}{look Face.D Sticker.C state}{look Face.F Sticker.C state}{look Face.B Sticker.C state}{Render.piecesToString state lseEdges}"
+                let algorithm =
+                    eoCandidates
+                    |> List.choose (fun eoAlgorithm ->
+                        let oriented = Cube.executeSteps eoAlgorithm cube
+                        if not (caseEO oriented) then None
+                        else
+                            let finish = Solver.solveWithStepsBy key muMoves caseEolr oriented |> List.head
+                            Some (eoAlgorithm @ finish))
+                    |> List.minBy List.length
+                Solver.solutionTrace <- Solver.solutionTrace @ ["EOLR", algorithm]
+                Cube.executeSteps algorithm cube)
+        else solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
 
     Solver.stageStats "EO" numCubes
 
     // Left/right edges (LR)
 
-    let caseLRSolved c = caseEO c && look Face.L Sticker.U c = Color.B && look Face.R Sticker.U c = Color.G &&
-                                     look Face.L Sticker.UL c = Color.B && look Face.R Sticker.UR c = Color.G &&
-                                     look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
     let solvedLR =
-        if level = 0 then 
+        if useEolr then
+            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedEO true
+        elif level = 0 then
             // L edge to DF*)
-            let caseLtoDF c = caseEO c && look Face.F Sticker.D c = Color.B
             let solvedLtoDF = solve muMoves "L edge to DF" "LToDF" caseLtoDF solvedEO false
 
             // LR edges to bottom
-            let caseLRBottom c = caseLtoDF c && look Face.F Sticker.D c = Color.B && look Face.B Sticker.U c = Color.G
             let solvedLRBottom = solve muMoves "LR edges to bottom" "LREdgesBottom" caseLRBottom solvedLtoDF false
 
             // LR edges solved
@@ -524,3 +783,6 @@ let generate numCubes =
     let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
+
+let generate numCubes =
+    generateFrom (initScrambledCubes numCubes)
