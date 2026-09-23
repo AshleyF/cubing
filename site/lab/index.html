@@ -12,14 +12,18 @@
       <aside class="control-panel">
         <div class="panel-head"><h1 id="sequenceTitle">Solving…</h1><span class="move-total"><strong id="moveTotal">—</strong> moves</span></div>
         <div class="scramble-block"><textarea id="scrambleInput" spellcheck="false" rows="3" aria-label="Scramble notation"></textarea><div class="action-row"><button class="primary" id="newScramble">↻ New scramble</button><span class="edit-hint">Edits apply automatically</span></div></div>
-        <div class="solver-line solving" id="solverStatus"><i></i><span>Running beginner Roux patterns…</span></div>
+        <div class="solver-line solving" id="solverStatus"><i></i><span>Running Roux patterns…</span></div>
         <div class="sequence-block"><div class="label-row"><span>SOLUTION</span><button id="copyButton">COPY</button></div><div id="solutionText" class="solution-text"></div></div>
       </aside>
     </section>
     <section class="patterns-section" id="patterns">
       <div class="pattern-grid" id="patternGrid"></div>
+      <div class="preset-row" aria-label="Solver presets">
+        <button class="preset-button" id="beginnerPreset" title="Minimum-memorization Roux: beginner block building, Sune plus J-perm, and beginner edge orientation. Least efficient, but the fewest algorithms to learn." data-tooltip="Minimum memorization and the fewest algorithms, at the cost of longer solutions.">Beginner method</button>
+        <button class="preset-button optimal" id="optimalPreset" title="Enable color neutrality, direct pairs, shorter pair order, one-look CMLL, center orientation, EOLR, and move cancellations for the shortest solutions currently available." data-tooltip="Enable every current optimization for the shortest solutions RouxLab can produce.">Optimal settings</button>
+      </div>
     </section>
   </main>
   <dialog id="patternDialog"><button class="dialog-close" id="closeDialog" aria-label="Close">×</button><div class="dialog-head"><span id="dialogStage"></span><h2 id="dialogTitle"></h2><p id="dialogDescription"></p></div><div class="case-toolbar"><span id="caseLabel"></span><div><button id="prevCase">←</button><button id="nextCase">→</button></div></div><div class="case-layout"><div class="cube-net" id="cubeNet" aria-label="Pattern cube net"></div><div class="case-details"><span>MATCHED ACTION</span><strong id="caseAlg"></strong></div></div></dialog>
-  <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module"></script><script src="app.js?v=20260923-7" type="module"></script>
+  <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module"></script><script src="app.js?v=20260923-8" type="module"></script>
 </body></html>

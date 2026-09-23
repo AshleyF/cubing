@@ -20,6 +20,7 @@
 - Inspection rotations (`ColorNeutralOrientation` and `DLEdge`) stay in the playable algorithm but count as zero moves in UI statistics.
 - Move cancellations are a browser-side post-processing option and default to enabled.
 - Solver switches and the move-cancellation preference persist in browser `localStorage`; restore them before generating the initial solve.
+- The Beginner and Optimal preset buttons apply complete configurations, persist them, and immediately regenerate the current scramble. Keep the solver title configuration-neutral.
 - Direct L4E is the baseline L4E pattern set. The repetitive `M' U2` beginner bank is retained only for historical comparisons and must not be selected by the web solver.
 - First- and second-block “choose shorter pair order” compare only the two ways of completing that block’s two pairs. Color neutrality compares only first-block cost. Neither may look ahead into later stages.
 - Before pushing solver changes, verify the .NET build, rebuild the static solver, serve the repository root with a plain static server, and test `site/lab/` without `server.mjs`.

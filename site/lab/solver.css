@@ -40,10 +40,17 @@
 .row-metric strong { color:var(--ink); font-size:12px; }
 .row-metric .saving { color:#16834a; }
 .config-row .explore { border:0; background:transparent; padding:0; text-align:left; color:var(--blue); font-size:9px; font-weight:700; text-transform:uppercase; cursor:pointer; }
+.preset-row { display:flex; justify-content:flex-end; gap:8px; padding:14px 0; }
+.preset-button { position:relative; border:1px solid var(--ink); background:transparent; padding:11px 15px; font-size:9px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.preset-button.optimal { background:var(--ink); color:#fff; }
+.preset-button::after { content:attr(data-tooltip); position:absolute; right:0; bottom:calc(100% + 9px); width:240px; padding:9px 11px; background:var(--ink); color:#fff; font:10px/1.4 Arial,sans-serif; letter-spacing:0; text-align:left; text-transform:none; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(3px); transition:.12s; z-index:4; }
+.preset-button:hover::after,.preset-button:focus-visible::after { opacity:1; visibility:visible; transform:none; }
 @media (max-width:700px) {
   .config-group { grid-template-columns:1fr; }
   .config-group h2 { border-right:0; border-bottom:1px solid var(--line); padding:10px 8px 6px; }
   .config-row { grid-template-columns:30px minmax(130px,1fr) 62px 72px 52px; }
+  .preset-row { justify-content:stretch; }
+  .preset-button { flex:1; }
 }
 
 .net-face i[data-color="*"] { background:#171715; }
