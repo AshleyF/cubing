@@ -11,7 +11,8 @@
 - GitHub Pages serves the app at `https://ashleyf.github.io/cubing/site/lab/`. All browser asset URLs must remain relative so the `/cubing/site/lab/` base path works.
 - RouxLab is a fully static application. GitHub Pages cannot run Node, .NET, or `/api/*` endpoints. Do not reintroduce a server dependency.
 - The production solver remains the F# implementation in `library/` and `solver333/`. `solver333/BrowserSolver.fsproj` links those sources and Fable compiles them to `site/lab/solver/`.
-- `site/lab/solver-worker.js` loads the compiled solver and runs every solve off the UI thread. `site/lab/app.js` communicates with that worker. Settings changes must regenerate the current scramble while leaving the previous result visible until the replacement is ready.
+- `site/lab/solver-worker.js` loads the compiled solver and runs every solve off the UI thread. `site/lab/app.js` uses separate foreground and option-comparison workers. Settings changes must cancel the previous foreground request, regenerate the current scramble immediately, and leave the previous result visible until stable milestones from the replacement arrive.
+- Foreground solves stream stable FB, SB, CMLL, EO/EOLR, LSE, and L4E milestones. Color neutrality evaluates only the first block for all eight x2/y orientations, then completes only the winning orientation.
 - External pattern text files are canonical. `solver333/Tools/GenerateBrowserPatternData.mjs` packages them as `site/lab/pattern-data.json`; it does not implement a second solver.
 - Run `site/lab/build.sh` after changing F# solver code or pattern files. It rebuilds the .NET solver, browser solver, embedded pattern data, and static pattern explorer catalog.
 - The pattern explorer reads `site/lab/patterns.json` and `site/lab/eolr-cases.json`; it must never call a local API.

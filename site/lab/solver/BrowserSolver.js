@@ -1,8 +1,8 @@
-import { Record } from "./fable_modules/fable-library-js.4.16.0/Types.js";
-import { array_type, string_type, record_type, int32_type } from "./fable_modules/fable-library-js.4.16.0/Reflection.js";
+import { FSharpException, Record } from "./fable_modules/fable-library-js.4.16.0/Types.js";
+import { class_type, array_type, string_type, record_type, int32_type } from "./fable_modules/fable-library-js.4.16.0/Reflection.js";
 import { setData } from "./PatternData.js";
 import { stringToSteps, stepsToString } from "./library/Render.js";
-import { isEmpty, append, filter, length, sumBy, minBy, ofArray, singleton, empty, map, toArray, collect } from "./fable_modules/fable-library-js.4.16.0/List.js";
+import { filter, length, sumBy, isEmpty, append, mapIndexed, minBy, ofArray, singleton, empty, map, toArray, collect } from "./fable_modules/fable-library-js.4.16.0/List.js";
 import { x2yColorNeutral, chooseShortestSecondBlockPairOrder, chooseShortestFirstBlockPairOrder, orientCentersWithSecondBlock, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, useEolr, edgeOrientationLevel, fullCmll, cornerPermutationLevel, cornerOrientationLevel } from "./Utility.js";
 import { Color, Face, Sticker, look, solved, executeSteps } from "./library/Cube.js";
 import { solutionTrace } from "./library/Solver.js";
@@ -57,6 +57,16 @@ export function SolveResult_$reflection() {
     return record_type("BrowserSolver.SolveResult", [], SolveResult, () => [["solution", string_type], ["stages", array_type(StageResult_$reflection())]]);
 }
 
+export class FirstBlockComplete extends FSharpException {
+    constructor() {
+        super();
+    }
+}
+
+export function FirstBlockComplete_$reflection() {
+    return class_type("BrowserSolver.FirstBlockComplete", void 0, FirstBlockComplete, class_type("System.Exception"));
+}
+
 export function setPatterns(keys, values) {
     setData(keys, values);
 }
@@ -93,8 +103,6 @@ export function solveWithProgress(scramble, config, progress) {
         trace = solveOne(scrambled);
     }
     else {
-        progressCallback((value) => {
-        });
         const orientations = map((algorithm) => {
             if (algorithm === "") {
                 return empty();
@@ -106,25 +114,53 @@ export function solveWithProgress(scramble, config, progress) {
         const firstBlockStages = ofSeq(["ColorNeutralOrientation", "DLEdge", "LCenter", "TuckLBtoFD", "BringDLBtoU", "InsertLBPair", "TuckLFtoBD", "BringDLFtoURF", "InsertLFPair", "TuckLFFirsttoBD", "BringDLFFirsttoURF", "InsertLFFirstPair", "TuckLBLasttoFD", "BringDLBLasttoU", "InsertLBLastPair"], {
             Compare: comparePrimitives,
         });
-        const tupledArg_2 = minBy((tupledArg_1) => tupledArg_1[2], map((orientation) => {
-            let cube_1, colorMap;
-            const candidateTrace = solveOne((cube_1 = executeSteps(orientation, scrambled), (colorMap = ofList(map((tupledArg) => [look(tupledArg[0], new Sticker(4, []), cube_1), tupledArg[1]], ofArray([[new Face(0, []), new Color(2, [])], [new Face(1, []), new Color(3, [])], [new Face(2, []), new Color(1, [])], [new Face(3, []), new Color(0, [])], [new Face(4, []), new Color(5, [])], [new Face(5, []), new Color(4, [])]])), {
+        const patternInput = minBy((tupledArg_1) => tupledArg_1[3], mapIndexed((index, orientation) => {
+            let candidateCube;
+            const cube_1 = executeSteps(orientation, scrambled);
+            const colorMap = ofList(map((tupledArg) => [look(tupledArg[0], new Sticker(4, []), cube_1), tupledArg[1]], ofArray([[new Face(0, []), new Color(2, [])], [new Face(1, []), new Color(3, [])], [new Face(2, []), new Color(1, [])], [new Face(3, []), new Color(0, [])], [new Face(4, []), new Color(5, [])], [new Face(5, []), new Color(4, [])]])), {
                 Compare: compare,
-            }), map_1((_arg, face_1) => map_1((_arg_1, color) => find(color, colorMap), face_1), cube_1))));
-            return [orientation, candidateTrace, sumBy((arg_1) => length(arg_1[1]), filter((arg) => FSharpSet__Contains(firstBlockStages, arg[0]), candidateTrace), {
+            });
+            candidateCube = map_1((_arg, face_1) => map_1((_arg_1, color) => find(color, colorMap), face_1), cube_1);
+            let candidateTrace;
+            let firstBlockTrace = empty();
+            solutionTrace(empty());
+            progressCallback((milestone_1) => {
+                if (milestone_1 === "First block") {
+                    firstBlockTrace = solutionTrace();
+                    throw new FirstBlockComplete();
+                }
+            });
+            try {
+                generateFrom(singleton(candidateCube));
+            }
+            catch (matchValue) {
+                if (matchValue instanceof FirstBlockComplete) {
+                }
+                else {
+                    throw matchValue;
+                }
+            }
+            candidateTrace = firstBlockTrace;
+            progress(`Inspection ${index + 1}/8`, resultFromTrace(append(isEmpty(orientation) ? empty() : singleton(["ColorNeutralOrientation", orientation]), candidateTrace)));
+            return [orientation, candidateCube, candidateTrace, sumBy((arg_1) => length(arg_1[1]), filter((arg) => FSharpSet__Contains(firstBlockStages, arg[0]), candidateTrace), {
                 GetZero: () => 0,
                 Add: (x_2, y_2) => (x_2 + y_2),
             })];
         }, orientations), {
             Compare: comparePrimitives,
         });
-        const orientation_1 = tupledArg_2[0];
-        const chosen = append(isEmpty(orientation_1) ? empty() : singleton(["ColorNeutralOrientation", orientation_1]), tupledArg_2[1]);
-        progress("First block", resultFromTrace(filter((arg_2) => FSharpSet__Contains(firstBlockStages, arg_2[0]), chosen)));
-        trace = chosen;
+        const orientation_1 = patternInput[0];
+        const orientationTrace = isEmpty(orientation_1) ? empty() : singleton(["ColorNeutralOrientation", orientation_1]);
+        progress("First block", resultFromTrace(append(orientationTrace, patternInput[2])));
+        progressCallback((milestone_2) => {
+            if (milestone_2 !== "First block") {
+                progress(milestone_2, resultFromTrace(append(orientationTrace, solutionTrace())));
+            }
+        });
+        trace = append(orientationTrace, solveOne(patternInput[1]));
     }
     solutionTrace(trace);
-    progressCallback((value_3) => {
+    progressCallback((value_1) => {
     });
     return resultFromTrace(trace);
 }

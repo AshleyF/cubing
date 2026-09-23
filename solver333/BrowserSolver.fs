@@ -14,6 +14,8 @@ type StageResult = { stage: string; moves: string }
 [<CLIMutable>]
 type SolveResult = { solution: string; stages: StageResult array }
 
+exception FirstBlockComplete
+
 let setPatterns (keys: string array) (values: string array array) = PatternData.setData keys values
 
 let private resultFromTrace trace =
@@ -46,9 +48,6 @@ let solveWithProgress (scramble: string) (config: Config) (progress: string -> S
             Roux.progressCallback <- fun milestone -> progress milestone (resultFromTrace Solver.solutionTrace)
             solveOne scrambled
         else
-            // Candidate orientations are speculative. Publish only the chosen
-            // first-block prefix, not stages from candidates that lose.
-            Roux.progressCallback <- ignore
             let orientations =
                 [ ""; "y"; "y2"; "y'"; "x2"; "x2 y"; "x2 y2"; "x2 y'" ]
                 |> List.map (fun algorithm -> if algorithm = "" then [] else Render.stringToSteps algorithm)
@@ -61,17 +60,30 @@ let solveWithProgress (scramble: string) (config: Config) (progress: string -> S
             let firstBlockStages =
                 set [ "ColorNeutralOrientation"; "DLEdge"; "LCenter"; "TuckLBtoFD"; "BringDLBtoU"; "InsertLBPair"; "TuckLFtoBD"; "BringDLFtoURF"; "InsertLFPair"
                       "TuckLFFirsttoBD"; "BringDLFFirsttoURF"; "InsertLFFirstPair"; "TuckLBLasttoFD"; "BringDLBLasttoU"; "InsertLBLastPair" ]
-            orientations
-            |> List.map (fun orientation ->
-                let candidateTrace = scrambled |> Cube.executeSteps orientation |> normalize |> solveOne
-                let firstBlockMoves = candidateTrace |> List.filter (fst >> firstBlockStages.Contains) |> List.sumBy (snd >> List.length)
-                orientation, candidateTrace, firstBlockMoves)
-            |> List.minBy (fun (_, _, moves) -> moves)
-            |> fun (orientation, candidateTrace, _) ->
-                let chosen = (if List.isEmpty orientation then [] else ["ColorNeutralOrientation", orientation]) @ candidateTrace
-                let firstBlock = chosen |> List.filter (fst >> firstBlockStages.Contains)
-                progress "First block" (resultFromTrace firstBlock)
-                chosen
+            let solveFirstBlock cube =
+                let mutable firstBlockTrace = []
+                Solver.solutionTrace <- []
+                Roux.progressCallback <- fun milestone ->
+                    if milestone = "First block" then
+                        firstBlockTrace <- Solver.solutionTrace
+                        raise FirstBlockComplete
+                try Roux.generateFrom [cube] with FirstBlockComplete -> ()
+                firstBlockTrace
+            let orientation, chosenCube, chosenFirstBlock, _ =
+                orientations
+                |> List.mapi (fun index orientation ->
+                    let candidateCube = scrambled |> Cube.executeSteps orientation |> normalize
+                    let candidateTrace = solveFirstBlock candidateCube
+                    let displayTrace = (if List.isEmpty orientation then [] else ["ColorNeutralOrientation", orientation]) @ candidateTrace
+                    progress $"Inspection {index + 1}/8" (resultFromTrace displayTrace)
+                    let firstBlockMoves = candidateTrace |> List.filter (fst >> firstBlockStages.Contains) |> List.sumBy (snd >> List.length)
+                    orientation, candidateCube, candidateTrace, firstBlockMoves)
+                |> List.minBy (fun (_, _, _, moves) -> moves)
+            let orientationTrace = if List.isEmpty orientation then [] else ["ColorNeutralOrientation", orientation]
+            progress "First block" (resultFromTrace (orientationTrace @ chosenFirstBlock))
+            Roux.progressCallback <- fun milestone ->
+                if milestone <> "First block" then progress milestone (resultFromTrace (orientationTrace @ Solver.solutionTrace))
+            orientationTrace @ solveOne chosenCube
 
     Solver.solutionTrace <- trace
     Roux.progressCallback <- ignore

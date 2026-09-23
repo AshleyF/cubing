@@ -5,7 +5,7 @@ const ready = (async () => {
     return response.json();
   });
   setData(Object.keys(patternData), Object.values(patternData));
-  return (await import('./solver/BrowserSolver.js?v=20260923-2')).solveWithProgress;
+  return (await import('./solver/BrowserSolver.js?v=20260923-3')).solveWithProgress;
 })();
 
 self.onmessage = async event => {
