@@ -1,12 +1,12 @@
-import { comparePrimitives, safeHash, stringHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
-import { cubeToString, stringToSteps, piecesToString } from "./library/Render.js";
+import { stringHash, comparePrimitives, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
+import { stringToSteps, cubeToString, piecesToString } from "./library/Render.js";
 import { chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js";
-import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, expandPatternsForAuf, solveCase, matchesGeneric } from "./library/Solver.js";
-import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, sortBy, tryHead, filter, isEmpty, collect, map, length, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
-import { Edge, Sticker, Face, look, executeSteps, Rotate, Step, Move, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
-import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
+import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, solveCase, expandPatternsForAuf, matchesGeneric } from "./library/Solver.js";
+import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, map, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
+import { Edge, Sticker, Face, look, Rotate, Step, Move, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
+import { map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
 import { List_distinct } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
-import { map as map_1, collect as collect_1, delay, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
+import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
 import { defaultArg, value as value_1, bind, map as map_2 } from "./fable_modules/fable-library-js.4.16.0/Option.js";
 import { find, forAll } from "./fable_modules/fable-library-js.4.16.0/Map.js";
@@ -119,6 +119,40 @@ export const lseBeginnerPatterns = append(eolrBeginnerPatterns, l4eIntermediateP
 
 export const lseIntermediatePatterns = append(eolrIntermediatePatterns, l4eIntermediatePatterns);
 
+export function chooseDirectLrAlgorithm(goal, cube) {
+    const matching = toList(filter((tupledArg) => {
+        if (tupledArg[1] === "LREdges") {
+            return tupledArg[0](cube)(tupledArg[2]);
+        }
+        else {
+            return false;
+        }
+    }, expandPatternsForAuf(lrIntermediatePatterns)));
+    if (isEmpty(matching)) {
+        throw new Error(`Uncovered direct LR state: ${cubeToString(cube)}`);
+    }
+    const matchValue = tryHead(sortBy(length, filter_1((algorithm) => goal(executeSteps(algorithm, cube)), List_distinct(collect((tupledArg_1) => {
+        const algorithms = tupledArg_1[3];
+        if (isEmpty(algorithms)) {
+            return singleton(empty());
+        }
+        else {
+            return map(stringToSteps, algorithms);
+        }
+    }, matching), {
+        Equals: equals,
+        GetHashCode: safeHash,
+    })), {
+        Compare: comparePrimitives,
+    }));
+    if (matchValue == null) {
+        throw new Error(`Direct LR patterns have no valid action for state: ${cubeToString(cube)}`);
+    }
+    else {
+        return matchValue;
+    }
+}
+
 export const rouxBeginnerPatterns = append(fbBeginnerPatterns, append(sbBeginnerPatterns, append(cmllBeginnerPatterns, lseBeginnerPatterns)));
 
 export const rouxIntermediatePatterns = append(fbIntermediatePatterns, append(sbIntermediatePatterns, append(cmllIntermediatePatterns, lseIntermediatePatterns)));
@@ -191,7 +225,7 @@ export function generateFrom(scrambled) {
                 else {
                     return values;
                 }
-            }, filter((tupledArg) => equals(tupledArg[1], stage), patterns)), {
+            }, filter_1((tupledArg) => equals(tupledArg[1], stage), patterns)), {
                 Equals: (x, y) => (x === y),
                 GetHashCode: stringHash,
             }));
@@ -201,7 +235,7 @@ export function generateFrom(scrambled) {
             });
         };
         const solveCandidates = (description, stage_1, goal, algorithms_1, cubes) => map((cube_10) => {
-            const matchValue = tryHead(sortBy(length, filter((algorithm_2) => goal(executeSteps(algorithm_2, cube_10)), algorithms_1), {
+            const matchValue = tryHead(sortBy(length, filter_1((algorithm_2) => goal(executeSteps(algorithm_2, cube_10)), algorithms_1), {
                 Compare: comparePrimitives,
             }));
             if (matchValue == null) {
@@ -297,7 +331,7 @@ export function generateFrom(scrambled) {
         };
         const tryApplyPattern = (goal_1, patterns_1, cube_16) => map_2((algorithm_5) => [executeSteps(algorithm_5, cube_16), algorithm_5], bind((tupledArg_5) => {
             const values_1 = tupledArg_5[3];
-            return tryHead(sortBy(length, filter((algorithm_4) => goal_1(executeSteps(algorithm_4, cube_16)), isEmpty(values_1) ? singleton(empty()) : map(stringToSteps, values_1)), {
+            return tryHead(sortBy(length, filter_1((algorithm_4) => goal_1(executeSteps(algorithm_4, cube_16)), isEmpty(values_1) ? singleton(empty()) : map(stringToSteps, values_1)), {
                 Compare: comparePrimitives,
             }));
         }, tryFind((tupledArg_4) => {
@@ -371,7 +405,7 @@ export function generateFrom(scrambled) {
                 else {
                     return values_2;
                 }
-            }, filter((tupledArg_8) => equals(tupledArg_8[1], stage_3), patterns_2)), {
+            }, filter_1((tupledArg_8) => equals(tupledArg_8[1], stage_3), patterns_2)), {
                 Equals: (x_6, y_5) => (x_6 === y_5),
                 GetHashCode: stringHash,
             }));
@@ -399,7 +433,7 @@ export function generateFrom(scrambled) {
             });
         };
         const solveFromCandidates = (description_2, stage_4, goal_2, candidates_2, cubes_1) => map((cube_26) => {
-            const matchValue_3 = tryHead(sortBy(length, filter((algorithm_8) => goal_2(executeSteps(algorithm_8, cube_26)), candidates_2), {
+            const matchValue_3 = tryHead(sortBy(length, filter_1((algorithm_8) => goal_2(executeSteps(algorithm_8, cube_26)), candidates_2), {
                 Compare: comparePrimitives,
             }));
             if (matchValue_3 == null) {
@@ -666,7 +700,11 @@ export function generateFrom(scrambled) {
     }
     stageStats("EO", numCubes);
     progressCallback()(useEolr() ? "EOLR" : "Edge orientation");
-    const solvedLR = useEolr() ? solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solvedEO, true) : ((level === 0) ? solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solve(muMoves, "LR edges to bottom", "LREdgesBottom", (c_6) => {
+    const solvedLR = useEolr() ? map((cube_36) => {
+        const algorithm_13 = chooseDirectLrAlgorithm(caseLRSolved, cube_36);
+        solutionTrace(append(solutionTrace(), singleton(["LREdges", algorithm_13])));
+        return executeSteps(algorithm_13, cube_36);
+    }, solvedEO) : ((level === 0) ? solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solve(muMoves, "LR edges to bottom", "LREdgesBottom", (c_6) => {
         if (caseLtoDF(c_6)) {
             return equals(look(new Face(5, []), new Sticker(1, []), c_6), new Color(5, []));
         }
@@ -676,8 +714,8 @@ export function generateFrom(scrambled) {
     }, solve(muMoves, "L edge to DF", "LToDF", caseLtoDF, solvedEO, false), false), true) : solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solvedEO, true));
     stageStats("LR", numCubes);
     progressCallback()("Last six edges");
-    const solved_6 = solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_36) => {
-        const solved_5 = (face, color) => forAll((_arg_31, col) => equals(col, color), find(face, cube_36));
+    const solved_6 = solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_37) => {
+        const solved_5 = (face, color) => forAll((_arg_31, col) => equals(col, color), find(face, cube_37));
         if ((((solved_5(new Face(4, []), new Color(0, [])) && solved_5(new Face(5, []), new Color(1, []))) && solved_5(new Face(2, []), new Color(4, []))) && solved_5(new Face(3, []), new Color(5, []))) && solved_5(new Face(0, []), new Color(3, []))) {
             return solved_5(new Face(1, []), new Color(2, []));
         }

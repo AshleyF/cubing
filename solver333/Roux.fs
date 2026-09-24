@@ -355,6 +355,24 @@ let l4eIntermediatePatterns = [
 let lseBeginnerPatterns = eolrBeginnerPatterns @ l4eIntermediatePatterns
 let lseIntermediatePatterns = eolrIntermediatePatterns @ l4eIntermediatePatterns
 
+let chooseDirectLrAlgorithm goal cube =
+    let matching =
+        lrIntermediatePatterns
+        |> expandPatternsForAuf
+        |> Seq.filter (fun (matchFn, stage, pattern, _) -> stage = "LREdges" && matchFn cube pattern)
+        |> Seq.toList
+    if List.isEmpty matching then failwith $"Uncovered direct LR state: {Render.cubeToString cube}"
+    let candidates =
+        matching
+        |> List.collect (fun (_, _, _, algorithms) ->
+            if List.isEmpty algorithms then [[]]
+            else algorithms |> List.map Render.stringToSteps)
+        |> List.distinct
+        |> List.filter (fun algorithm -> Cube.executeSteps algorithm cube |> goal)
+    match candidates |> List.sortBy List.length |> List.tryHead with
+    | Some algorithm -> algorithm
+    | None -> failwith $"Direct LR patterns have no valid action for state: {Render.cubeToString cube}"
+
 let rouxBeginnerPatterns = fbBeginnerPatterns @ sbBeginnerPatterns @ cmllBeginnerPatterns @ lseBeginnerPatterns // 102 STM, 99 with ignored AUF
 let rouxIntermediatePatterns = fbIntermediatePatterns @ sbIntermediatePatterns @ cmllIntermediatePatterns @ lseIntermediatePatterns // 97 STM with LSE, 84 with 1L CO, 81 with 1L CP, 77 with EO, 74 with ignored AUF
 let rouxAdvancedPatterns = fbIntermediatePatterns @ sbIntermediatePatterns @ cmllAdvancedPatterns @ lseIntermediatePatterns // 65 STM with CMLL
@@ -785,7 +803,10 @@ let generateFrom scrambled =
 
     let solvedLR =
         if useEolr then
-            solve muMoves "LR edges solved" "LREdges" caseLRSolved solvedEO true
+            solvedEO |> List.map (fun cube ->
+                let algorithm = chooseDirectLrAlgorithm caseLRSolved cube
+                Solver.solutionTrace <- Solver.solutionTrace @ ["LREdges", algorithm]
+                Cube.executeSteps algorithm cube)
         elif level = 0 then
             // L edge to DF*)
             let solvedLtoDF = solve muMoves "L edge to DF" "LToDF" caseLtoDF solvedEO false

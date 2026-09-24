@@ -6,8 +6,8 @@ repo_dir="$(cd "$lab_dir/../.." && pwd)"
 solver_dir="$repo_dir/solver333"
 
 node "$solver_dir/Tools/GenerateBrowserPatternData.mjs"
-dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disable-build-servers
-dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers
+dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
+dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
 
 # Fable writes a blanket ignore file beside its runtime. Keep JavaScript modules
@@ -16,6 +16,8 @@ printf '%s\n' '*' '!*/' '!*.js' > "$lab_dir/solver/fable_modules/.gitignore"
 node "$solver_dir/Tools/CheckBrowserModules.mjs"
 node "$solver_dir/Tools/TestCancellations.mjs"
 node "$solver_dir/Tools/TestL4E.mjs"
+node "$solver_dir/Tools/TestEolrRegression.mjs"
+node "$solver_dir/Tools/CheckLrCoverage.mjs"
 
 catalog="$({ cd "$solver_dir"; dotnet bin/Release/net8.0/Solver.dll --patterns; } | sed -n 's/^PATTERN_RESULT|//p')"
 if [[ -z "$catalog" ]]; then
