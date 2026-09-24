@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f0e9">
+  <title>RouxLab · Brute-force solver</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="brute-force.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-mark">R</span><span>ROUXLAB</span></a>
+    <nav><a href="./#cube-workbench">SOLVE</a><a href="./#patterns">PATTERNS</a><a href="report.html">REPORT</a><a href="brute-force.html" aria-current="page">BRUTE FORCE</a></nav>
+  </header>
+
+  <main class="brief">
+    <header class="brief-head">
+      <p>DESIGN NOTE</p>
+      <h1>A stage-optimal Roux solver is small enough to brute force.</h1>
+      <p class="lede">Roux has four natural stages: first block, second block, CMLL, and last six edges. Each can be searched independently and stored as a compact policy. That gives RouxLab an exact baseline for measuring what a learnable pattern set costs.</p>
+    </header>
+
+    <section class="stage-grid" aria-label="Roux stage state estimates">
+      <article>
+        <span>01 · FB</span>
+        <h2>First block</h2>
+        <strong>5,322,240</strong>
+        <p>Abstract states for its three edges and two corners. Explicitly tracking which movable center was selected raises the upper estimate to about <b>31.9 million</b>.</p>
+      </article>
+      <article>
+        <span>02 · SB</span>
+        <h2>Second block</h2>
+        <strong>1,088,640</strong>
+        <p>States for the remaining three block edges and two corners with first block fixed. Tracking the four M-axis center offsets gives an upper estimate of <b>4,354,560</b>.</p>
+      </article>
+      <article>
+        <span>03 · CMLL</span>
+        <h2>Top corners</h2>
+        <strong>648</strong>
+        <p>Concrete corner cases: <code>4! × 3³</code>. AUF and symmetry reduce these to the familiar named cases, but a computer can simply retain all 648.</p>
+      </article>
+      <article>
+        <span>04 · LSE</span>
+        <h2>Last six edges</h2>
+        <strong>184,320</strong>
+        <p>The exact M/U-reachable orbit, including edge permutation and orientation, center offset, and corner AUF. This is tiny enough for exhaustive reverse BFS.</p>
+      </article>
+    </section>
+
+    <section class="note two-column">
+      <div>
+        <p class="eyebrow">THE BASIC MECHANISM</p>
+        <h2>Rank, look up, move, repeat.</h2>
+      </div>
+      <div>
+        <p>Generate each table offline by searching backward from its goal states. Encode the relevant cubies directly as an integer rank. Each entry then stores the next move—and optionally the remaining distance—on a shortest path.</p>
+        <p>This is an exact, constant-time lookup. A textual pattern scan, general-purpose hash table, or Bloom filter would only add overhead. Bloom filters are especially unsuitable because they admit false positives and do not return the required action.</p>
+      </div>
+    </section>
+
+    <section class="note two-column">
+      <div>
+        <p class="eyebrow">IMPORTANT QUALIFICATION</p>
+        <h2>CMLL has 648 inputs, not necessarily a 648-state search.</h2>
+      </div>
+      <div>
+        <p>A CMLL algorithm may temporarily disturb block pieces and restore them at the end. A search over ordinary turns must therefore track enough of the cube to verify that both blocks return solved; corner state alone is not Markov under those moves.</p>
+        <p>There are two practical approaches: search the 648 starting cases with IDA* and good block-preservation heuristics, or construct a smaller graph from block-preserving macro moves. The finished policy still needs only one result per concrete CMLL input.</p>
+      </div>
+    </section>
+
+    <section class="note two-column">
+      <div>
+        <p class="eyebrow">BOUNDARIES</p>
+        <h2>Optimal by stage is not globally optimal.</h2>
+      </div>
+      <div>
+        <p>Each table minimizes its own stage without looking ahead. The shortest first block can lead to a worse second block, and the shortest CMLL can lead to a worse LSE. That is intentional: it models recognizable Roux decisions and produces a fair, reproducible reference.</p>
+        <p>Color neutrality should compare first-block cost only. Pair order should compare completion of that block only. CMLL may leave an AUF, and LSE should absorb that alignment rather than charging CMLL for it.</p>
+      </div>
+    </section>
+
+    <section class="compression">
+      <div class="compression-head">
+        <div>
+          <p class="eyebrow">POLICY COMPRESSION</p>
+          <h2>Can the table be reduced to rules plus exceptions?</h2>
+        </div>
+        <p>Once the exhaustive policy exists, it becomes training data. We can search for compact machine rules that select an optimal next move across large groups of states, then retain an exact exception table for the states that resist compression.</p>
+      </div>
+
+      <div class="compression-flow" aria-label="Policy compression process">
+        <span>EXACT POLICY</span><i>→</i><span>GENERAL RULES</span><i>→</i><span>SPECIALIZED RULES</span><i>→</i><span>EXCEPTIONS</span>
+      </div>
+
+      <div class="compression-points">
+        <article>
+          <span>01</span>
+          <h3>Preserve every optimal choice</h3>
+          <p>A BFS should retain every move that decreases the exact distance by one, not just its arbitrary parent move. A compressed rule may choose any of them, greatly increasing the structure it can share.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Require exact coverage</h3>
+          <p>A rule is accepted only where its action is provably optimal. States outside its domain continue to more specific rules or the exception table. Nothing is guessed and no state silently falls back.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Optimize machine cost</h3>
+          <p>The rules need not be understandable to a cuber. Decision DAGs, bit predicates, arithmetic programs, symmetry reduction, and small indexed subtables are all valid if they reduce bytes without making lookup impractical.</p>
+        </article>
+      </div>
+
+      <div class="compression-score">
+        <strong>Measure the whole representation.</strong>
+        <p>Score rule bytecode, exception keys and actions, and evaluation cost together. Compare the result with a dense packed table—and with that table after Brotli compression—because a clever rule system is only useful if it beats the simple baseline in a meaningful way.</p>
+      </div>
+    </section>
+
+    <section class="outcome">
+      <p class="eyebrow">WHAT THIS ENABLES</p>
+      <h2>Measure the price of learnability.</h2>
+      <p>The exhaustive policies become a control group. RouxLab can compare beginner pairs, direct pairs, two-look CMLL, full CMLL, direct EO, EOLR, and other human-sized algorithm sets against the shortest solution available inside the same stage boundaries.</p>
+      <div class="pipeline" aria-label="Solver pipeline">
+        <span>SCRAMBLE</span><i>→</i><span>FB</span><i>→</i><span>SB</span><i>→</i><span>CMLL</span><i>→</i><span>LSE</span><i>→</i><span>CANCEL</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
