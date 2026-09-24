@@ -1,5 +1,25 @@
 ﻿# Solver
 
+## Exact LSE policy
+
+`Data/lse-policy-v1.dat` contains the complete stage-optimal policy for the
+184,320 states in the Roux M/U last-six-edges orbit. Each of the 368,640 raw
+coordinate slots stores an exact distance byte and a six-bit mask containing
+every move (`M M' M2 U U' U2`) that decreases that distance.
+
+Regenerate and validate it from `solver333/`:
+
+```sh
+dotnet bin/Release/net8.0/Solver.dll --generate-lse-table Data/lse-policy-v1.dat
+dotnet fsi Tools/TestLsePolicy.fsx
+```
+
+Solve an M/U-generated LSE state:
+
+```sh
+dotnet bin/Release/net8.0/Solver.dll --solve-lse "M U2 M' U M2"
+```
+
 The goal of this solver is to discover cases and corresponding patterns for each step. The steps are hand crafted and human-oriented. For example, the steps of a Roux solve.
 
 Given thousands of scrambled cubes, the act of finding solutions to each step generates an exhaustive set of algs (up to the minimum length required) along with distinct patterns with which to recognize each case.

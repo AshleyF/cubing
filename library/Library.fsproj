@@ -17,6 +17,7 @@
     <None Include="readme.md" />
     <Compile Include="Cube.fs" />
     <Compile Include="Render.fs" />
+    <Compile Include="Lse.fs" />
     <Compile Include="Solver.fs" />
   </ItemGroup>
 

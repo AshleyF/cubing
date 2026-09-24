@@ -3,7 +3,22 @@ open System.Text.Json
 
 let args = Environment.GetCommandLineArgs() |> Array.skip 1
 
-if args.Length > 0 && args[0] = "--patterns" then
+if args.Length > 0 && args[0] = "--generate-lse-table" then
+    let path = if args.Length > 1 then args[1] else "Data/lse-policy-v1.dat"
+    let policy = Lse.buildPolicy ()
+    Lse.savePolicy path policy
+    let reachable, maximum = Lse.validatePolicy policy
+    printfn "LSE_POLICY|%s|%i|%i|%i" path reachable maximum (System.IO.FileInfo(path).Length)
+elif args.Length > 1 && args[0] = "--solve-lse" then
+    let tableArgument = args |> Array.tryFind (fun value -> value.StartsWith("--table="))
+    let tablePath = tableArgument |> Option.map (fun value -> value.Substring("--table=".Length)) |> Option.defaultValue "Data/lse-policy-v1.dat"
+    let policy = Lse.loadPolicy tablePath
+    let cube = Cube.solved |> Cube.executeSteps (Render.stringToSteps args[1])
+    let solution = Lse.solveCube policy cube
+    let solved = cube |> Cube.executeMoves solution
+    if Lse.indexCube solved <> Lse.indexCube Cube.solved then failwith "Generated LSE solution did not solve the state."
+    printfn "LSE_SOLUTION|%i|%s" solution.Length (Render.movesToString solution)
+elif args.Length > 0 && args[0] = "--patterns" then
     let cases patterns =
         patterns
         |> List.map (fun (_, _, (pattern, _, _, _), algs) ->

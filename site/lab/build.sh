@@ -8,6 +8,7 @@ solver_dir="$repo_dir/solver333"
 node "$solver_dir/Tools/GenerateBrowserPatternData.mjs"
 dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
+dotnet fsi "$solver_dir/Tools/TestLsePolicy.fsx"
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
 
 # Fable writes a blanket ignore file beside its runtime. Keep JavaScript modules
