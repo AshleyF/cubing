@@ -9,6 +9,7 @@ node "$solver_dir/Tools/GenerateBrowserPatternData.mjs"
 dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 dotnet fsi "$solver_dir/Tools/TestLsePolicy.fsx"
+cp "$solver_dir/Data/lse-policy-v1.dat" "$lab_dir/lse-policy-v1.dat"
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
 
 # Fable writes a blanket ignore file beside its runtime. Keep JavaScript modules
@@ -18,6 +19,7 @@ node "$solver_dir/Tools/CheckBrowserModules.mjs"
 node "$solver_dir/Tools/TestCancellations.mjs"
 node "$solver_dir/Tools/TestL4E.mjs"
 node "$solver_dir/Tools/TestEolrRegression.mjs"
+node "$solver_dir/Tools/TestOptimalLse.mjs"
 node "$solver_dir/Tools/CheckLrCoverage.mjs"
 
 catalog="$({ cd "$solver_dir"; dotnet bin/Release/net8.0/Solver.dll --patterns; } | sed -n 's/^PATTERN_RESULT|//p')"

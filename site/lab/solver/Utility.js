@@ -33,6 +33,8 @@ export let x2yColorNeutral = createAtom(false);
 
 export let useEolr = createAtom(false);
 
+export let useOptimalLse = createAtom(false);
+
 export function readPatterns(matchFn, method, level_1, name, cornerRotationNeutral, cornerColorNeutral, discoverAuf) {
     return ofSeq(map((x) => [matchFn, name, [item(0, x), cornerRotationNeutral, cornerColorNeutral, discoverAuf], (item(1, x).length === 0) ? empty() : ofSeq(split(item(1, x), [";"], void 0, 0))], map((line) => split(line, [","], void 0, 0), read(`${method}/${level_1}/${name}`))));
 }

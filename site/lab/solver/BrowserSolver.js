@@ -1,9 +1,10 @@
 import { FSharpException, Record } from "./fable_modules/fable-library-js.4.16.0/Types.js";
 import { class_type, array_type, string_type, record_type, int32_type } from "./fable_modules/fable-library-js.4.16.0/Reflection.js";
 import { setData } from "./PatternData.js";
+import { installPolicy } from "./library/Lse.js";
 import { stringToSteps, stepsToString } from "./library/Render.js";
 import { filter, length, sumBy, isEmpty, append, mapIndexed, minBy, ofArray, singleton, empty, map, toArray, collect } from "./fable_modules/fable-library-js.4.16.0/List.js";
-import { x2yColorNeutral, chooseShortestSecondBlockPairOrder, chooseShortestFirstBlockPairOrder, orientCentersWithSecondBlock, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, useEolr, edgeOrientationLevel, fullCmll, cornerPermutationLevel, cornerOrientationLevel } from "./Utility.js";
+import { x2yColorNeutral, chooseShortestSecondBlockPairOrder, chooseShortestFirstBlockPairOrder, orientCentersWithSecondBlock, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, useOptimalLse, useEolr, edgeOrientationLevel, fullCmll, cornerPermutationLevel, cornerOrientationLevel } from "./Utility.js";
 import { Color, Face, Sticker, look, solved, executeSteps } from "./library/Cube.js";
 import { solutionTrace } from "./library/Solver.js";
 import { progressCallback, generateFrom } from "./Roux.js";
@@ -12,7 +13,7 @@ import { compare, comparePrimitives } from "./fable_modules/fable-library-js.4.1
 import { find, map as map_1, ofList } from "./fable_modules/fable-library-js.4.16.0/Map.js";
 
 export class Config extends Record {
-    constructor(co, cp, cmll, eo, lb, lf, rb, rf, center, fbOrder, sbOrder, colorNeutral) {
+    constructor(co, cp, cmll, eo, lb, lf, rb, rf, center, fbOrder, sbOrder, colorNeutral, lse) {
         super();
         this.co = (co | 0);
         this.cp = (cp | 0);
@@ -26,11 +27,12 @@ export class Config extends Record {
         this.fbOrder = (fbOrder | 0);
         this.sbOrder = (sbOrder | 0);
         this.colorNeutral = (colorNeutral | 0);
+        this.lse = (lse | 0);
     }
 }
 
 export function Config_$reflection() {
-    return record_type("BrowserSolver.Config", [], Config, () => [["co", int32_type], ["cp", int32_type], ["cmll", int32_type], ["eo", int32_type], ["lb", int32_type], ["lf", int32_type], ["rb", int32_type], ["rf", int32_type], ["center", int32_type], ["fbOrder", int32_type], ["sbOrder", int32_type], ["colorNeutral", int32_type]]);
+    return record_type("BrowserSolver.Config", [], Config, () => [["co", int32_type], ["cp", int32_type], ["cmll", int32_type], ["eo", int32_type], ["lb", int32_type], ["lf", int32_type], ["rb", int32_type], ["rf", int32_type], ["center", int32_type], ["fbOrder", int32_type], ["sbOrder", int32_type], ["colorNeutral", int32_type], ["lse", int32_type]]);
 }
 
 export class StageResult extends Record {
@@ -71,6 +73,10 @@ export function setPatterns(keys, values) {
     setData(keys, values);
 }
 
+export function setLsePolicy(distances, optimalMoves, reachable, maximum) {
+    installPolicy(distances, optimalMoves, reachable, maximum);
+}
+
 function resultFromTrace(trace) {
     return new SolveResult(stepsToString(collect((tuple) => tuple[1], trace)), toArray(map((tupledArg) => (new StageResult(tupledArg[0], stepsToString(tupledArg[1]))), trace)));
 }
@@ -81,6 +87,7 @@ export function solveWithProgress(scramble, config, progress) {
     fullCmll(config.cmll === 1);
     edgeOrientationLevel((config.eo === 1) ? 1 : 0);
     useEolr(config.eo === 2);
+    useOptimalLse(config.lse === 1);
     lbPairLevel(config.lb);
     lfPairLevel(config.lf);
     rbPairLevel(config.rb);

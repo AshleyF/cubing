@@ -6,7 +6,7 @@ open Cube
 type Config =
     { co: int; cp: int; cmll: int; eo: int
       lb: int; lf: int; rb: int; rf: int
-      center: int; fbOrder: int; sbOrder: int; colorNeutral: int }
+      center: int; fbOrder: int; sbOrder: int; colorNeutral: int; lse: int }
 
 [<CLIMutable>]
 type StageResult = { stage: string; moves: string }
@@ -17,6 +17,8 @@ type SolveResult = { solution: string; stages: StageResult array }
 exception FirstBlockComplete
 
 let setPatterns (keys: string array) (values: string array array) = PatternData.setData keys values
+let setLsePolicy (distances: byte array) (optimalMoves: byte array) reachable maximum =
+    Lse.installPolicy distances optimalMoves reachable maximum
 
 let private resultFromTrace trace =
     { solution = trace |> List.collect snd |> Render.stepsToString
@@ -28,6 +30,7 @@ let solveWithProgress (scramble: string) (config: Config) (progress: string -> S
     Utility.fullCmll <- config.cmll = 1
     Utility.edgeOrientationLevel <- if config.eo = 1 then 1 else 0
     Utility.useEolr <- config.eo = 2
+    Utility.useOptimalLse <- config.lse = 1
     Utility.lbPairLevel <- config.lb
     Utility.lfPairLevel <- config.lf
     Utility.rbPairLevel <- config.rb

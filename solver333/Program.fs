@@ -59,6 +59,12 @@ elif args.Length > 0 then
         Utility.fullCmll <- args |> Array.contains "--cmll=1"
         Utility.edgeOrientationLevel <- if args |> Array.contains "--eo=1" then 1 else 0
         Utility.useEolr <- args |> Array.contains "--eo=2"
+        Utility.useOptimalLse <- args |> Array.contains "--lse=1"
+        if Utility.useOptimalLse then
+            let tableArgument = args |> Array.tryFind (fun value -> value.StartsWith("--table="))
+            let tablePath = tableArgument |> Option.map (fun value -> value.Substring("--table=".Length)) |> Option.defaultValue "Data/lse-policy-v1.dat"
+            let policy = Lse.loadPolicy tablePath
+            Lse.installPolicy policy.Distances policy.OptimalMoves policy.ReachableCount policy.MaxDistance
         Utility.lbPairLevel <- if args |> Array.contains "--lb=1" then 1 else 0
         Utility.lfPairLevel <- if args |> Array.contains "--lf=1" then 1 else 0
         Utility.rbPairLevel <- if args |> Array.contains "--rb=1" then 1 else 0

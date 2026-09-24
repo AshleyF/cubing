@@ -1,13 +1,14 @@
 import { centerToFaceSticker, cornerToFaceStickers, edgeToFaceStickers, look, solved, executeMove, Center, Corner, Edge, Move } from "./Cube.js";
 import { Record } from "../fable_modules/fable-library-js.4.16.0/Types.js";
 import { record_type, int32_type, array_type, uint8_type } from "../fable_modules/fable-library-js.4.16.0/Reflection.js";
-import { fill, mapIndexed, choose, tryFindIndex, setItem, item, map as map_1, initialize } from "../fable_modules/fable-library-js.4.16.0/Array.js";
+import { copy, fill, mapIndexed, choose, tryFindIndex, setItem, item, map as map_1, initialize } from "../fable_modules/fable-library-js.4.16.0/Array.js";
 import { ofSeq, find, ofArray, item as item_1, sort, map } from "../fable_modules/fable-library-js.4.16.0/List.js";
 import { compare, equals } from "../fable_modules/fable-library-js.4.16.0/Util.js";
 import { toList } from "../fable_modules/fable-library-js.4.16.0/Seq.js";
 import { rangeDouble } from "../fable_modules/fable-library-js.4.16.0/Range.js";
-import { value, defaultArgWith } from "../fable_modules/fable-library-js.4.16.0/Option.js";
+import { value as value_1, defaultArgWith } from "../fable_modules/fable-library-js.4.16.0/Option.js";
 import { max } from "../fable_modules/fable-library-js.4.16.0/Double.js";
+import { find as find_1, map as map_2, ofArray as ofArray_1 } from "../fable_modules/fable-library-js.4.16.0/Map.js";
 
 export const moves = [new Move(36, []), new Move(37, []), new Move(38, []), new Move(0, []), new Move(1, []), new Move(2, [])];
 
@@ -341,10 +342,39 @@ export function solveCube(policy, cube) {
 }
 
 export function distanceCube(policy, cube) {
-    return value(distance(policy, indexCube(cube)));
+    return value_1(distance(policy, indexCube(cube)));
 }
 
 export function optimalNextMovesCube(policy, cube) {
     return optimalNextMoves(policy, indexCube(cube));
+}
+
+function recolorToSolvedFrame(goal, cube) {
+    const colorMap = ofArray_1(map_1((center) => [centerColor(center, goal), centerColor(center, solved)], allCenters), {
+        Compare: compare,
+    });
+    return map_2((_arg, face) => map_2((_arg_1, color) => find_1(color, colorMap), face), cube);
+}
+
+export function indexCubeRelative(goal, cube) {
+    return indexCube(recolorToSolvedFrame(goal, cube));
+}
+
+export function solveCubeRelative(policy, goal, cube) {
+    return solveIndex(policy, indexCubeRelative(goal, cube));
+}
+
+let installedPolicy = void 0;
+
+export function installPolicy(distances, optimalMoves, reachable, maximum) {
+    const policy = new Policy(copy(distances), copy(optimalMoves), reachable, maximum);
+    validatePolicy(policy);
+    installedPolicy = policy;
+}
+
+export function requirePolicy() {
+    return defaultArgWith(installedPolicy, () => {
+        throw new Error("The exact LSE policy has not been loaded.");
+    });
 }
 

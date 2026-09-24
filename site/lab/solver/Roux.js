@@ -1,14 +1,15 @@
 import { stringHash, comparePrimitives, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
 import { stringToSteps, cubeToString, piecesToString } from "./library/Render.js";
-import { chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js";
+import { useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js";
 import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, solveCase, expandPatternsForAuf, matchesGeneric } from "./library/Solver.js";
 import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, map, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
-import { Edge, Sticker, Face, look, Rotate, Step, Move, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
+import { Edge, executeMoves, solved as solved_7, Sticker, Face, look, Rotate, Step, Move, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
 import { map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
 import { List_distinct } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
 import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
 import { defaultArg, value as value_1, bind, map as map_2 } from "./fable_modules/fable-library-js.4.16.0/Option.js";
+import { solveCubeRelative, requirePolicy } from "./library/Lse.js";
 import { find, forAll } from "./fable_modules/fable-library-js.4.16.0/Map.js";
 
 export const sune = "R U R\' U R U2 R\'";
@@ -615,7 +616,20 @@ export function generateFrom(scrambled) {
     const solvedCP = solve(ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(18, [])]), new Step(1, [new Move(19, [])]), new Step(1, [new Move(20, [])]), new Step(1, [new Move(24, [])]), new Step(1, [new Move(25, [])]), new Step(1, [new Move(26, [])])]), "Permute corners (CP)", "CornerPermutation", caseCP, solve(moves, "Orient corners (CO)", "CornerOrientation", caseCO, solvedSB, false), true);
     stageStats("CMLL", numCubes);
     progressCallback()("CMLL");
-    const solvedCenterO = (level === 0) ? solve(mMoves, "Orient center", "CenterOrientation", caseCenterO, solvedCP, false) : solvedCP;
+    let solvedCenterO;
+    if (useOptimalLse()) {
+        const goal_3 = executeSteps([new Step(0, [new Rotate(2, [])]), new Step(0, [new Rotate(3, [])])], solved_7);
+        const policy = requirePolicy();
+        solvedCenterO = map((cube_36) => {
+            const algorithm_10 = solveCubeRelative(policy, goal_3, cube_36);
+            const steps_10 = map((Item) => (new Step(1, [Item])), algorithm_10);
+            solutionTrace(append(solutionTrace(), singleton(["OptimalLSE", steps_10])));
+            return executeMoves(algorithm_10, cube_36);
+        }, solvedCP);
+    }
+    else {
+        solvedCenterO = ((level === 0) ? solve(mMoves, "Orient center", "CenterOrientation", caseCenterO, solvedCP, false) : solvedCP);
+    }
     const muMoves = append(mMoves, ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])])]));
     const caseEO = (c_4) => {
         if (((((caseCenterO(c_4) && (equals(look(new Face(0, []), new Sticker(3, []), c_4), new Color(2, [])) ? true : equals(look(new Face(0, []), new Sticker(3, []), c_4), new Color(3, [])))) && (equals(look(new Face(0, []), new Sticker(1, []), c_4), new Color(2, [])) ? true : equals(look(new Face(0, []), new Sticker(1, []), c_4), new Color(3, [])))) && (equals(look(new Face(0, []), new Sticker(5, []), c_4), new Color(2, [])) ? true : equals(look(new Face(0, []), new Sticker(5, []), c_4), new Color(3, [])))) && (equals(look(new Face(0, []), new Sticker(7, []), c_4), new Color(2, [])) ? true : equals(look(new Face(0, []), new Sticker(7, []), c_4), new Color(3, [])))) && (equals(look(new Face(1, []), new Sticker(1, []), c_4), new Color(2, [])) ? true : equals(look(new Face(1, []), new Sticker(1, []), c_4), new Color(3, [])))) {
@@ -647,13 +661,16 @@ export function generateFrom(scrambled) {
         }
     };
     let solvedEO;
-    if (useEolr()) {
-        const directEoAlgorithms = map((algorithm_10) => {
-            if (isNullOrWhiteSpace(algorithm_10)) {
+    if (useOptimalLse()) {
+        solvedEO = solvedCenterO;
+    }
+    else if (useEolr()) {
+        const directEoAlgorithms = map((algorithm_11) => {
+            if (isNullOrWhiteSpace(algorithm_11)) {
                 return empty();
             }
             else {
-                return stringToSteps(algorithm_10);
+                return stringToSteps(algorithm_11);
             }
         }, List_distinct(collect((tupledArg_14) => {
             const algorithms_3 = tupledArg_14[3];
@@ -667,13 +684,13 @@ export function generateFrom(scrambled) {
             Equals: (x_14, y_12) => (x_14 === y_12),
             GetHashCode: stringHash,
         }));
-        const eoCandidates = List_distinct(toList(delay(() => collect_1((auf_4) => map_1((algorithm_11) => append(auf_4, algorithm_11), directEoAlgorithms), [empty(), singleton(new Step(1, [new Move(0, [])])), singleton(new Step(1, [new Move(1, [])])), singleton(new Step(1, [new Move(2, [])]))]))), {
+        const eoCandidates = List_distinct(toList(delay(() => collect_1((auf_4) => map_1((algorithm_12) => append(auf_4, algorithm_12), directEoAlgorithms), [empty(), singleton(new Step(1, [new Move(0, [])])), singleton(new Step(1, [new Move(1, [])])), singleton(new Step(1, [new Move(2, [])]))]))), {
             Equals: equals,
             GetHashCode: safeHash,
         });
-        solvedEO = map((cube_35) => {
-            const algorithm_12 = minBy(length, choose((eoAlgorithm) => {
-                const oriented = executeSteps(eoAlgorithm, cube_35);
+        solvedEO = map((cube_37) => {
+            const algorithm_13 = minBy(length, choose((eoAlgorithm) => {
+                const oriented = executeSteps(eoAlgorithm, cube_37);
                 if (!caseEO(oriented)) {
                     return void 0;
                 }
@@ -691,19 +708,21 @@ export function generateFrom(scrambled) {
             }, eoCandidates), {
                 Compare: comparePrimitives,
             });
-            solutionTrace(append(solutionTrace(), singleton(["EOLR", algorithm_12])));
-            return executeSteps(algorithm_12, cube_35);
+            solutionTrace(append(solutionTrace(), singleton(["EOLR", algorithm_13])));
+            return executeSteps(algorithm_13, cube_37);
         }, solvedCenterO);
     }
     else {
         solvedEO = solve(muMoves, "Orient edges (EO)", "EdgeOrientation", caseEO, solvedCenterO, true);
     }
     stageStats("EO", numCubes);
-    progressCallback()(useEolr() ? "EOLR" : "Edge orientation");
-    const solvedLR = useEolr() ? map((cube_36) => {
-        const algorithm_13 = chooseDirectLrAlgorithm(caseLRSolved, cube_36);
-        solutionTrace(append(solutionTrace(), singleton(["LREdges", algorithm_13])));
-        return executeSteps(algorithm_13, cube_36);
+    if (!useOptimalLse()) {
+        progressCallback()(useEolr() ? "EOLR" : "Edge orientation");
+    }
+    const solvedLR = useOptimalLse() ? solvedEO : (useEolr() ? map((cube_38) => {
+        const algorithm_14 = chooseDirectLrAlgorithm(caseLRSolved, cube_38);
+        solutionTrace(append(solutionTrace(), singleton(["LREdges", algorithm_14])));
+        return executeSteps(algorithm_14, cube_38);
     }, solvedEO) : ((level === 0) ? solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solve(muMoves, "LR edges to bottom", "LREdgesBottom", (c_6) => {
         if (caseLtoDF(c_6)) {
             return equals(look(new Face(5, []), new Sticker(1, []), c_6), new Color(5, []));
@@ -711,11 +730,11 @@ export function generateFrom(scrambled) {
         else {
             return false;
         }
-    }, solve(muMoves, "L edge to DF", "LToDF", caseLtoDF, solvedEO, false), false), true) : solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solvedEO, true));
+    }, solve(muMoves, "L edge to DF", "LToDF", caseLtoDF, solvedEO, false), false), true) : solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solvedEO, true)));
     stageStats("LR", numCubes);
     progressCallback()("Last six edges");
-    const solved_6 = solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_37) => {
-        const solved_5 = (face, color) => forAll((_arg_31, col) => equals(col, color), find(face, cube_37));
+    const solved_6 = useOptimalLse() ? solvedLR : solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_39) => {
+        const solved_5 = (face, color) => forAll((_arg_31, col) => equals(col, color), find(face, cube_39));
         if ((((solved_5(new Face(4, []), new Color(0, [])) && solved_5(new Face(5, []), new Color(1, []))) && solved_5(new Face(2, []), new Color(4, []))) && solved_5(new Face(3, []), new Color(5, []))) && solved_5(new Face(0, []), new Color(3, []))) {
             return solved_5(new Face(1, []), new Color(2, []));
         }
@@ -724,7 +743,9 @@ export function generateFrom(scrambled) {
         }
     }, solvedLR, true);
     stageStats("L4E", numCubes);
-    progressCallback()("Last four edges");
+    if (!useOptimalLse()) {
+        progressCallback()("Last four edges");
+    }
 }
 
 export function generate(numCubes) {

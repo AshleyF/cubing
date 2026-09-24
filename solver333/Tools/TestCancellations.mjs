@@ -1,9 +1,12 @@
-import { cancellationCases, reducePair, simplifyOrientation } from '../../site/lab/cancellations.js';
+import { cancellationCases, reducePair, simplifyLeadingOrientation, simplifyOrientation } from '../../site/lab/cancellations.js';
 import { executeSteps, solved } from '../../site/lab/solver/library/Cube.js';
 import { cubeToString, stringToSteps } from '../../site/lab/solver/library/Render.js';
 
 if (reducePair("R'", 'r') !== "M'") throw Error("Expected R' r to reduce to M'");
 if (reducePair("R'", 'Rw') !== "M'") throw Error("Expected R' Rw to reduce to M'");
+if (simplifyOrientation(['x', 'x2']).join(' ') !== "x'") throw Error("Expected x x2 to simplify to x'");
+const rawInspection = [{ move: 'x', base: 'x', amount: 1, stageIndex: 0 }, { move: 'x2', base: 'x', amount: 2, stageIndex: 1 }, { move: 'R', base: 'R', amount: 1, stageIndex: 2 }];
+if (simplifyLeadingOrientation(rawInspection)[0].move !== "x'") throw Error("Expected raw inspection rotations to normalize without move cancellations");
 
 const state = algorithm => algorithm ? cubeToString(executeSteps(stringToSteps(algorithm), solved)) : cubeToString(solved);
 let checked = 0;

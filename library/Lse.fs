@@ -242,6 +242,30 @@ let solveCube policy cube = indexCube cube |> solveIndex policy
 let distanceCube policy cube = indexCube cube |> distance policy |> Option.get
 let optimalNextMovesCube policy cube = indexCube cube |> optimalNextMoves policy
 
+let private recolorToSolvedFrame goal cube =
+    let colorMap =
+        allCenters
+        |> Array.map (fun center -> centerColor center goal, centerColor center Cube.solved)
+        |> Map.ofArray
+    cube |> Map.map (fun _ face -> face |> Map.map (fun _ color -> Map.find color colorMap))
+
+let indexCubeRelative goal cube = cube |> recolorToSolvedFrame goal |> indexCube
+let solveCubeRelative policy goal cube = indexCubeRelative goal cube |> solveIndex policy
+
+let mutable private installedPolicy: Policy option = None
+
+let installPolicy distances optimalMoves reachable maximum =
+    let policy =
+        { Distances = Array.copy distances
+          OptimalMoves = Array.copy optimalMoves
+          ReachableCount = reachable
+          MaxDistance = maximum }
+    validatePolicy policy |> ignore
+    installedPolicy <- Some policy
+
+let requirePolicy () =
+    installedPolicy |> Option.defaultWith (fun () -> failwith "The exact LSE policy has not been loaded.")
+
 #if !FABLE_COMPILER
 open System.IO
 

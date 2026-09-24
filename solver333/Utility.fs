@@ -18,6 +18,7 @@ let mutable chooseShortestSecondBlockPairOrder = false
 let mutable chooseShortestFirstBlockPairOrder = false
 let mutable x2yColorNeutral = false
 let mutable useEolr = false
+let mutable useOptimalLse = false
 
 let readPatterns matchFn method level name cornerRotationNeutral cornerColorNeutral discoverAuf =
 #if FABLE_COMPILER

@@ -48,7 +48,12 @@
 @media (max-width:700px) {
   .config-group { grid-template-columns:1fr; }
   .config-group h2 { border-right:0; border-bottom:1px solid var(--line); padding:10px 8px 6px; }
-  .config-row { grid-template-columns:30px minmax(130px,1fr) 62px 72px 52px; }
+  .config-row { min-height:58px; grid-template-columns:44px minmax(0,1fr) auto; grid-template-rows:auto auto; grid-template-areas:"toggle name explore" "toggle count metric"; column-gap:7px; padding:7px 8px 7px 0; }
+  .config-row .set-toggle { grid-area:toggle; align-self:center; margin-left:7px; transform:scale(.82); }
+  .config-name { grid-area:name; align-self:end; line-height:1.2; }
+  .case-count { grid-area:count; align-self:start; }
+  .row-metric { grid-area:metric; align-self:start; justify-self:end; }
+  .config-row .explore { grid-area:explore; align-self:end; justify-self:end; text-align:right; }
   .preset-row { justify-content:stretch; }
   .preset-button { flex:1; }
 }

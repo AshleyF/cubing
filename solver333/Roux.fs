@@ -749,7 +749,15 @@ let generateFrom scrambled =
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let solvedCenterO =
-        if level = 0
+        if useOptimalLse then
+            let goal = Cube.solved |> Cube.executeSteps [Rotate X2; Rotate Y]
+            let policy = Lse.requirePolicy ()
+            solvedCP |> List.map (fun cube ->
+                let algorithm = Lse.solveCubeRelative policy goal cube
+                let steps = algorithm |> List.map Move
+                Solver.solutionTrace <- Solver.solutionTrace @ ["OptimalLSE", steps]
+                Cube.executeMoves algorithm cube)
+        elif level = 0
         then solve mMoves "Orient center" "CenterOrientation" caseCenterO solvedCP false
         else solvedCP // center already solved with SB
 
@@ -772,7 +780,8 @@ let generateFrom scrambled =
                                      look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
     let caseEolr c = caseLRBottomEither c || caseLRSolved c
     let solvedEO =
-        if useEolr then
+        if useOptimalLse then solvedCenterO
+        elif useEolr then
             let lseEdges = [Edge UL; Edge UR; Edge UF; Edge UB; Edge DF; Edge DB]
             let directEoAlgorithms =
                 edgeIntermediateOrientationPatters
@@ -797,12 +806,13 @@ let generateFrom scrambled =
         else solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
 
     Solver.stageStats "EO" numCubes
-    progressCallback (if useEolr then "EOLR" else "Edge orientation")
+    if not useOptimalLse then progressCallback (if useEolr then "EOLR" else "Edge orientation")
 
     // Left/right edges (LR)
 
     let solvedLR =
-        if useEolr then
+        if useOptimalLse then solvedEO
+        elif useEolr then
             solvedEO |> List.map (fun cube ->
                 let algorithm = chooseDirectLrAlgorithm caseLRSolved cube
                 Solver.solutionTrace <- Solver.solutionTrace @ ["LREdges", algorithm]
@@ -833,10 +843,12 @@ let generateFrom scrambled =
         solved Face.R Color.G &&
         solved Face.U Color.Y &&
         solved Face.D Color.W
-    let solved = solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
+    let solved =
+        if useOptimalLse then solvedLR
+        else solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
-    progressCallback "Last four edges"
+    if not useOptimalLse then progressCallback "Last four edges"
 
 let generate numCubes =
     generateFrom (initScrambledCubes numCubes)
