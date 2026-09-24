@@ -11,6 +11,7 @@ dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build
 dotnet fsi "$solver_dir/Tools/TestLsePolicy.fsx"
 cp "$solver_dir/Data/lse-policy-v1.dat" "$lab_dir/lse-policy-v1.dat"
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
+node "$solver_dir/Tools/VersionBrowserImports.mjs" 20260924-1
 
 # Fable writes a blanket ignore file beside its runtime. Keep JavaScript modules
 # versioned because GitHub Pages has no package installation/build step.

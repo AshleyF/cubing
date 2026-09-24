@@ -1,13 +1,13 @@
 import { FSharpException, Record } from "./fable_modules/fable-library-js.4.16.0/Types.js";
 import { class_type, array_type, string_type, record_type, int32_type } from "./fable_modules/fable-library-js.4.16.0/Reflection.js";
 import { setData } from "./PatternData.js";
-import { installPolicy } from "./library/Lse.js";
+import { installPolicy } from "./library/Lse.js?v=20260924-1";
 import { stringToSteps, stepsToString } from "./library/Render.js";
 import { filter, length, sumBy, isEmpty, append, mapIndexed, minBy, ofArray, singleton, empty, map, toArray, collect } from "./fable_modules/fable-library-js.4.16.0/List.js";
-import { x2yColorNeutral, chooseShortestSecondBlockPairOrder, chooseShortestFirstBlockPairOrder, orientCentersWithSecondBlock, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, useOptimalLse, useEolr, edgeOrientationLevel, fullCmll, cornerPermutationLevel, cornerOrientationLevel } from "./Utility.js";
+import { x2yColorNeutral, chooseShortestSecondBlockPairOrder, chooseShortestFirstBlockPairOrder, orientCentersWithSecondBlock, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, useOptimalLse, useEolr, edgeOrientationLevel, fullCmll, cornerPermutationLevel, cornerOrientationLevel } from "./Utility.js?v=20260924-1";
 import { Color, Face, Sticker, look, solved, executeSteps } from "./library/Cube.js";
 import { solutionTrace } from "./library/Solver.js";
-import { progressCallback, generateFrom } from "./Roux.js";
+import { progressCallback, generateFrom } from "./Roux.js?v=20260924-1";
 import { FSharpSet__Contains, ofSeq } from "./fable_modules/fable-library-js.4.16.0/Set.js";
 import { compare, comparePrimitives } from "./fable_modules/fable-library-js.4.16.0/Util.js";
 import { find, map as map_1, ofList } from "./fable_modules/fable-library-js.4.16.0/Map.js";

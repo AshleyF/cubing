@@ -1,6 +1,6 @@
 import { stringHash, comparePrimitives, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
 import { stringToSteps, cubeToString, piecesToString } from "./library/Render.js";
-import { useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js";
+import { useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js?v=20260924-1";
 import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, solveCase, expandPatternsForAuf, matchesGeneric } from "./library/Solver.js";
 import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, map, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
 import { Edge, executeMoves, solved as solved_7, Sticker, Face, look, Rotate, Step, Move, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
@@ -9,7 +9,7 @@ import { List_distinct } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
 import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
 import { defaultArg, value as value_1, bind, map as map_2 } from "./fable_modules/fable-library-js.4.16.0/Option.js";
-import { solveCubeRelative, requirePolicy } from "./library/Lse.js";
+import { solveCubeRelative, requirePolicy } from "./library/Lse.js?v=20260924-1";
 import { find, forAll } from "./fable_modules/fable-library-js.4.16.0/Map.js";
 
 export const sune = "R U R\' U R U2 R\'";

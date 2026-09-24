@@ -21,7 +21,7 @@ const relativeImport = /(?:from\s+|import\s*\()(["'])(\.\.?\/[^"']+)\1/g;
 for (const module of modules) {
   const source = readFileSync(module, "utf8");
   for (const match of source.matchAll(relativeImport)) {
-    const dependency = resolve(dirname(module), match[2]);
+    const dependency = resolve(dirname(module), match[2].split(/[?#]/, 1)[0]);
     if (!existsSync(dependency)) missing.push(`${module}: ${match[2]}`);
   }
 }
