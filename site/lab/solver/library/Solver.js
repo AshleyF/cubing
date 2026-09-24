@@ -2,13 +2,13 @@ import { stringHash, comparePrimitives, safeHash, equals, disposeSafe, getEnumer
 import { initialize as initialize_1, concat as concat_1, map as map_2, zip, mapIndexed, choose, collect, tryFind as tryFind_1, head as head_1, tail, isEmpty, ofSeq, filter, tryPick, reverse as reverse_1, ofArray, append, singleton, cons, length, item, empty } from "../fable_modules/fable-library-js.4.16.0/List.js";
 import { rotateZ2, rotateZ$0027, rotateZ, rotateY2, rotateY$0027, rotateY, rotateX2, rotateX$0027, rotateX, stageCount, Step, executeStep, step as step_1, Move, solved as solved_1, move, executeSteps } from "./Cube.js";
 import { nonSeeded } from "../fable_modules/fable-library-js.4.16.0/Random.js";
-import { empty as empty_2, singleton as singleton_1, append as append_1, delay, concat, initialize, iterate, sort, length as length_1, map as map_1, fold, filter as filter_1, tryHead, tryFind, ofList, forAll2, forAll, head, reverse } from "../fable_modules/fable-library-js.4.16.0/Seq.js";
+import { empty as empty_2, singleton as singleton_1, append as append_1, delay, concat, initialize, iterate, sort, length as length_1, map as map_1, fold, tryFind, ofList, forAll2, forAll, head, reverse } from "../fable_modules/fable-library-js.4.16.0/Seq.js";
 import { stepsToString, stringToSteps, cubeToString, moveToString, rotationToString } from "./Render.js";
 import { addToSet, tryGetValue } from "../fable_modules/fable-library-js.4.16.0/MapUtil.js";
 import { FSharpRef } from "../fable_modules/fable-library-js.4.16.0/Types.js";
 import { map, toArray } from "../fable_modules/fable-library-js.4.16.0/Option.js";
 import { Queue$1__Dequeue, Queue$1__Enqueue_2B595, Queue$1_$ctor } from "../fable_modules/fable-library-js.4.16.0/System.Collections.Generic.js";
-import { join, toConsole, printf, toText } from "../fable_modules/fable-library-js.4.16.0/String.js";
+import { toConsole, join, printf, toText } from "../fable_modules/fable-library-js.4.16.0/String.js";
 import { distinct as distinct_1, List_distinct } from "../fable_modules/fable-library-js.4.16.0/Seq2.js";
 import { toList, empty as empty_1, add, tryFind as tryFind_2 } from "../fable_modules/fable-library-js.4.16.0/Map.js";
 
@@ -1083,25 +1083,7 @@ export function matchesGeneric(cube, pattern_, pattern__1, pattern__2) {
 export function hybridSolve(steps, hints, patterns, goal, stage, cube) {
     const matchValue = tryFind((tupledArg) => (equals(tupledArg[1], stage) && tupledArg[0](cube)(tupledArg[2])), patterns);
     if (matchValue == null) {
-        if (warnings) {
-            const arg_1 = cubeToString(cube);
-            toConsole(printf("UNMATCHED: %s"))(arg_1);
-        }
-        const matchValue_3 = tryHead(filter_1((arg_3) => {
-            const matchValue_2 = tryHead(arg_3);
-            if (matchValue_2 == null) {
-                return false;
-            }
-            else {
-                return goal(executeAndReportSteps(matchValue_2)(cube));
-            }
-        }, hints));
-        if (matchValue_3 == null) {
-            return solveWithSteps(steps, goal, cube);
-        }
-        else {
-            return matchValue_3;
-        }
+        throw new Error(`Uncovered pattern state for ${stage}: ${cubeToString(cube)}`);
     }
     else {
         const algs = matchValue[3];

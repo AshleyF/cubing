@@ -375,7 +375,8 @@ let solve moves description name target cubes search =
             let lf = if lfPairLevel = 0 then lfPairBeginnerPatterns else lfPairIntermediatePatterns
             let rb = if rbPairLevel = 0 then rbPairBeginnerPatterns else rbPairIntermediatePatterns
             let rf = if rfPairLevel = 0 then rfPairBeginnerPatterns else rfPairIntermediatePatterns
-            dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lb @ lf @ drEdgeBeginnerPatterns @ rb @ rf @ corners @ centerOrientationPatterns @ edgeOrientation @ lrBeginnerPatterns @ l4eIntermediatePatterns
+            let lr = if useEolr then lrIntermediatePatterns else lrBeginnerPatterns
+            dlEdgeBeginnerPatterns @ lCenterBeginnerPatterns @ lb @ lf @ drEdgeBeginnerPatterns @ rb @ rf @ corners @ centerOrientationPatterns @ edgeOrientation @ lr @ l4eIntermediatePatterns
         | 1 -> rouxIntermediatePatterns
         | 2 -> rouxAdvancedPatterns
         | 3 -> rouxGodPatterns

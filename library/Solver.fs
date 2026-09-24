@@ -154,14 +154,7 @@ let hybridSolve steps hints patterns goal stage cube =
             | None -> failwith $"Matched pattern has no algorithm satisfying its required goal: {cubeToString cube}"
         | a :: _ -> [stringToSteps a]
     | None ->
-        if warnings then printfn "UNMATCHED: %s" (cubeToString cube)
-        let tryHint h = 
-            match Seq.tryHead h with
-            | Some h' -> cube |> executeAndReportSteps h' |> goal
-            | None -> false
-        match hints |> Seq.filter tryHint |> Seq.tryHead with
-        | Some solution -> solution
-        | None -> solveWithSteps steps goal cube
+        failwith $"Uncovered pattern state for {stage}: {cubeToString cube}"
 
 let mutable best = 0
 let mutable worst = 0
