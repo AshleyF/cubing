@@ -33,6 +33,10 @@ for (const [label, config] of configs) for (const scramble of scrambles) {
   if (config.cmll === 2 && result.stages.filter(stage => stage.stage === 'CMLLEO').length !== 1) {
     throw Error('CMLL + EO influence did not emit exactly one CMLLEO stage');
   }
+  const influenceMarkers = result.stages.filter(stage => stage.stage === 'CMLLEOInfluence');
+  if (influenceMarkers.length > 1 || influenceMarkers.some(stage => stage.moves.trim())) {
+    throw Error('CMLL + EO influence marker must be unique and contain no moves');
+  }
   const lse = result.stages.filter(stage => stage.stage === 'OptimalLSE');
   if (lse.length !== 1) throw Error(`Expected one OptimalLSE stage, found ${lse.length}`);
   if (result.stages.some(stage => ['CenterOrientation', 'EdgeOrientation', 'EOLR', 'LToDF', 'LREdgesBottom', 'LREdges', 'L4E'].includes(stage.stage))) {

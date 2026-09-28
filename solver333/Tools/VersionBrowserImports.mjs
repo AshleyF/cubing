@@ -8,8 +8,8 @@ if (!version || !/^[A-Za-z0-9._-]+$/.test(version)) throw Error('Usage: VersionB
 const toolsDir = path.dirname(fileURLToPath(import.meta.url));
 const solverDir = path.resolve(toolsDir, '../../site/lab/solver');
 const targets = new Map([
-  ['BrowserSolver.js', ['./Utility.js', './Roux.js', './library/Lse.js']],
-  ['Roux.js', ['./Utility.js', './library/Lse.js']]
+  ['BrowserSolver.js', ['./Utility.js', './Roux.js', './library/Lse.js', './library/Render.js']],
+  ['Roux.js', ['./Utility.js', './library/Lse.js', './library/Render.js']]
 ]);
 
 for (const [file, dependencies] of targets) {

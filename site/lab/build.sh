@@ -30,5 +30,6 @@ if [[ -z "$catalog" ]]; then
   exit 1
 fi
 printf '%s\n' "$catalog" > "$lab_dir/patterns.json"
+node "$solver_dir/Tools/AddCmllEoCatalog.mjs"
 
 echo "Built static RouxLab solver in $lab_dir"

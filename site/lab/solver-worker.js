@@ -18,7 +18,7 @@ const ready = (async () => {
     distances[index] = bytes[offset];
     optimalMoves[index] = bytes[offset + 1];
   }
-  const solver = await import('./solver/BrowserSolver.js?v=20260927-1');
+  const solver = await import('./solver/BrowserSolver.js?v=20260928-2');
   solver.setLsePolicy(distances, optimalMoves, reachable, maximum);
   return solver.solveWithProgress;
 })();

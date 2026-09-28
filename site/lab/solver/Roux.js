@@ -1,12 +1,12 @@
 import { compareArrays, stringHash, comparePrimitives, Lazy, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
-import { cubeToString, stringToSteps, piecesToString } from "./library/Render.js";
-import { useCmllEoInfluence, useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js?v=20260927-1";
+import { cubeToString, stringToSteps, piecesToString } from "./library/Render.js?v=20260928-2";
+import { useCmllEoInfluence, useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js?v=20260928-2";
 import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, solveCase, expandPatternsForAuf, matchesGeneric } from "./library/Solver.js";
 import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, iterate, map, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
 import { Edge, executeMoves, Sticker, Face, look, Rotate, Step, Move, solved as solved_8, inverseSteps, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
 import { List_distinct, List_distinctBy } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
 import { read } from "./PatternData.js";
-import { solveCubeRelative, distanceCubeRelative, requirePolicy, indexEdgeCenterCube } from "./library/Lse.js?v=20260927-1";
+import { solveCubeRelative, distanceCubeRelative, requirePolicy, indexEdgeCenterCube } from "./library/Lse.js?v=20260928-2";
 import { empty as empty_1, singleton as singleton_1, map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
 import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
@@ -660,28 +660,35 @@ export function generateFrom(scrambled) {
             }
         }, expandPatternsForAuf(cmllAdvancedPatterns))));
         const imported = toList(delay(() => collect_1((setup) => collect_1((matchValue_6) => singleton_1(append(setup, matchValue_6[1])), cmllEoCandidates), [empty(), singleton(new Step(1, [new Move(0, [])])), singleton(new Step(1, [new Move(1, [])])), singleton(new Step(1, [new Move(2, [])]))])));
-        const matchValue_7 = tryHead(sortBy((tupledArg_16) => [tupledArg_16[2], length(tupledArg_16[0])], toList(delay(() => collect_1((candidate_4) => {
+        const taggedCandidates = List_distinctBy((tuple) => tuple[1], append(map((steps) => [false, steps], baseline), map((steps_1) => [true, steps_1], imported)), {
+            Equals: equals,
+            GetHashCode: safeHash,
+        });
+        const matchValue_7 = tryHead(sortBy((tupledArg_16) => [tupledArg_16[3], length(tupledArg_16[1]), tupledArg_16[0]], toList(delay(() => collect_1((taggedCandidate) => {
+            const influenced = taggedCandidate[0];
+            const candidate_4 = taggedCandidate[1];
             const result = executeSteps(candidate_4, cube_36);
             if (caseCP(result)) {
                 const lseDistance = distanceCubeRelative(policy, goal_3, result) | 0;
-                return singleton_1([candidate_4, result, length(candidate_4) + lseDistance]);
+                return singleton_1([influenced, candidate_4, result, length(candidate_4) + lseDistance]);
             }
             else {
                 return empty_1();
             }
-        }, List_distinct(append(baseline, imported), {
-            Equals: equals,
-            GetHashCode: safeHash,
-        })))), {
+        }, taggedCandidates))), {
             Compare: compareArrays,
         }));
         if (matchValue_7 == null) {
             throw new Error(`Uncovered CMLL+EO state: ${cubeToString(cube_36)}`);
         }
         else {
-            const steps_12 = matchValue_7[0];
-            const result_1 = matchValue_7[1];
+            const influenced_1 = matchValue_7[0];
+            const steps_12 = matchValue_7[1];
+            const result_1 = matchValue_7[2];
             solutionTrace(append(solutionTrace(), singleton(["CMLLEO", steps_12])));
+            if (influenced_1) {
+                solutionTrace(append(solutionTrace(), singleton(["CMLLEOInfluence", empty()])));
+            }
             return result_1;
         }
     }, solvedSB), [solved_5, solved_5]))))) : ((co = solve(moves, "Orient corners (CO)", "CornerOrientation", caseCO, solvedSB, false), [co, solve(ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(18, [])]), new Step(1, [new Move(19, [])]), new Step(1, [new Move(20, [])]), new Step(1, [new Move(24, [])]), new Step(1, [new Move(25, [])]), new Step(1, [new Move(26, [])])]), "Permute corners (CP)", "CornerPermutation", caseCP, co, true)])))[1];
@@ -822,4 +829,3 @@ export function generateFrom(scrambled) {
 export function generate(numCubes) {
     generateFrom(initScrambledCubes(numCubes));
 }
-

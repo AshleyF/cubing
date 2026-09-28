@@ -784,14 +784,18 @@ let generateFrom scrambled =
                     |> Seq.toList
                 let imported = [ for setup in setups do for _, steps in cmllEoCandidates do yield setup @ steps ]
                 let candidates =
-                    [ for candidate in List.distinct (baseline @ imported) do
+                    [ for influenced, candidate in
+                          ((baseline |> List.map (fun steps -> false, steps)) @
+                           (imported |> List.map (fun steps -> true, steps))
+                           |> List.distinctBy snd) do
                             let result = Cube.executeSteps candidate cube
                             if caseCP result then
                                 let lseDistance = Lse.distanceCubeRelative policy goal result
-                                yield candidate, result, candidate.Length + lseDistance ]
-                match candidates |> List.sortBy (fun (steps, _, total) -> total, steps.Length) |> List.tryHead with
-                | Some (steps, result, _) ->
+                                yield influenced, candidate, result, candidate.Length + lseDistance ]
+                match candidates |> List.sortBy (fun (influenced, steps, _, total) -> total, steps.Length, influenced) |> List.tryHead with
+                | Some (influenced, steps, result, _) ->
                     Solver.solutionTrace <- Solver.solutionTrace @ ["CMLLEO", steps]
+                    if influenced then Solver.solutionTrace <- Solver.solutionTrace @ ["CMLLEOInfluence", []]
                     result
                 | None -> failwith $"Uncovered CMLL+EO state: {Render.cubeToString cube}"
             let solved = solvedSB |> List.map solveCandidate
