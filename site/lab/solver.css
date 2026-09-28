@@ -1,7 +1,6 @@
 .engine-badge.ready i { background: #23a85b; }
 .engine-badge.error i { background: #f04435; }
 .engine-badge.solving i { animation: solver-pulse 1s infinite; }
-.edit-hint { align-self: center; margin-left: 8px; font-size: 9px; color: var(--muted); letter-spacing: .06em; }
 .search-row { display:grid; grid-template-columns:auto auto auto minmax(0,1fr); align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
 .search-row>span:first-child { font-size:8px; font-weight:900; letter-spacing:.12em; color:var(--muted); }
 .search-row select,.search-row button { min-height:30px; border:1px solid var(--ink); background:transparent; padding:5px 8px; color:var(--ink); font:800 9px Arial,sans-serif; text-transform:uppercase; }
