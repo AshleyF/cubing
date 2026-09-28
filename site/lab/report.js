@@ -1,9 +1,12 @@
 const rows=document.getElementById('reportRows');
 const format=value=>Number(value).toFixed(2);
-fetch('benchmark-results.json').then(async response=>{if(!response.ok)throw Error('Benchmark results are not ready');return response.json()}).then(data=>{
+Promise.all(['benchmark-results.json','cmll-eo-results.json'].map(async url=>{const response=await fetch(url);if(!response.ok)throw Error('Benchmark results are not ready');return response.json()})).then(([data,studyData])=>{
  const first=data.rows[0],last=data.rows.at(-1),span=first.average-last.average||1;
  document.getElementById('startAverage').textContent=format(first.average);
  document.getElementById('bestAverage').textContent=format(last.average);
  document.getElementById('methodText').textContent=`Every row uses the same ${data.sampleSize.toLocaleString()} deterministic 25-move scrambles (seed ${data.seed}). Each optimization is cumulative except the explicitly labeled center comparison. Move counts are STM; cancellations combine adjacent turns of the same slice.`;
  rows.innerHTML=data.rows.map((row,index)=>`<article class="report-row"><div><b>${index+1}</b><span><strong>${row.name}</strong><small>${row.note}</small></span></div><strong class="average">${format(row.average)}</strong><strong class="saved">${index?`−${format(row.saved)}`:'—'}</strong><span class="range">${row.minimum}–${row.maximum}</span><i style="--width:${Math.max(2,(first.average-row.average)/span*100)}%"></i></article>`).join('');
+ const study=studyData.cmllEoStudy,baseline=study.rows[0];
+ document.getElementById('cmllEoSummary').textContent=`Both rows use the same ${studyData.sampleSize.toLocaleString()} scrambles, identical direct blocks, pair-order choices, cancellations, and the exact optimal LSE table. Color neutrality is held off in both. The only variable is whether the solver may choose an EO-influencing corner algorithm. Ordinary CMLL remains a candidate, so this option never deliberately chooses a longer combined CMLL + LSE finish. Average saving: ${format(study.averageSaved)} moves.`;
+ document.getElementById('cmllEoRows').innerHTML=study.rows.map((row,index)=>`<article class="report-row"><div><b>${index+1}</b><span><strong>${row.name}</strong><small>${row.note}</small></span></div><strong class="average">${format(row.average)}</strong><strong class="saved">${index?`−${format(baseline.average-row.average)}`:'—'}</strong><span class="range">${row.minimum}–${row.maximum}</span></article>`).join('');
 }).catch(error=>{rows.innerHTML=`<p class="report-error">${error.message}</p>`});

@@ -4,6 +4,10 @@ import { cubeToString, stringToSteps } from '../../site/lab/solver/library/Rende
 
 if (reducePair("R'", 'r') !== "M'") throw Error("Expected R' r to reduce to M'");
 if (reducePair("R'", 'Rw') !== "M'") throw Error("Expected R' Rw to reduce to M'");
+if (reducePair('M', 'M') !== "M2'") throw Error("Expected M M to use the ergonomic M2' spelling");
+if (reducePair("M2'", 'M2') !== '') throw Error("Expected M2' and M2 to parse as equivalent half turns");
+if (reducePair('U', 'U') !== "U2'") throw Error("Expected U U to use the ergonomic U2' spelling");
+if (reducePair("U2'", 'U2') !== '') throw Error("Expected U2' and U2 to parse as equivalent half turns");
 if (simplifyOrientation(['x', 'x2']).join(' ') !== "x'") throw Error("Expected x x2 to simplify to x'");
 const rawInspection = [{ move: 'x', base: 'x', amount: 1, stageIndex: 0 }, { move: 'x2', base: 'x', amount: 2, stageIndex: 1 }, { move: 'R', base: 'R', amount: 1, stageIndex: 2 }];
 if (simplifyLeadingOrientation(rawInspection)[0].move !== "x'") throw Error("Expected raw inspection rotations to normalize without move cancellations");

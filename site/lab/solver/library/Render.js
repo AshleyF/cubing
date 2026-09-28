@@ -144,7 +144,7 @@ export function moveToString(_arg) {
         case 1:
             return "U\'";
         case 2:
-            return "U2";
+            return "U2'";
         case 3:
             return "u";
         case 4:
@@ -216,7 +216,7 @@ export function moveToString(_arg) {
         case 37:
             return "M\'";
         case 38:
-            return "M2";
+            return "M2'";
         case 39:
             return "S";
         case 40:
@@ -405,4 +405,3 @@ export function stepToString(_arg) {
 export function stepsToString(steps) {
     return join(" ", map(stepToString, steps));
 }
-

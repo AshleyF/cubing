@@ -213,7 +213,7 @@ let rotationsToString rots = String.Join(' ', Seq.map rotationToString rots)
 let moveToString = function
     | Move.U   -> "U"
     | U'  -> "U'"
-    | U2  -> "U2"
+    | U2  -> "U2'"
     | UW  -> "u"
     | UW' -> "u'"
     | UW2 -> "u2"
@@ -249,7 +249,7 @@ let moveToString = function
     | BW2 -> "b2"
     | M   -> "M"
     | M'  -> "M'"
-    | M2  -> "M2"
+    | M2  -> "M2'"
     | S   -> "S"
     | S'  -> "S'"
     | S2  -> "S2"

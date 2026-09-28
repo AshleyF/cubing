@@ -1,5 +1,5 @@
-export function turn(move){const match=move.match(/^(.*?)(2|')?$/);return{base:match[1],amount:match[2]==='2'?2:match[2]==="'"?3:1}}
-export function notation(base,amount){amount=((amount%4)+4)%4;return amount===0?'':base+(amount===1?'':amount===2?'2':"'")}
+export function turn(move){const match=move.match(/^(.*?)(2'?|')?$/);return{base:match[1],amount:match[2]?.startsWith('2')?2:match[2]==="'"?3:1}}
+export function notation(base,amount){amount=((amount%4)+4)%4;return amount===0?'':base+(amount===1?'':amount===2?(['M','U'].includes(base)?"2'":'2'):"'")}
 
 export const cancellationBases=['U','D','L','R','F','B','M','E','S','x','y','z','u','d','l','r','f','b','Uw','Dw','Lw','Rw','Fw','Bw'];
 const cancellationAmounts=[1,2,3];

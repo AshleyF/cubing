@@ -11,14 +11,14 @@ type Settings =
       cancel: bool
       lb: int; lf: int; fbOrder: bool
       rb: int; rf: int; sbOrder: bool
-      co: int; cp: int; cmll: bool
+      co: int; cp: int; cmll: int
       eo: int; eolr: bool; centers: bool
-      colorNeutral: bool }
+      colorNeutral: bool; lse: bool }
 
 let beginner =
     { name = "Beginner"; note = "Beginner pairs, Sune/J-perm corners, M/U edge orientation"
       cancel = false; lb = 0; lf = 0; fbOrder = false; rb = 0; rf = 0; sbOrder = false
-      co = 0; cp = 0; cmll = false; eo = 0; eolr = false; centers = false; colorNeutral = false }
+      co = 0; cp = 0; cmll = 0; eo = 0; eolr = false; centers = false; colorNeutral = false; lse = false }
 
 let configurations =
     [ beginner
@@ -28,12 +28,23 @@ let configurations =
       { beginner with name = "+ direct second-block pairs"; note = "Direct back and front pair cases in both blocks"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1 }
       { beginner with name = "+ second-block pair order"; note = "Try both second-block pair orders"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true }
       { beginner with name = "+ two-look CMLL"; note = "Direct corner orientation, then direct permutation"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; co = 1; cp = 1 }
-      { beginner with name = "+ one-look CMLL"; note = "Full CMLL"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true }
-      { beginner with name = "+ direct EO"; note = "Direct edge-orientation cases"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true; eo = 1 }
-      { beginner with name = "+ centers with SB"; note = "Orient centers while finishing second block"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true; eo = 1; centers = true }
-      { beginner with name = "+ EOLR"; note = "Combined EO/LR, without center optimization"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true; eolr = true }
-      { beginner with name = "+ EOLR + centers"; note = "Combined EO/LR with centers oriented during SB"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true; eolr = true; centers = true }
-      { beginner with name = "+ x2/y color neutrality"; note = "Choose the shortest first block among eight orientations"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = true; eolr = true; centers = true; colorNeutral = true } ]
+      { beginner with name = "+ one-look CMLL"; note = "Full CMLL"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1 }
+      { beginner with name = "+ direct EO"; note = "Direct edge-orientation cases"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1; eo = 1 }
+      { beginner with name = "+ centers with SB"; note = "Orient centers while finishing second block"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1; eo = 1; centers = true }
+      { beginner with name = "+ EOLR"; note = "Combined EO/LR, without center optimization"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1; eolr = true }
+      { beginner with name = "+ EOLR + centers"; note = "Combined EO/LR with centers oriented during SB"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1; eolr = true; centers = true }
+      { beginner with name = "+ x2/y color neutrality"; note = "Choose the shortest first block among eight orientations"; cancel = true; lb = 1; lf = 1; fbOrder = true; rb = 1; rf = 1; sbOrder = true; cmll = 1; eolr = true; centers = true; colorNeutral = true } ]
+
+let cmllEoBaseline =
+    { beginner with
+        name = "One-look CMLL + optimal LSE"
+        note = "Baseline with the same exact LSE finish"
+        cancel = true
+        lb = 1; lf = 1; fbOrder = true
+        rb = 1; rf = 1; sbOrder = true
+        cmll = 1; centers = true; colorNeutral = false; lse = true }
+let cmllEoInfluence =
+    { cmllEoBaseline with name = "Try CMLL + EO influence"; note = "Choose ordinary or EO-influencing CMLL by total CMLL + exact LSE length"; cmll = 2 }
 
 let moves = [Move.U; U'; U2; Move.D; D'; D2; Move.L; L'; L2; Move.R; R'; R2; Move.F; F'; F2; Move.B; B'; B2]
 let random = Random(3332026)
@@ -53,7 +64,10 @@ let configure settings =
     Utility.chooseShortestFirstBlockPairOrder <- settings.fbOrder
     Utility.chooseShortestSecondBlockPairOrder <- settings.sbOrder
     Utility.cornerOrientationLevel <- settings.co; Utility.cornerPermutationLevel <- settings.cp
-    Utility.fullCmll <- settings.cmll; Utility.edgeOrientationLevel <- settings.eo
+    Utility.fullCmll <- settings.cmll = 1
+    Utility.useCmllEoInfluence <- settings.cmll = 2
+    Utility.useOptimalLse <- settings.lse
+    Utility.edgeOrientationLevel <- settings.eo
     Utility.useEolr <- settings.eolr; Utility.orientCentersWithSecondBlock <- settings.centers
     Utility.x2yColorNeutral <- settings.colorNeutral
 
@@ -98,8 +112,9 @@ let solveBatch settings cubes =
 
 let token (step: Step) = Render.stepsToString [step]
 let turn (token: string) =
-    let amount = if token.EndsWith("2") then 2 elif token.EndsWith("'") then 3 else 1
-    let face = if amount = 1 then token else token.Substring(0, token.Length - 1)
+    let amount = if token.EndsWith("2'") || token.EndsWith("2") then 2 elif token.EndsWith("'") then 3 else 1
+    let suffixLength = if token.EndsWith("2'") then 2 elif amount = 1 then 0 else 1
+    let face = token.Substring(0, token.Length - suffixLength)
     face, amount
 let cancelledCount steps =
     let folder stack step =
@@ -113,23 +128,28 @@ let cancelledCount steps =
 
 let originalOut = Console.Out
 let quiet = TextWriter.Null
+let policyPath = Path.Combine(__SOURCE_DIRECTORY__, "..", "Data", "lse-policy-v1.dat")
+let policy = Lse.loadPolicy policyPath
+Lse.installPolicy policy.Distances policy.OptimalMoves policy.ReachableCount policy.MaxDistance
+
+let measure settings =
+    originalOut.WriteLine($"Running {settings.name}…")
+    Console.SetOut(quiet)
+    let counts =
+        solveBatch settings scrambles
+        |> List.map (fun trace ->
+            let steps = trace |> List.collect snd
+            if settings.cancel then cancelledCount steps else steps.Length)
+    Console.SetOut(originalOut)
+    let average = counts |> List.averageBy float
+    let ordered = counts |> List.sort
+    {| name = settings.name; note = settings.note; average = average
+       median = float ordered[ordered.Length / 2]; minimum = List.min counts; maximum = List.max counts |}
+
 let requested = Environment.GetEnvironmentVariable("BENCHMARK_ONLY")
-let selectedConfigurations = if String.IsNullOrWhiteSpace requested then configurations else configurations |> List.filter (fun settings -> settings.name = requested)
-let results =
-    selectedConfigurations
-    |> List.map (fun settings ->
-        originalOut.WriteLine($"Running {settings.name}…")
-        Console.SetOut(quiet)
-        let counts =
-            solveBatch settings scrambles
-            |> List.map (fun trace ->
-                let steps = trace |> List.collect snd
-                if settings.cancel then cancelledCount steps else steps.Length)
-        Console.SetOut(originalOut)
-        let average = counts |> List.averageBy float
-        let ordered = counts |> List.sort
-        {| name = settings.name; note = settings.note; average = average
-           median = float ordered[ordered.Length / 2]; minimum = List.min counts; maximum = List.max counts |})
+let studyOnly = requested = "CMLL_EO_STUDY"
+let selectedConfigurations = if studyOnly then [] elif String.IsNullOrWhiteSpace requested then configurations else configurations |> List.filter (fun settings -> settings.name = requested)
+let results = selectedConfigurations |> List.map measure
 
 let rows =
     results
@@ -139,6 +159,17 @@ let rows =
            minimum = result.minimum; maximum = result.maximum; saved = previous - result.average
            totalSaved = results[0].average - result.average |})
 
-let output = Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, "..", "..", "site", "lab", "benchmark-results.json"))
-File.WriteAllText(output, System.Text.Json.JsonSerializer.Serialize({| sampleSize = scrambles.Length; seed = 3332026; rows = rows |}))
+let cmllEoResults = [cmllEoBaseline; cmllEoInfluence] |> List.map measure
+let cmllEoStudy =
+    let baseline = cmllEoResults[0]
+    let influenced = cmllEoResults[1]
+    {| rows = cmllEoResults
+       averageSaved = baseline.average - influenced.average |}
+
+let outputName = if studyOnly then "cmll-eo-results.json" else "benchmark-results.json"
+let output = Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, "..", "..", "site", "lab", outputName))
+let payload =
+    if studyOnly then System.Text.Json.JsonSerializer.Serialize({| sampleSize = scrambles.Length; seed = 3332026; cmllEoStudy = cmllEoStudy |})
+    else System.Text.Json.JsonSerializer.Serialize({| sampleSize = scrambles.Length; seed = 3332026; rows = rows |})
+File.WriteAllText(output, payload)
 printfn "Wrote %s" output
