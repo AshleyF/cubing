@@ -28,6 +28,7 @@ let solveWithProgress (scramble: string) (config: Config) (progress: string -> S
     Utility.cornerOrientationLevel <- config.co
     Utility.cornerPermutationLevel <- config.cp
     Utility.fullCmll <- config.cmll = 1
+    Utility.useCmllEoInfluence <- config.cmll = 2
     Utility.edgeOrientationLevel <- if config.eo = 1 then 1 else 0
     Utility.useEolr <- config.eo = 2
     Utility.useOptimalLse <- config.lse = 1

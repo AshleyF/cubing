@@ -149,6 +149,31 @@ let cpIntermediatePatterns = [
 let cmllBeginnerPatterns = coBeginnerPatterns @ cpBeginnerPatterns
 let cmllIntermediatePatterns = coIntermediatePatterns @ cpIntermediatePatterns // two-look
 
+let cmllEoCandidates =
+#if FABLE_COMPILER
+    PatternData.read "Roux/Experimental/CmllEoCandidates"
+#else
+    System.IO.File.ReadLines "Patterns/Roux/Experimental/CmllEoCandidates.txt" |> List.ofSeq
+#endif
+    |> List.map (fun algorithm -> algorithm, Render.stringToSteps algorithm)
+    |> List.distinctBy snd
+
+// Imported algorithms are data, not trusted code.  Applying an inverse to the
+// solved cube constructs the exact case without relying on an external label;
+// the LSE boundary validator then proves that both Roux blocks were preserved.
+let validateCmllEoCandidates () =
+    cmllEoCandidates
+    |> List.iter (fun (algorithm, steps) ->
+        let case = Cube.solved |> Cube.executeSteps (Cube.inverseSteps steps)
+        try
+            Lse.indexEdgeCenterCube case |> ignore
+        with error ->
+            failwith $"Invalid CMLL/EO candidate '{algorithm}': {error.Message}"
+        if Cube.executeSteps steps case <> Cube.solved then
+            failwith $"CMLL/EO candidate does not invert its generated case: {algorithm}")
+
+let private cmllEoCandidatesValidated = lazy (validateCmllEoCandidates ())
+
 let cmllAdvancedPatterns = [
     // Full CMLL - hand authored patterns [?? cases] (~10 STM better than intermediate)
     matchesGeneric, "CornerOrientation", ("O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false), [] // skip (color neutral)
@@ -737,19 +762,52 @@ let generateFrom scrambled =
     Solver.stageStats "SB" numCubes
     progressCallback "Second block"
 
-    // Orient corners (CO) - hand authored patterns
-    let solvedCO = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB false
+    let exactLse = useOptimalLse || useCmllEoInfluence
 
-    // Permute corners (CP) - hand authored patterns
-    let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
-    let solvedCP = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP solvedCO true
+    // This is optimal over a curated human CMLL/COLL bank and U setups, scored
+    // by the exact remaining LSE distance.  It is intentionally not presented
+    // as a proof of globally optimal CMLLEO.
+    let solvedCO, solvedCP =
+        if useCmllEoInfluence then
+            cmllEoCandidatesValidated.Force()
+            let policy = Lse.requirePolicy ()
+            let goal = Cube.solved |> Cube.executeSteps [Rotate X2; Rotate Y]
+            let setups = [ []; [Move Move.U]; [Move Move.U']; [Move Move.U2] ]
+            let solveCandidate cube =
+                let baseline =
+                    cmllAdvancedPatterns
+                    |> expandPatternsForAuf
+                    |> Seq.filter (fun (matcher, stage, pattern, _) -> stage = "CornerOrientation" && matcher cube pattern)
+                    |> Seq.collect (fun (_, _, _, algorithms) ->
+                        if List.isEmpty algorithms then seq { [] }
+                        else algorithms |> Seq.map Render.stringToSteps)
+                    |> Seq.toList
+                let imported = [ for setup in setups do for _, steps in cmllEoCandidates do yield setup @ steps ]
+                let candidates =
+                    [ for candidate in List.distinct (baseline @ imported) do
+                            let result = Cube.executeSteps candidate cube
+                            if caseCP result then
+                                let lseDistance = Lse.distanceCubeRelative policy goal result
+                                yield candidate, result, candidate.Length + lseDistance ]
+                match candidates |> List.sortBy (fun (steps, _, total) -> total, steps.Length) |> List.tryHead with
+                | Some (steps, result, _) ->
+                    Solver.solutionTrace <- Solver.solutionTrace @ ["CMLLEO", steps]
+                    result
+                | None -> failwith $"Uncovered CMLL+EO state: {Render.cubeToString cube}"
+            let solved = solvedSB |> List.map solveCandidate
+            solved, solved
+        else
+            let co = solve moves "Orient corners (CO)" "CornerOrientation" caseCO solvedSB false
+            let rufMoves = [Move Move.U; Move Move.U'; Move Move.U2; Move Move.R; Move Move.R'; Move Move.R2; Move Move.F; Move Move.F'; Move Move.F2]
+            let cp = solve rufMoves "Permute corners (CP)" "CornerPermutation" caseCP co true
+            co, cp
 
     Solver.stageStats "CMLL" numCubes
     progressCallback "CMLL"
 
     // Orient center (note: generated patterns and algs are not distinct because goal is flexible U/D colors)
     let solvedCenterO =
-        if useOptimalLse then
+        if exactLse then
             let goal = Cube.solved |> Cube.executeSteps [Rotate X2; Rotate Y]
             let policy = Lse.requirePolicy ()
             solvedCP |> List.map (fun cube ->
@@ -780,7 +838,7 @@ let generateFrom scrambled =
                                      look Face.L Sticker.UR c = Color.B && look Face.R Sticker.UL c = Color.G
     let caseEolr c = caseLRBottomEither c || caseLRSolved c
     let solvedEO =
-        if useOptimalLse then solvedCenterO
+        if exactLse then solvedCenterO
         elif useEolr then
             let lseEdges = [Edge UL; Edge UR; Edge UF; Edge UB; Edge DF; Edge DB]
             let directEoAlgorithms =
@@ -806,12 +864,12 @@ let generateFrom scrambled =
         else solve muMoves "Orient edges (EO)" "EdgeOrientation" caseEO solvedCenterO true
 
     Solver.stageStats "EO" numCubes
-    if not useOptimalLse then progressCallback (if useEolr then "EOLR" else "Edge orientation")
+    if not exactLse then progressCallback (if useEolr then "EOLR" else "Edge orientation")
 
     // Left/right edges (LR)
 
     let solvedLR =
-        if useOptimalLse then solvedEO
+        if exactLse then solvedEO
         elif useEolr then
             solvedEO |> List.map (fun cube ->
                 let algorithm = chooseDirectLrAlgorithm caseLRSolved cube
@@ -844,11 +902,11 @@ let generateFrom scrambled =
         solved Face.U Color.Y &&
         solved Face.D Color.W
     let solved =
-        if useOptimalLse then solvedLR
+        if exactLse then solvedLR
         else solve mud2Moves "Last 4 edges -> Solved!" "L4E" caseSolved solvedLR true
 
     Solver.stageStats "L4E" numCubes
-    if not useOptimalLse then progressCallback "Last four edges"
+    if not exactLse then progressCallback "Last four edges"
 
 let generate numCubes =
     generateFrom (initScrambledCubes numCubes)

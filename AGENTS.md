@@ -26,3 +26,14 @@
 - EOLR must use `lrIntermediatePatterns`, never the beginner LR bank. Direct LR patterns overlap, so select the shortest explicitly matched action that actually satisfies the LR goal; never generic-search an uncovered state.
 - First- and second-block “choose shorter pair order” compare only the two ways of completing that block’s two pairs. Color neutrality compares only first-block cost. Neither may look ahead into later stages.
 - Before pushing solver changes, verify the .NET build, rebuild the static solver, serve the repository root with a plain static server, and test `site/lab/` without `server.mjs`.
+
+# Exact CMLLEO + LSE work in progress
+
+- `solver333/Tools/CmllEoSearch.md` is the design contract. The objective is CMLLEO move count plus the exact remaining distance from `lse-policy-v1.dat`, not shortest CMLLEO in isolation.
+- The v1 search alphabet is `U/R/r/F` with all powers in STM. Never describe a resulting policy as unrestricted cube-optimal; it is exact within that versioned alphabet.
+- `GenerateCmllEoMoveData.fsx` derives cubie and facelet transforms from the canonical F# cube model and performs 1,000 randomized equivalence checks. Do not hand-maintain a second move convention in C.
+- `CmllEoKernel.c` currently builds and verifies three admissible pruning tables and proves a weighted optimum for a deterministic sample. `BuildCmllEoSearch.sh WORK_DIRECTORY` reproduces those artifacts. The large PDBs belong in a temporary work directory and are not browser assets.
+- No exhaustive CMLLEO policy exists yet. RouxLab's separate `CMLL + EO influence` option is an explicitly non-exact approximation: it merges the complete built-in 42-case CMLL bank with 92 published CMLL/COLL alternatives, validates block preservation, tries applicable AUFs, and minimizes candidate STM plus exact remaining LSE distance. It always uses the exact LSE continuation it scores. The candidate source and provenance live under `solver333/Patterns/Roux/Experimental/`.
+- The next exact-generator phase must batch the 82,944 corner/edge-orientation/center abstract inputs and evaluate the 360 parity-compatible LSE edge permutations together; do not run weighted IDA* independently for all 29,859,840 boundary states.
+- The v1 combined policy stores one deterministic optimal move. Preserving every tied first move is optional and must not make initial exhaustive generation intractable.
+- Phase-two benchmark: one exact 360-permutation batch took 2,067,343,732 nodes / 297.82 seconds (costs 11–16, average 14.555556). Do not extrapolate this across 82,944 abstractions. A 6.23-million-state reverse meet table was memory-latency bound and was also rejected. See `CmllEoSearch.md` before attempting the next generator architecture.

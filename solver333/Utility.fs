@@ -8,6 +8,7 @@ let level = 0 // 0 = beginner, 1 = intermediate, 2 = advanced, 3 = god
 let mutable cornerOrientationLevel = 0
 let mutable cornerPermutationLevel = 0
 let mutable fullCmll = false
+let mutable useCmllEoInfluence = false
 let mutable edgeOrientationLevel = 0
 let mutable lbPairLevel = 0
 let mutable lfPairLevel = 0

@@ -22,11 +22,17 @@ const scrambles = [
   "F R2 B' U2 L D' F2 R U' B2 L2 D F' U R' B D2 L' U2 F2",
   "U2 R F2 D' L2 B U R2 F' D2 B2 L U' F R' D B' U2 L2 R2"
 ];
-const config = { co: 0, cp: 0, cmll: 1, eo: 2, lb: 1, lf: 1, rb: 1, rf: 1, center: 1, fbOrder: 1, sbOrder: 1, colorNeutral: 0, lse: 1 };
+const configs = [
+  ['one-look CMLL', { co: 0, cp: 0, cmll: 1, eo: 2, lb: 1, lf: 1, rb: 1, rf: 1, center: 1, fbOrder: 1, sbOrder: 1, colorNeutral: 0, lse: 1 }],
+  ['CMLL + EO influence', { co: 0, cp: 0, cmll: 2, eo: 2, lb: 1, lf: 1, rb: 1, rf: 1, center: 1, fbOrder: 1, sbOrder: 1, colorNeutral: 0, lse: 1 }]
+];
 const rouxSolved = 'OOOOOOOOOYYYYYYYYYBBBRRRGGGBBBRRRGGGBBBRRRGGGWWWWWWWWW';
 
-for (const scramble of scrambles) {
+for (const [label, config] of configs) for (const scramble of scrambles) {
   const result = solve(scramble, config);
+  if (config.cmll === 2 && result.stages.filter(stage => stage.stage === 'CMLLEO').length !== 1) {
+    throw Error('CMLL + EO influence did not emit exactly one CMLLEO stage');
+  }
   const lse = result.stages.filter(stage => stage.stage === 'OptimalLSE');
   if (lse.length !== 1) throw Error(`Expected one OptimalLSE stage, found ${lse.length}`);
   if (result.stages.some(stage => ['CenterOrientation', 'EdgeOrientation', 'EOLR', 'LToDF', 'LREdgesBottom', 'LREdges', 'L4E'].includes(stage.stage))) {
@@ -35,7 +41,7 @@ for (const scramble of scrambles) {
   const lseLength = lse[0].moves.trim().split(/\s+/).filter(Boolean).length;
   if (lseLength > maximum) throw Error(`Optimal LSE stage exceeded maximum table depth: ${lseLength}`);
   const cube = executeSteps(stringToSteps(`${scramble} ${result.solution}`), solved);
-  if (cubeToString(cube) !== rouxSolved) throw Error(`God-mode solution did not solve scramble: ${scramble}`);
+  if (cubeToString(cube) !== rouxSolved) throw Error(`${label} solution did not solve scramble: ${scramble}`);
 }
 
-console.log(`Verified browser God-mode LSE on ${scrambles.length} full solves (policy depth ${maximum}).`);
+console.log(`Verified browser exact LSE with both corner modes on ${scrambles.length * configs.length} full solves (policy depth ${maximum}).`);

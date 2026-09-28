@@ -1,15 +1,16 @@
-import { stringHash, comparePrimitives, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
-import { stringToSteps, cubeToString, piecesToString } from "./library/Render.js";
-import { useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js?v=20260924-1";
+import { compareArrays, stringHash, comparePrimitives, Lazy, safeHash, equals, createAtom } from "./fable_modules/fable-library-js.4.16.0/Util.js";
+import { cubeToString, stringToSteps, piecesToString } from "./library/Render.js";
+import { useCmllEoInfluence, useOptimalLse, chooseShortestSecondBlockPairOrder, orientCentersWithSecondBlock, chooseShortestFirstBlockPairOrder, useEolr, rfPairLevel, rbPairLevel, lfPairLevel, lbPairLevel, edgeOrientationLevel, cornerPermutationLevel, cornerOrientationLevel, fullCmll, level, readPatterns } from "./Utility.js?v=20260927-1";
 import { initScrambledCubes, solveWithStepsBy, preferGoalMatchingAlgorithm, solutionTrace, stageStats, lookPattern, solveCase, expandPatternsForAuf, matchesGeneric } from "./library/Solver.js";
-import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, map, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
-import { Edge, executeMoves, solved as solved_7, Sticker, Face, look, Rotate, Step, Move, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
-import { map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
-import { List_distinct } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
+import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, splitAt, mapIndexed, choose, concat, sumBy, skip, collect, filter as filter_1, length, sortBy, tryHead, isEmpty, iterate, map, singleton, empty, ofArray, append } from "./fable_modules/fable-library-js.4.16.0/List.js";
+import { Edge, executeMoves, Sticker, Face, look, Rotate, Step, Move, solved as solved_8, inverseSteps, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
+import { List_distinct, List_distinctBy } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
+import { read } from "./PatternData.js";
+import { solveCubeRelative, distanceCubeRelative, requirePolicy, indexEdgeCenterCube } from "./library/Lse.js?v=20260927-1";
+import { empty as empty_1, singleton as singleton_1, map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
 import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
 import { defaultArg, value as value_1, bind, map as map_2 } from "./fable_modules/fable-library-js.4.16.0/Option.js";
-import { solveCubeRelative, requirePolicy } from "./library/Lse.js?v=20260924-1";
 import { find, forAll } from "./fable_modules/fable-library-js.4.16.0/Map.js";
 
 export const sune = "R U R\' U R U2 R\'";
@@ -94,6 +95,32 @@ export const cmllBeginnerPatterns = append(coBeginnerPatterns, cpBeginnerPattern
 
 export const cmllIntermediatePatterns = append(coIntermediatePatterns, cpIntermediatePatterns);
 
+export const cmllEoCandidates = List_distinctBy((tuple) => tuple[1], map((algorithm) => [algorithm, stringToSteps(algorithm)], read("Roux/Experimental/CmllEoCandidates")), {
+    Equals: equals,
+    GetHashCode: safeHash,
+});
+
+export function validateCmllEoCandidates() {
+    iterate((tupledArg) => {
+        const algorithm = tupledArg[0];
+        const steps = tupledArg[1];
+        const case$ = executeSteps(inverseSteps(steps), solved_8);
+        try {
+            indexEdgeCenterCube(case$);
+        }
+        catch (error) {
+            throw new Error(`Invalid CMLL/EO candidate '${algorithm}': ${error.message}`);
+        }
+        if (!executeSteps(steps, case$).Equals(solved_8)) {
+            throw new Error(`CMLL/EO candidate does not invert its generated case: ${algorithm}`);
+        }
+    }, cmllEoCandidates);
+}
+
+const cmllEoCandidatesValidated = new Lazy(() => {
+    validateCmllEoCandidates();
+});
+
 export const cmllAdvancedPatterns = ofArray([[(cube) => ((tupledArg) => matchesGeneric(cube, tupledArg[0], tupledArg[1], tupledArg[2])), "CornerOrientation", ["O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false], empty()], [(cube_1) => ((tupledArg_1) => matchesGeneric(cube_1, tupledArg_1[0], tupledArg_1[1], tupledArg_1[2])), "CornerOrientation", ["O.OO.OG.RY.Y...Y.YO.OB.RG.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton(jperm)], [(cube_2) => ((tupledArg_2) => matchesGeneric(cube_2, tupledArg_2[0], tupledArg_2[1], tupledArg_2[2])), "CornerOrientation", ["O.OO.OR.OY.Y...Y.YG.BR.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false], singleton(diagSwap)], [(cube_3) => ((tupledArg_3) => matchesGeneric(cube_3, tupledArg_3[0], tupledArg_3[1], tupledArg_3[2])), "CornerOrientation", ["O.OO.OY.YO.O...R.RG.GY.YB.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton(((((("F " + sexy) + " ") + sexy) + " ") + sexy) + " F\'")], [(cube_4) => ((tupledArg_4) => matchesGeneric(cube_4, tupledArg_4[0], tupledArg_4[1], tupledArg_4[2])), "CornerOrientation", ["O.OO.OR.OB.B...G.GY.YR.OY.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U R\' U R U\' R\' U R U2 R\'")], [(cube_5) => ((tupledArg_5) => matchesGeneric(cube_5, tupledArg_5[0], tupledArg_5[1], tupledArg_5[2])), "CornerOrientation", ["O.OO.OR.RB.G...O.OY.YG.BY.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U2\' R2\' F R F\' U2 R\' F R F\'")], [(cube_6) => ((tupledArg_6) => matchesGeneric(cube_6, tupledArg_6[0], tupledArg_6[1], tupledArg_6[2])), "CornerOrientation", ["O.OO.OY.YB.B...R.OO.GY.YG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r U\' r2\' D\' r U\' r\' D r2 U r\'")], [(cube_7) => ((tupledArg_7) => matchesGeneric(cube_7, tupledArg_7[0], tupledArg_7[1], tupledArg_7[2])), "CornerOrientation", ["O.OO.OB.YO.G...R.GY.YB.YR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R U R\' U\' R U R\' U\' F\'")], [(cube_8) => ((tupledArg_8) => matchesGeneric(cube_8, tupledArg_8[0], tupledArg_8[1], tupledArg_8[2])), "CornerOrientation", ["O.OO.OB.BO.R...G.GY.OY.YR.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R\' U\' R\' F R F\' R U\' R\' U2 R")], [(cube_9) => ((tupledArg_9) => matchesGeneric(cube_9, tupledArg_9[0], tupledArg_9[1], tupledArg_9[2])), "CornerOrientation", ["O.OO.OY.YG.O...O.BR.YG.RY.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R\' F\' R U2 R U\' R\' U R U2\' R\'")], [(cube_10) => ((tupledArg_10) => matchesGeneric(cube_10, tupledArg_10[0], tupledArg_10[1], tupledArg_10[2])), "CornerOrientation", ["O.OO.OG.YR.B...B.OY.YO.YG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U2 R\' U\' R U R\' U2\' R\' F R F\'")], [(cube_11) => ((tupledArg_11) => matchesGeneric(cube_11, tupledArg_11[0], tupledArg_11[1], tupledArg_11[2])), "CornerOrientation", ["O.OO.OB.BO.R...R.OY.GY.YG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R\' F R U F U\' R U R\' U\' F\'")], [(cube_12) => ((tupledArg_12) => matchesGeneric(cube_12, tupledArg_12[0], tupledArg_12[1], tupledArg_12[2])), "CornerOrientation", ["O.OO.OG.BR.R...O.OY.BY.YG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r U\' r2\' D\' r U r\' D r2 U r\'")], [(cube_13) => ((tupledArg_13) => matchesGeneric(cube_13, tupledArg_13[0], tupledArg_13[1], tupledArg_13[2])), "CornerOrientation", ["O.OO.OG.OR.Y...R.YY.YB.OB.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R U R\' U\' F\'")], [(cube_14) => ((tupledArg_14) => matchesGeneric(cube_14, tupledArg_14[0], tupledArg_14[1], tupledArg_14[2])), "CornerOrientation", ["O.OO.OO.GY.Y...G.RB.OY.YB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R2 D R\' U2 R D\' R\' U2 R\'")], [(cube_15) => ((tupledArg_15) => matchesGeneric(cube_15, tupledArg_15[0], tupledArg_15[1], tupledArg_15[2])), "CornerOrientation", ["O.OO.OY.YR.G...Y.YB.OB.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R2\' D\' R U2 R\' D R U2 R")], [(cube_16) => ((tupledArg_16) => matchesGeneric(cube_16, tupledArg_16[0], tupledArg_16[1], tupledArg_16[2])), "CornerOrientation", ["O.OO.OY.YG.B...Y.YR.GO.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R2\' F U\' F U F2 R2 U\' R\' F R")], [(cube_17) => ((tupledArg_17) => matchesGeneric(cube_17, tupledArg_17[0], tupledArg_17[1], tupledArg_17[2])), "CornerOrientation", ["O.OO.OG.BR.Y...R.YY.YB.GO.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R2 D R\' U R D\' R2\' U\' F\'")], [(cube_18) => ((tupledArg_18) => matchesGeneric(cube_18, tupledArg_18[0], tupledArg_18[1], tupledArg_18[2])), "CornerOrientation", ["O.OO.OG.BY.Y...B.GO.RY.YR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r U\' r\' U r\' D\' r U\' r\' D r")], [(cube_19) => ((tupledArg_19) => matchesGeneric(cube_19, tupledArg_19[0], tupledArg_19[1], tupledArg_19[2])), "CornerOrientation", ["O.OO.OY.BR.Y...G.YB.OY.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U R\' U\' R\' F R F\'")], [(cube_20) => ((tupledArg_20) => matchesGeneric(cube_20, tupledArg_20[0], tupledArg_20[1], tupledArg_20[2])), "CornerOrientation", ["O.OO.OG.YY.R...Y.BO.BR.YO.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("L\' U\' L U L F\' L\' F")], [(cube_21) => ((tupledArg_21) => matchesGeneric(cube_21, tupledArg_21[0], tupledArg_21[1], tupledArg_21[2])), "CornerOrientation", ["O.OO.OG.BR.R...Y.YY.GO.OB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R\' F R2 U\' R\' U\' R U R\' F2")], [(cube_22) => ((tupledArg_22) => matchesGeneric(cube_22, tupledArg_22[0], tupledArg_22[1], tupledArg_22[2])), "CornerOrientation", ["O.OO.OR.RB.G...Y.YY.GO.OB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r\' U r U2\' R2\' F R F\' R")], [(cube_23) => ((tupledArg_23) => matchesGeneric(cube_23, tupledArg_23[0], tupledArg_23[1], tupledArg_23[2])), "CornerOrientation", ["O.OO.OR.OB.B...Y.YY.GO.RG.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r\' D\' r U r\' D r U\' r U r\'")], [(cube_24) => ((tupledArg_24) => matchesGeneric(cube_24, tupledArg_24[0], tupledArg_24[1], tupledArg_24[2])), "CornerOrientation", ["O.OO.OG.BY.Y...G.BO.YR.RY.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("r2\' D\' r U r\' D r2 U\' r\' U\' r")], [(cube_25) => ((tupledArg_25) => matchesGeneric(cube_25, tupledArg_25[0], tupledArg_25[1], tupledArg_25[2])), "CornerOrientation", ["O.OO.OY.GB.O...Y.GO.BR.YR.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton(sune)], [(cube_26) => ((tupledArg_26) => matchesGeneric(cube_26, tupledArg_26[0], tupledArg_26[1], tupledArg_26[2])), "CornerOrientation", ["O.OO.OY.GG.O...Y.RR.OB.YB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("L\' U2 L U2\' L F\' L\' F")], [(cube_27) => ((tupledArg_27) => matchesGeneric(cube_27, tupledArg_27[0], tupledArg_27[1], tupledArg_27[2])), "CornerOrientation", ["O.OO.OY.GR.O...Y.BB.RG.YO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R\' F\' R U2 R U2\' R\'")], [(cube_28) => ((tupledArg_28) => matchesGeneric(cube_28, tupledArg_28[0], tupledArg_28[1], tupledArg_28[2])), "CornerOrientation", ["O.OO.OY.GB.O...Y.RO.RG.YB.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U R\' U\' R\' F R F\' R U R\' U R U2 R\'")], [(cube_29) => ((tupledArg_29) => matchesGeneric(cube_29, tupledArg_29[0], tupledArg_29[1], tupledArg_29[2])), "CornerOrientation", ["O.OO.OY.BO.Y...G.RG.YR.YB.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U R\' U R\' F R F\' R U2\' R\'")], [(cube_30) => ((tupledArg_30) => matchesGeneric(cube_30, tupledArg_30[0], tupledArg_30[1], tupledArg_30[2])), "CornerOrientation", ["O.OO.OY.BO.R...Y.BG.RG.YO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U\' L\' U R\' U\' L")], [(cube_31) => ((tupledArg_31) => matchesGeneric(cube_31, tupledArg_31[0], tupledArg_31[1], tupledArg_31[2])), "CornerOrientation", ["O.OO.OR.YB.O...R.YY.GY.GO.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("L\' U\' L U\' L\' U2 L")], [(cube_32) => ((tupledArg_32) => matchesGeneric(cube_32, tupledArg_32[0], tupledArg_32[1], tupledArg_32[2])), "CornerOrientation", ["O.OO.OB.YO.G...R.YY.GY.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R2 D R\' U R D\' R\' U R\' U\' R U\' R\'")], [(cube_33) => ((tupledArg_33) => matchesGeneric(cube_33, tupledArg_33[0], tupledArg_33[1], tupledArg_33[2])), "CornerOrientation", ["O.OO.OR.YB.G...O.YY.BY.RG.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F\' L F L\' U2\' L\' U2 L")], [(cube_34) => ((tupledArg_34) => matchesGeneric(cube_34, tupledArg_34[0], tupledArg_34[1], tupledArg_34[2])), "CornerOrientation", ["O.OO.OG.YR.G...O.YY.BY.BR.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U2\' R\' U2 R\' F R F\'")], [(cube_35) => ((tupledArg_35) => matchesGeneric(cube_35, tupledArg_35[0], tupledArg_35[1], tupledArg_35[2])), "CornerOrientation", ["O.OO.OR.YB.G...R.YY.GY.OB.OBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("L\' U R U\' L U R\'")], [(cube_36) => ((tupledArg_36) => matchesGeneric(cube_36, tupledArg_36[0], tupledArg_36[1], tupledArg_36[2])), "CornerOrientation", ["O.OO.OB.YO.B...G.YY.OY.RG.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R\' U\' R U\' L U\' R\' U L\' U2 R")], [(cube_37) => ((tupledArg_37) => matchesGeneric(cube_37, tupledArg_37[0], tupledArg_37[1], tupledArg_37[2])), "CornerOrientation", ["O.OO.OO.YY.B...G.YB.YR.GO.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R2\' D\' R U\' R\' D R U R")], [(cube_38) => ((tupledArg_38) => matchesGeneric(cube_38, tupledArg_38[0], tupledArg_38[1], tupledArg_38[2])), "CornerOrientation", ["O.OO.OO.RY.G...B.YB.RY.GO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("F R\' F\' R U R U\' R\'")], [(cube_39) => ((tupledArg_39) => matchesGeneric(cube_39, tupledArg_39[0], tupledArg_39[1], tupledArg_39[2])), "CornerOrientation", ["O.OO.OR.YY.B...O.YG.YG.OB.RBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U2 R\' U\' R U R\' U\' R U R\' U\' R U\' R\'")], [(cube_40) => ((tupledArg_40) => matchesGeneric(cube_40, tupledArg_40[0], tupledArg_40[1], tupledArg_40[2])), "CornerOrientation", ["O.OO.OO.BY.R...R.YB.GY.GO.YBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R U2 R D R\' U2 R D\' R2\'")], [(cube_41) => ((tupledArg_41) => matchesGeneric(cube_41, tupledArg_41[0], tupledArg_41[1], tupledArg_41[2])), "CornerOrientation", ["O.OO.OG.YY.O...G.YO.YR.BR.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("R\' U\' R U R\' F\' R U R\' U\' R\' F R2")], [(cube_42) => ((tupledArg_42) => matchesGeneric(cube_42, tupledArg_42[0], tupledArg_42[1], tupledArg_42[2])), "CornerOrientation", ["O.OO.OR.YY.O...O.YG.YG.BR.BBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, true], singleton("U R\' U2 R\' D\' R U2 R\' D R2")], [(cube_43) => ((tupledArg_43) => matchesGeneric(cube_43, tupledArg_43[0], tupledArg_43[1], tupledArg_43[2])), "CornerPermutation", ["O.OO.OO.OY.Y...Y.YB.BR.RG.GBBBR.RGGGBBBR.RGGGW.WW.WW.W", false, true, false], empty()]]);
 
 export const edgeBeginnerOrientationPatters = ofArray([[(cube) => ((tupledArg) => matchesGeneric(cube, tupledArg[0], tupledArg[1], tupledArg[2])), "EdgeOrientation", ["O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", true, true, false], empty()], [(cube_1) => ((tupledArg_1) => matchesGeneric(cube_1, tupledArg_1[0], tupledArg_1[1], tupledArg_1[2])), "EdgeOrientation", ["O.OO.OO.OYPYEEEYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", true, true, true], singleton((((mum + " ") + mum) + " U\' ") + mum)], [(cube_2) => ((tupledArg_2) => matchesGeneric(cube_2, tupledArg_2[0], tupledArg_2[1], tupledArg_2[2])), "EdgeOrientation", ["O.OO.OO.OYEYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", true, true, false], singleton((((("M2 " + mum) + " ") + mum) + " U\' ") + mum)], [(cube_3) => ((tupledArg_3) => matchesGeneric(cube_3, tupledArg_3[0], tupledArg_3[1], tupledArg_3[2])), "EdgeOrientation", ["O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", true, true, true], singleton((mum + " U2 ") + mum)], [(cube_4) => ((tupledArg_4) => matchesGeneric(cube_4, tupledArg_4[0], tupledArg_4[1], tupledArg_4[2])), "EdgeOrientation", ["O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", true, true, true], singleton((((((((mum + " ") + mum) + " U2 ") + mum) + " U ") + mum) + " U\' ") + mum)], [(cube_5) => ((tupledArg_5) => matchesGeneric(cube_5, tupledArg_5[0], tupledArg_5[1], tupledArg_5[2])), "EdgeOrientation", ["O.OO.OO.OYPYEEEYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", true, true, true], singleton((((mum + " U ") + mum) + " U\' ") + mum)], [(cube_6) => ((tupledArg_6) => matchesGeneric(cube_6, tupledArg_6[0], tupledArg_6[1], tupledArg_6[2])), "EdgeOrientation", ["O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWEW", true, true, false], singleton((((((mum + " U\' ") + mum) + " U ") + mum) + " U\' ") + mum)], [(cube_7) => ((tupledArg_7) => matchesGeneric(cube_7, tupledArg_7[0], tupledArg_7[1], tupledArg_7[2])), "EdgeOrientation", ["O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWEW", true, true, true], singleton(mum)], [(cube_8) => ((tupledArg_8) => matchesGeneric(cube_8, tupledArg_8[0], tupledArg_8[1], tupledArg_8[2])), "EdgeOrientation", ["O.OO.OO.OYEYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWEWWEWWPW", true, true, true], singleton((((mum + " U\' ") + mum) + " U2 ") + mum)], [(cube_9) => ((tupledArg_9) => matchesGeneric(cube_9, tupledArg_9[0], tupledArg_9[1], tupledArg_9[2])), "EdgeOrientation", ["O.OO.OO.OYEYPEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", true, true, true], singleton((((mum + " U2 ") + mum) + " U2 ") + mum)], [(cube_10) => ((tupledArg_10) => matchesGeneric(cube_10, tupledArg_10[0], tupledArg_10[1], tupledArg_10[2])), "EdgeOrientation", ["O.OO.OO.OYPYEEPYEYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", true, true, true], singleton((mum + " U\' ") + mum)], [(cube_11) => ((tupledArg_11) => matchesGeneric(cube_11, tupledArg_11[0], tupledArg_11[1], tupledArg_11[2])), "EdgeOrientation", ["O.OO.OO.OYPYPEPYPYB.BR.RG.GBBBR.RGGGBBBR.RGGGWPWWEWWPW", true, true, false], singleton((((((mum + " U2 ") + mum) + " U ") + mum) + " U\' ") + mum)]]);
@@ -170,6 +197,7 @@ export function solve(moves, description, name, target, cubes, search) {
 }
 
 export function generateFrom(scrambled) {
+    let policy, goal_3, solved_5, co;
     const numCubes = length(scrambled) | 0;
     const moves = append(ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(3, [])]), new Step(1, [new Move(4, [])]), new Step(1, [new Move(5, [])])]), append(ofArray([new Step(1, [new Move(6, [])]), new Step(1, [new Move(7, [])]), new Step(1, [new Move(8, [])]), new Step(1, [new Move(9, [])]), new Step(1, [new Move(10, [])]), new Step(1, [new Move(11, [])])]), append(ofArray([new Step(1, [new Move(12, [])]), new Step(1, [new Move(13, [])]), new Step(1, [new Move(14, [])]), new Step(1, [new Move(15, [])]), new Step(1, [new Move(16, [])]), new Step(1, [new Move(17, [])])]), append(ofArray([new Step(1, [new Move(18, [])]), new Step(1, [new Move(19, [])]), new Step(1, [new Move(20, [])]), new Step(1, [new Move(21, [])]), new Step(1, [new Move(22, [])]), new Step(1, [new Move(23, [])])]), append(ofArray([new Step(1, [new Move(24, [])]), new Step(1, [new Move(25, [])]), new Step(1, [new Move(26, [])]), new Step(1, [new Move(27, [])]), new Step(1, [new Move(28, [])]), new Step(1, [new Move(29, [])])]), append(ofArray([new Step(1, [new Move(30, [])]), new Step(1, [new Move(31, [])]), new Step(1, [new Move(32, [])]), new Step(1, [new Move(33, [])]), new Step(1, [new Move(34, [])]), new Step(1, [new Move(35, [])])]), append(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])])]), append(ofArray([new Step(1, [new Move(39, [])]), new Step(1, [new Move(40, [])]), new Step(1, [new Move(41, [])])]), ofArray([new Step(1, [new Move(42, [])]), new Step(1, [new Move(43, [])]), new Step(1, [new Move(44, [])])])))))))));
     const caseLBPair = (cube) => lookPattern("O..O.......................BB.......BB..........W..W..".split(""), cube);
@@ -613,18 +641,61 @@ export function generateFrom(scrambled) {
     }
     stageStats("SB", numCubes);
     progressCallback()("Second block");
-    const solvedCP = solve(ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(18, [])]), new Step(1, [new Move(19, [])]), new Step(1, [new Move(20, [])]), new Step(1, [new Move(24, [])]), new Step(1, [new Move(25, [])]), new Step(1, [new Move(26, [])])]), "Permute corners (CP)", "CornerPermutation", caseCP, solve(moves, "Orient corners (CO)", "CornerOrientation", caseCO, solvedSB, false), true);
+    const exactLse = useOptimalLse() ? true : useCmllEoInfluence();
+    const solvedCP = (useCmllEoInfluence() ? ((cmllEoCandidatesValidated.Value, (policy = requirePolicy(), (goal_3 = executeSteps([new Step(0, [new Rotate(2, [])]), new Step(0, [new Rotate(3, [])])], solved_8), (solved_5 = map((cube_36) => {
+        const baseline = toList(collect_1((tupledArg_15) => {
+            const algorithms_3 = tupledArg_15[3];
+            if (isEmpty(algorithms_3)) {
+                return delay(() => singleton_1(empty()));
+            }
+            else {
+                return map_1(stringToSteps, algorithms_3);
+            }
+        }, filter((tupledArg_14) => {
+            if (tupledArg_14[1] === "CornerOrientation") {
+                return tupledArg_14[0](cube_36)(tupledArg_14[2]);
+            }
+            else {
+                return false;
+            }
+        }, expandPatternsForAuf(cmllAdvancedPatterns))));
+        const imported = toList(delay(() => collect_1((setup) => collect_1((matchValue_6) => singleton_1(append(setup, matchValue_6[1])), cmllEoCandidates), [empty(), singleton(new Step(1, [new Move(0, [])])), singleton(new Step(1, [new Move(1, [])])), singleton(new Step(1, [new Move(2, [])]))])));
+        const matchValue_7 = tryHead(sortBy((tupledArg_16) => [tupledArg_16[2], length(tupledArg_16[0])], toList(delay(() => collect_1((candidate_4) => {
+            const result = executeSteps(candidate_4, cube_36);
+            if (caseCP(result)) {
+                const lseDistance = distanceCubeRelative(policy, goal_3, result) | 0;
+                return singleton_1([candidate_4, result, length(candidate_4) + lseDistance]);
+            }
+            else {
+                return empty_1();
+            }
+        }, List_distinct(append(baseline, imported), {
+            Equals: equals,
+            GetHashCode: safeHash,
+        })))), {
+            Compare: compareArrays,
+        }));
+        if (matchValue_7 == null) {
+            throw new Error(`Uncovered CMLL+EO state: ${cubeToString(cube_36)}`);
+        }
+        else {
+            const steps_12 = matchValue_7[0];
+            const result_1 = matchValue_7[1];
+            solutionTrace(append(solutionTrace(), singleton(["CMLLEO", steps_12])));
+            return result_1;
+        }
+    }, solvedSB), [solved_5, solved_5]))))) : ((co = solve(moves, "Orient corners (CO)", "CornerOrientation", caseCO, solvedSB, false), [co, solve(ofArray([new Step(1, [new Move(0, [])]), new Step(1, [new Move(1, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(18, [])]), new Step(1, [new Move(19, [])]), new Step(1, [new Move(20, [])]), new Step(1, [new Move(24, [])]), new Step(1, [new Move(25, [])]), new Step(1, [new Move(26, [])])]), "Permute corners (CP)", "CornerPermutation", caseCP, co, true)])))[1];
     stageStats("CMLL", numCubes);
     progressCallback()("CMLL");
     let solvedCenterO;
-    if (useOptimalLse()) {
-        const goal_3 = executeSteps([new Step(0, [new Rotate(2, [])]), new Step(0, [new Rotate(3, [])])], solved_7);
-        const policy = requirePolicy();
-        solvedCenterO = map((cube_36) => {
-            const algorithm_10 = solveCubeRelative(policy, goal_3, cube_36);
-            const steps_10 = map((Item) => (new Step(1, [Item])), algorithm_10);
-            solutionTrace(append(solutionTrace(), singleton(["OptimalLSE", steps_10])));
-            return executeMoves(algorithm_10, cube_36);
+    if (exactLse) {
+        const goal_4 = executeSteps([new Step(0, [new Rotate(2, [])]), new Step(0, [new Rotate(3, [])])], solved_8);
+        const policy_1 = requirePolicy();
+        solvedCenterO = map((cube_38) => {
+            const algorithm_10 = solveCubeRelative(policy_1, goal_4, cube_38);
+            const steps_13 = map((Item) => (new Step(1, [Item])), algorithm_10);
+            solutionTrace(append(solutionTrace(), singleton(["OptimalLSE", steps_13])));
+            return executeMoves(algorithm_10, cube_38);
         }, solvedCP);
     }
     else {
@@ -661,7 +732,7 @@ export function generateFrom(scrambled) {
         }
     };
     let solvedEO;
-    if (useOptimalLse()) {
+    if (exactLse) {
         solvedEO = solvedCenterO;
     }
     else if (useEolr()) {
@@ -672,25 +743,25 @@ export function generateFrom(scrambled) {
             else {
                 return stringToSteps(algorithm_11);
             }
-        }, List_distinct(collect((tupledArg_14) => {
-            const algorithms_3 = tupledArg_14[3];
-            if (isEmpty(algorithms_3)) {
+        }, List_distinct(collect((tupledArg_17) => {
+            const algorithms_4 = tupledArg_17[3];
+            if (isEmpty(algorithms_4)) {
                 return singleton("");
             }
             else {
-                return algorithms_3;
+                return algorithms_4;
             }
         }, edgeIntermediateOrientationPatters), {
-            Equals: (x_14, y_12) => (x_14 === y_12),
+            Equals: (x_16, y_14) => (x_16 === y_14),
             GetHashCode: stringHash,
         }));
         const eoCandidates = List_distinct(toList(delay(() => collect_1((auf_4) => map_1((algorithm_12) => append(auf_4, algorithm_12), directEoAlgorithms), [empty(), singleton(new Step(1, [new Move(0, [])])), singleton(new Step(1, [new Move(1, [])])), singleton(new Step(1, [new Move(2, [])]))]))), {
             Equals: equals,
             GetHashCode: safeHash,
         });
-        solvedEO = map((cube_37) => {
+        solvedEO = map((cube_39) => {
             const algorithm_13 = minBy(length, choose((eoAlgorithm) => {
-                const oriented = executeSteps(eoAlgorithm, cube_37);
+                const oriented = executeSteps(eoAlgorithm, cube_39);
                 if (!caseEO(oriented)) {
                     return void 0;
                 }
@@ -709,20 +780,20 @@ export function generateFrom(scrambled) {
                 Compare: comparePrimitives,
             });
             solutionTrace(append(solutionTrace(), singleton(["EOLR", algorithm_13])));
-            return executeSteps(algorithm_13, cube_37);
+            return executeSteps(algorithm_13, cube_39);
         }, solvedCenterO);
     }
     else {
         solvedEO = solve(muMoves, "Orient edges (EO)", "EdgeOrientation", caseEO, solvedCenterO, true);
     }
     stageStats("EO", numCubes);
-    if (!useOptimalLse()) {
+    if (!exactLse) {
         progressCallback()(useEolr() ? "EOLR" : "Edge orientation");
     }
-    const solvedLR = useOptimalLse() ? solvedEO : (useEolr() ? map((cube_38) => {
-        const algorithm_14 = chooseDirectLrAlgorithm(caseLRSolved, cube_38);
+    const solvedLR = exactLse ? solvedEO : (useEolr() ? map((cube_40) => {
+        const algorithm_14 = chooseDirectLrAlgorithm(caseLRSolved, cube_40);
         solutionTrace(append(solutionTrace(), singleton(["LREdges", algorithm_14])));
-        return executeSteps(algorithm_14, cube_38);
+        return executeSteps(algorithm_14, cube_40);
     }, solvedEO) : ((level === 0) ? solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solve(muMoves, "LR edges to bottom", "LREdgesBottom", (c_6) => {
         if (caseLtoDF(c_6)) {
             return equals(look(new Face(5, []), new Sticker(1, []), c_6), new Color(5, []));
@@ -733,17 +804,17 @@ export function generateFrom(scrambled) {
     }, solve(muMoves, "L edge to DF", "LToDF", caseLtoDF, solvedEO, false), false), true) : solve(muMoves, "LR edges solved", "LREdges", caseLRSolved, solvedEO, true)));
     stageStats("LR", numCubes);
     progressCallback()("Last six edges");
-    const solved_6 = useOptimalLse() ? solvedLR : solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_39) => {
-        const solved_5 = (face, color) => forAll((_arg_31, col) => equals(col, color), find(face, cube_39));
-        if ((((solved_5(new Face(4, []), new Color(0, [])) && solved_5(new Face(5, []), new Color(1, []))) && solved_5(new Face(2, []), new Color(4, []))) && solved_5(new Face(3, []), new Color(5, []))) && solved_5(new Face(0, []), new Color(3, []))) {
-            return solved_5(new Face(1, []), new Color(2, []));
+    const solved_7 = exactLse ? solvedLR : solve(ofArray([new Step(1, [new Move(36, [])]), new Step(1, [new Move(37, [])]), new Step(1, [new Move(38, [])]), new Step(1, [new Move(2, [])]), new Step(1, [new Move(8, [])])]), "Last 4 edges -> Solved!", "L4E", (cube_41) => {
+        const solved_6 = (face, color) => forAll((_arg_36, col) => equals(col, color), find(face, cube_41));
+        if ((((solved_6(new Face(4, []), new Color(0, [])) && solved_6(new Face(5, []), new Color(1, []))) && solved_6(new Face(2, []), new Color(4, []))) && solved_6(new Face(3, []), new Color(5, []))) && solved_6(new Face(0, []), new Color(3, []))) {
+            return solved_6(new Face(1, []), new Color(2, []));
         }
         else {
             return false;
         }
     }, solvedLR, true);
     stageStats("L4E", numCubes);
-    if (!useOptimalLse()) {
+    if (!exactLse) {
         progressCallback()("Last four edges");
     }
 }

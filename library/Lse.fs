@@ -4,6 +4,7 @@ open System
 open Cube
 
 let moves = [| Move.M; Move.M'; Move.M2; Move.U; Move.U'; Move.U2 |]
+let edgeCenterSlotCount = 720 * 32 * 4
 let slotCount = 720 * 32 * 4 * 4
 let unreachable = Byte.MaxValue
 
@@ -18,6 +19,11 @@ type private State =
       Flips: int array
       Center: int
       Auf: int }
+
+type private EdgeCenterState =
+    { Pieces: int array
+      Flips: int array
+      Center: int }
 
 let private lseEdges = [| Edge.UL; Edge.UR; Edge.UF; Edge.UB; Edge.DF; Edge.DB |]
 let private otherEdges = [| Edge.DL; Edge.DR; Edge.FL; Edge.FR; Edge.BL; Edge.BR |]
@@ -71,12 +77,12 @@ let private permutationOfRank rank =
         available.RemoveAt digit
     permutation
 
-let private indexState state =
+let private indexState (state: State) =
     let mutable flipRank = 0
     for index in 0 .. 4 do flipRank <- flipRank ||| (state.Flips[index] <<< index)
     (((permutationRank state.Pieces * 32 + flipRank) * 4 + state.Center) * 4 + state.Auf)
 
-let private stateOfIndex index =
+let private stateOfIndex index : State =
     let auf = index % 4
     let centerAndAbove = index / 4
     let center = centerAndAbove % 4
@@ -91,7 +97,7 @@ let private stateOfIndex index =
     flips[5] <- parity
     { Pieces = permutation; Flips = flips; Center = center; Auf = auf }
 
-let private stateOfCubeUnchecked cube =
+let private edgeCenterStateOfCubeUnchecked cube =
     let pieces = Array.zeroCreate 6
     let flips = Array.zeroCreate 6
     for position in 0 .. 5 do
@@ -109,13 +115,19 @@ let private stateOfCubeUnchecked cube =
             allCenters |> Array.forall (fun position -> centerColor position cube = centerColor position reference))
         |> Option.defaultWith (fun () -> invalidArg "cube" "Centers are not in the M-slice orbit.")
 
-    let auf =
-        uReferences
-        |> Array.tryFindIndex (fun reference ->
-            topCorners |> Array.forall (fun position -> cornerColors position cube = cornerColors position reference))
-        |> Option.defaultWith (fun () -> invalidArg "cube" "Top corners are not solved up to AUF.")
+    { Pieces = pieces; Flips = flips; Center = center }
 
-    { Pieces = pieces; Flips = flips; Center = center; Auf = auf }
+let private aufOfCubeUnchecked cube =
+    uReferences
+    |> Array.tryFindIndex (fun reference ->
+        topCorners |> Array.forall (fun position -> cornerColors position cube = cornerColors position reference))
+    |> Option.defaultWith (fun () -> invalidArg "cube" "Top corners are not solved up to AUF.")
+
+let private stateOfCubeUnchecked cube : State =
+    let edgeCenter = edgeCenterStateOfCubeUnchecked cube
+    let auf = aufOfCubeUnchecked cube
+
+    { Pieces = edgeCenter.Pieces; Flips = edgeCenter.Flips; Center = edgeCenter.Center; Auf = auf }
 
 let private validateLsePreconditions cube =
     otherEdges
@@ -134,13 +146,35 @@ let indexCube cube =
     validateLsePreconditions cube
     stateOfCubeUnchecked cube |> indexState
 
+/// Ranks the six LSE edges and M-slice center offset without requiring the top
+/// corners to be solved. This is a sparse 92,160-slot coordinate; for any fixed
+/// legal corner/center parity class, 46,080 of those slots are admitted at the
+/// post-second-block boundary of the combined CMLLEO search.
+let indexEdgeCenterCube cube =
+    validateLsePreconditions cube
+    let state = edgeCenterStateOfCubeUnchecked cube
+    let mutable flipRank = 0
+    for index in 0 .. 4 do flipRank <- flipRank ||| (state.Flips[index] <<< index)
+    ((permutationRank state.Pieces * 32 + flipRank) * 4 + state.Center)
+
+/// Combines the edge/center coordinate with a corner AUF to address the exact
+/// LSE policy.  The caller must supply an AUF in [0, 3].
+let indexFromEdgeCenterAndAuf edgeCenterIndex auf =
+    if edgeCenterIndex < 0 || edgeCenterIndex >= edgeCenterSlotCount then invalidArg "edgeCenterIndex" "LSE edge/center index is out of range."
+    if auf < 0 || auf > 3 then invalidArg "auf" "Corner AUF must be between 0 and 3."
+    edgeCenterIndex * 4 + auf
+
+/// Returns the top-corner AUF at a valid CMLLEO boundary.  It fails loudly if
+/// the corners are not solved up to AUF.
+let cornerAufCube cube = aufOfCubeUnchecked cube
+
 let private solvedState = stateOfCubeUnchecked Cube.solved
 
 let private transforms =
     moves
     |> Array.map (fun move -> Cube.solved |> apply move |> stateOfCubeUnchecked)
 
-let private moveState moveIndex state =
+let private moveState moveIndex (state: State) : State =
     let transform = transforms[moveIndex]
     let pieces = Array.zeroCreate 6
     let flips = Array.zeroCreate 6
@@ -250,6 +284,7 @@ let private recolorToSolvedFrame goal cube =
     cube |> Map.map (fun _ face -> face |> Map.map (fun _ color -> Map.find color colorMap))
 
 let indexCubeRelative goal cube = cube |> recolorToSolvedFrame goal |> indexCube
+let distanceCubeRelative policy goal cube = indexCubeRelative goal cube |> distance policy |> Option.get
 let solveCubeRelative policy goal cube = indexCubeRelative goal cube |> solveIndex policy
 
 let mutable private installedPolicy: Policy option = None

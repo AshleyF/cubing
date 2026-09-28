@@ -57,10 +57,11 @@ elif args.Length > 0 then
         Utility.cornerOrientationLevel <- if args |> Array.contains "--co=1" then 1 else 0
         Utility.cornerPermutationLevel <- if args |> Array.contains "--cp=1" then 1 else 0
         Utility.fullCmll <- args |> Array.contains "--cmll=1"
+        Utility.useCmllEoInfluence <- args |> Array.contains "--cmll=2"
         Utility.edgeOrientationLevel <- if args |> Array.contains "--eo=1" then 1 else 0
         Utility.useEolr <- args |> Array.contains "--eo=2"
         Utility.useOptimalLse <- args |> Array.contains "--lse=1"
-        if Utility.useOptimalLse then
+        if Utility.useOptimalLse || Utility.useCmllEoInfluence then
             let tableArgument = args |> Array.tryFind (fun value -> value.StartsWith("--table="))
             let tablePath = tableArgument |> Option.map (fun value -> value.Substring("--table=".Length)) |> Option.defaultValue "Data/lse-policy-v1.dat"
             let policy = Lse.loadPolicy tablePath

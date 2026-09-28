@@ -12,6 +12,8 @@ import { find as find_1, map as map_2, ofArray as ofArray_1 } from "../fable_mod
 
 export const moves = [new Move(36, []), new Move(37, []), new Move(38, []), new Move(0, []), new Move(1, []), new Move(2, [])];
 
+export const edgeCenterSlotCount = (720 * 32) * 4;
+
 export const slotCount = ((720 * 32) * 4) * 4;
 
 export const unreachable = 255;
@@ -42,6 +44,19 @@ class State extends Record {
 
 function State_$reflection() {
     return record_type("Lse.State", [], State, () => [["Pieces", array_type(int32_type)], ["Flips", array_type(int32_type)], ["Center", int32_type], ["Auf", int32_type]]);
+}
+
+class EdgeCenterState extends Record {
+    constructor(Pieces, Flips, Center) {
+        super();
+        this.Pieces = Pieces;
+        this.Flips = Flips;
+        this.Center = (Center | 0);
+    }
+}
+
+function EdgeCenterState_$reflection() {
+    return record_type("Lse.EdgeCenterState", [], EdgeCenterState, () => [["Pieces", array_type(int32_type)], ["Flips", array_type(int32_type)], ["Center", int32_type]]);
 }
 
 const lseEdges = [new Edge(0, []), new Edge(1, []), new Edge(2, []), new Edge(3, []), new Edge(6, []), new Edge(7, [])];
@@ -152,7 +167,7 @@ function stateOfIndex(index) {
     return new State(permutation, flips, center, auf);
 }
 
-function stateOfCubeUnchecked(cube) {
+function edgeCenterStateOfCubeUnchecked(cube) {
     const pieces = new Int32Array(6);
     const flips = new Int32Array(6);
     for (let position = 0; position <= 5; position++) {
@@ -167,11 +182,20 @@ function stateOfCubeUnchecked(cube) {
             throw new Error(((`Non-LSE edge occupies ${item(position, lseEdges)}.`) + "\\nParameter name: ") + "cube");
         }
     }
-    return new State(pieces, flips, defaultArgWith(tryFindIndex((reference) => allCenters.every((position_1) => equals(centerColor(position_1, cube), centerColor(position_1, reference))), mReferences), () => {
+    return new EdgeCenterState(pieces, flips, defaultArgWith(tryFindIndex((reference) => allCenters.every((position_1) => equals(centerColor(position_1, cube), centerColor(position_1, reference))), mReferences), () => {
         throw new Error("Centers are not in the M-slice orbit.\\nParameter name: cube");
-    }), defaultArgWith(tryFindIndex((reference_1) => topCorners.every((position_2) => equals(cornerColors(position_2, cube), cornerColors(position_2, reference_1))), uReferences), () => {
-        throw new Error("Top corners are not solved up to AUF.\\nParameter name: cube");
     }));
+}
+
+function aufOfCubeUnchecked(cube) {
+    return defaultArgWith(tryFindIndex((reference) => topCorners.every((position) => equals(cornerColors(position, cube), cornerColors(position, reference))), uReferences), () => {
+        throw new Error("Top corners are not solved up to AUF.\\nParameter name: cube");
+    });
+}
+
+function stateOfCubeUnchecked(cube) {
+    const edgeCenter = edgeCenterStateOfCubeUnchecked(cube);
+    return new State(edgeCenter.Pieces, edgeCenter.Flips, edgeCenter.Center, aufOfCubeUnchecked(cube));
 }
 
 function validateLsePreconditions(cube) {
@@ -193,6 +217,44 @@ function validateLsePreconditions(cube) {
 export function indexCube(cube) {
     validateLsePreconditions(cube);
     return indexState(stateOfCubeUnchecked(cube)) | 0;
+}
+
+/**
+ * Ranks the six LSE edges and M-slice center offset without requiring the top
+ * corners to be solved. This is a sparse 92,160-slot coordinate; for any fixed
+ * legal corner/center parity class, 46,080 of those slots are admitted at the
+ * post-second-block boundary of the combined CMLLEO search.
+ */
+export function indexEdgeCenterCube(cube) {
+    validateLsePreconditions(cube);
+    const state = edgeCenterStateOfCubeUnchecked(cube);
+    let flipRank = 0;
+    for (let index = 0; index <= 4; index++) {
+        flipRank = ((flipRank | (item(index, state.Flips) << index)) | 0);
+    }
+    return ((((permutationRank(state.Pieces) * 32) + flipRank) * 4) + state.Center) | 0;
+}
+
+/**
+ * Combines the edge/center coordinate with a corner AUF to address the exact
+ * LSE policy.  The caller must supply an AUF in [0, 3].
+ */
+export function indexFromEdgeCenterAndAuf(edgeCenterIndex, auf) {
+    if ((edgeCenterIndex < 0) ? true : (edgeCenterIndex >= edgeCenterSlotCount)) {
+        throw new Error("LSE edge/center index is out of range.\\nParameter name: edgeCenterIndex");
+    }
+    if ((auf < 0) ? true : (auf > 3)) {
+        throw new Error("Corner AUF must be between 0 and 3.\\nParameter name: auf");
+    }
+    return ((edgeCenterIndex * 4) + auf) | 0;
+}
+
+/**
+ * Returns the top-corner AUF at a valid CMLLEO boundary.  It fails loudly if
+ * the corners are not solved up to AUF.
+ */
+export function cornerAufCube(cube) {
+    return aufOfCubeUnchecked(cube);
 }
 
 const solvedState = stateOfCubeUnchecked(solved);
@@ -358,6 +420,10 @@ function recolorToSolvedFrame(goal, cube) {
 
 export function indexCubeRelative(goal, cube) {
     return indexCube(recolorToSolvedFrame(goal, cube));
+}
+
+export function distanceCubeRelative(policy, goal, cube) {
+    return value_1(distance(policy, indexCubeRelative(goal, cube)));
 }
 
 export function solveCubeRelative(policy, goal, cube) {

@@ -9,6 +9,7 @@ node "$solver_dir/Tools/GenerateBrowserPatternData.mjs"
 dotnet build "$solver_dir/BrowserSolver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 dotnet build "$solver_dir/Solver.fsproj" -c Release --no-restore --disable-build-servers -p:UseSharedCompilation=false
 dotnet fsi "$solver_dir/Tools/TestLsePolicy.fsx"
+{ cd "$solver_dir"; dotnet fsi Tools/TestCmllEoCandidates.fsx; }
 cp "$solver_dir/Data/lse-policy-v1.dat" "$lab_dir/lse-policy-v1.dat"
 "$HOME/.dotnet/tools/fable" "$solver_dir/BrowserSolver.fsproj" --outDir "$lab_dir/solver" --noRestore --noCache --optimize
 node "$solver_dir/Tools/VersionBrowserImports.mjs" 20260924-1

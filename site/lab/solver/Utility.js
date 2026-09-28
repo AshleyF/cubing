@@ -13,6 +13,8 @@ export let cornerPermutationLevel = createAtom(0);
 
 export let fullCmll = createAtom(false);
 
+export let useCmllEoInfluence = createAtom(false);
+
 export let edgeOrientationLevel = createAtom(0);
 
 export let lbPairLevel = createAtom(0);
