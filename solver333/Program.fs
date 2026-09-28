@@ -24,6 +24,12 @@ elif args.Length > 0 && args[0] = "--patterns" then
         |> List.map (fun (_, _, (pattern, _, _, _), algs) ->
             {| pattern = pattern
                action = if List.isEmpty algs then "skip — already satisfied" else String.Join(" / ", algs) |})
+    let algorithmCases algorithms =
+        algorithms
+        |> List.map (fun (algorithm, steps) ->
+            let case = Cube.solved |> Cube.executeSteps (Cube.inverseSteps steps)
+            {| pattern = Render.cubeToString case
+               action = algorithm |})
     let sets = [
         {| id = "dl"; cases = cases Roux.dlEdgeBeginnerPatterns |}
         {| id = "lc"; cases = cases Roux.lCenterBeginnerPatterns |}
@@ -45,6 +51,7 @@ elif args.Length > 0 && args[0] = "--patterns" then
         {| id = "cp"; cases = cases Roux.cpBeginnerPatterns |}
         {| id = "cp2"; cases = cases Roux.cpIntermediatePatterns |}
         {| id = "cmll"; cases = cases (Roux.cmllAdvancedPatterns |> List.filter (fun (_, stage, _, _) -> stage = "CornerOrientation")) |}
+        {| id = "cmllEo"; cases = algorithmCases Roux.cmllEoCandidates |}
         {| id = "eo"; cases = cases Roux.edgeBeginnerOrientationPatters |}
         {| id = "eo2"; cases = cases Roux.edgeIntermediateOrientationPatters |}
         {| id = "lr"; cases = cases Roux.lrBeginnerPatterns |}
