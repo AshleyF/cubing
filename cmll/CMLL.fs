@@ -72,7 +72,7 @@ let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
             sprintf "1. `%s` (%s)" rendered (alg))
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
-    File.WriteAllLines(sprintf "%s.md" file, sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
+    File.WriteAllLines(Path.Combine(__SOURCE_DIRECTORY__, sprintf "%s.md" file), sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
     index.WriteLine(sprintf "- [%s](%s.md)" name file)
 
 let oriented cube =
@@ -125,8 +125,8 @@ let algSolvesCmll alg cube =
 
 let case alg = algSolvesCmll (Render.stringToSteps alg)
 
-let index = new StreamWriter(File.OpenWrite "CMLL.md")
-let diagrams = new StreamWriter(File.OpenWrite "Diagrams.js")
+let index = new StreamWriter(File.Create(Path.Combine(__SOURCE_DIRECTORY__, "CMLL.md")))
+let diagrams = new StreamWriter(File.Create(Path.Combine(__SOURCE_DIRECTORY__, "Diagrams.js")))
 
 let writeCaseHeader name =
     index.WriteLine()
