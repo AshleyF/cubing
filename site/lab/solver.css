@@ -1,7 +1,7 @@
 .engine-badge.ready i { background: #23a85b; }
 .engine-badge.error i { background: #f04435; }
 .engine-badge.solving i { animation: solver-pulse 1s infinite; }
-.search-row { display:grid; grid-template-columns:auto auto auto minmax(0,1fr); align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
+.search-row { display:grid; grid-template-columns:auto auto auto auto minmax(0,1fr); align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
 .search-row>span:first-child { font-size:8px; font-weight:900; letter-spacing:.12em; color:var(--muted); }
 .search-row select,.search-row button { min-height:30px; border:1px solid var(--ink); background:transparent; padding:5px 8px; color:var(--ink); font:800 9px Arial,sans-serif; text-transform:uppercase; }
 .search-row button { background:var(--ink); color:#fff; }
@@ -55,6 +55,7 @@
 .preset-button:hover::after,.preset-button:focus-visible::after { opacity:1; visibility:visible; transform:none; }
 @media (max-width:700px) {
   .search-row { grid-template-columns:auto 1fr auto; }
+  #searchSkip { grid-column:1/-1; }
   #searchProgress { grid-column:1/-1; }
   .config-group { grid-template-columns:1fr; }
   .config-group h2 { border-right:0; border-bottom:1px solid var(--line); padding:10px 8px 6px; }
