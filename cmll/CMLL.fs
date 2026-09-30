@@ -65,14 +65,36 @@ let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
         |> Seq.filter (fun (_, (moves, cube)) -> not (Seq.isEmpty moves) && selector cube)
         |> Seq.distinctBy fst // distinct cube state
         |> Seq.map (fun (_, (moves, _)) -> moves |> List.rev) // scrambles
-        |> Seq.map (fun scramble -> scramble, yellowUpRedFront |> Cube.executeSteps scramble |> Render.cubeToString) // add cube rendering
-        |> Seq.map (fun (scramble, rendered) ->
+        |> Seq.map (fun scramble -> scramble, yellowUpRedFront |> Cube.executeSteps scramble) // add case cube
+        |> Seq.map (fun (scramble, cube) ->
             let alg = Render.stepsToString (inverseSteps scramble)
+            let rendered = Render.cubeToString cube
             diagrams.WriteLine(sprintf "diag(\"%s\");" alg)
-            sprintf "1. `%s` (%s)" rendered (alg))
+            let stickers face stickers =
+                stickers
+                |> List.map (fun sticker ->
+                    let color = Cube.look face sticker cube |> Render.colorToString
+                    sprintf "<i data-color=\"%s\"></i>" color)
+                |> String.concat ""
+            let diagram =
+                sprintf "<div class=\"cmll-diagram\"><div class=\"cmll-strip cmll-back\">%s</div><div class=\"cmll-strip cmll-left\">%s</div><div class=\"cmll-top\">%s</div><div class=\"cmll-strip cmll-right\">%s</div><div class=\"cmll-strip cmll-front\">%s</div></div>"
+                    (stickers Face.B [Sticker.DR; Sticker.D; Sticker.DL])
+                    (stickers Face.L [Sticker.UR; Sticker.U; Sticker.UL])
+                    (stickers Face.U [Sticker.UL; Sticker.U; Sticker.UR; Sticker.L; Sticker.C; Sticker.R; Sticker.DL; Sticker.D; Sticker.DR])
+                    (stickers Face.R [Sticker.UL; Sticker.U; Sticker.UR])
+                    (stickers Face.F [Sticker.UL; Sticker.U; Sticker.UR])
+            sprintf "<article class=\"cmll-case\">%s<code>%s</code><details><summary>Sticker state</summary><code>%s</code></details></article>" diagram alg rendered)
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
-    File.WriteAllLines(Path.Combine(__SOURCE_DIRECTORY__, sprintf "%s.md" file), sprintf "# %s [%i cases]" name sub.Length :: "" :: sub)
+    let page =
+        [ sprintf "# %s [%i cases]" name sub.Length
+          ""
+          "<div class=\"cmll-cases\">"
+          yield! sub
+          "</div>"
+          ""
+          "<style>.cmll-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin:24px 0}.cmll-case{min-width:0;padding:14px;border:1px solid #bbb;border-radius:8px}.cmll-diagram{position:relative;width:180px;height:180px;margin:0 auto}.cmll-top,.cmll-strip{position:absolute;display:grid;gap:2px}.cmll-top{left:45px;top:45px;width:90px;height:90px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}.cmll-back,.cmll-front{left:45px;width:90px;height:28px;grid-template-columns:repeat(3,1fr)}.cmll-back{top:14px}.cmll-front{top:138px}.cmll-left,.cmll-right{top:45px;width:28px;height:90px;grid-template-rows:repeat(3,1fr)}.cmll-left{left:14px}.cmll-right{left:138px}.cmll-diagram i{display:block;border:1px solid #222;border-radius:2px}.cmll-diagram i[data-color=\"W\"]{background:#fff}.cmll-diagram i[data-color=\"Y\"]{background:#ffd500}.cmll-diagram i[data-color=\"R\"]{background:#d92727}.cmll-diagram i[data-color=\"O\"]{background:#ff7a00}.cmll-diagram i[data-color=\"B\"]{background:#2358c9}.cmll-diagram i[data-color=\"G\"]{background:#1f9d55}.cmll-case>code{display:block;overflow-wrap:anywhere;margin-top:10px}.cmll-case details{margin-top:10px;color:#666;font-size:.8em}.cmll-case details code{overflow-wrap:anywhere}</style>" ]
+    File.WriteAllLines(Path.Combine(__SOURCE_DIRECTORY__, sprintf "%s.md" file), page)
     index.WriteLine(sprintf "- [%s](%s.md)" name file)
 
 let oriented cube =
