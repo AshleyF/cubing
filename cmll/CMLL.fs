@@ -58,6 +58,45 @@ let rec iter cases known =
 let cases = iter init init
 printfn "Total Cases: %i" (List.length cases)
 
+// Match the last-layer SVG renderer used by the wiki/trainer
+// (site/notes/cmll.js and site/trainer/display.js).
+let colorToCss = function
+    | Color.Y -> "#EF0"
+    | Color.W -> "#FFF"
+    | Color.B -> "#08F"
+    | Color.G -> "#0C0"
+    | Color.R -> "#F10"
+    | Color.O -> "#F90"
+    | Color.A -> "#333"
+
+let cmllDiagram cube =
+    let polygon (face, sticker, points) =
+        sprintf "<polygon fill=\"%s\" stroke=\"#000\" points=\"%s\"/>" (Cube.look face sticker cube |> colorToCss) points
+    let top =
+        [ Face.U, Sticker.UL, "-0.527777777778,-0.527777777778 -0.212962962963,-0.527777777778 -0.212962962963,-0.212962962963 -0.527777777778,-0.212962962963"
+          Face.U, Sticker.U,  "-0.157407407407,-0.527777777778 0.157407407407,-0.527777777778 0.157407407407,-0.212962962963 -0.157407407407,-0.212962962963"
+          Face.U, Sticker.UR, "0.212962962963,-0.527777777778 0.527777777778,-0.527777777778 0.527777777778,-0.212962962963 0.212962962963,-0.212962962963"
+          Face.U, Sticker.L,  "-0.527777777778,-0.157407407407 -0.212962962963,-0.157407407407 -0.212962962963,0.157407407407 -0.527777777778,0.157407407407"
+          Face.U, Sticker.C,  "-0.157407407407,-0.157407407407 0.157407407407,-0.157407407407 0.157407407407,0.157407407407 -0.157407407407,0.157407407407"
+          Face.U, Sticker.R,  "0.212962962963,-0.157407407407 0.527777777778,-0.157407407407 0.527777777778,0.157407407407 0.212962962963,0.157407407407"
+          Face.U, Sticker.DL, "-0.527777777778,0.212962962963 -0.212962962963,0.212962962963 -0.212962962963,0.527777777778 -0.527777777778,0.527777777778"
+          Face.U, Sticker.D,  "-0.157407407407,0.212962962963 0.157407407407,0.212962962963 0.157407407407,0.527777777778 -0.157407407407,0.527777777778"
+          Face.U, Sticker.DR, "0.212962962963,0.212962962963 0.527777777778,0.212962962963 0.527777777778,0.527777777778 0.212962962963,0.527777777778" ]
+    let sides =
+        [ Face.B, Sticker.DR, "-0.195146871009,-0.554406130268 -0.543295019157,-0.554406130268 -0.507279693487,-0.718390804598 -0.183141762452,-0.718390804598"
+          Face.B, Sticker.D,  "0.174457215837,-0.554406130268 -0.173690932312,-0.554406130268 -0.161685823755,-0.718390804598 0.16245210728,-0.718390804598"
+          Face.B, Sticker.DL, "0.544061302682,-0.554406130268 0.195913154534,-0.554406130268 0.183908045977,-0.718390804598 0.508045977011,-0.718390804598"
+          Face.L, Sticker.UR, "-0.554406130268,-0.544061302682 -0.554406130268,-0.195913154534 -0.718390804598,-0.183908045977 -0.718390804598,-0.508045977011"
+          Face.L, Sticker.U,  "-0.554406130268,-0.174457215837 -0.554406130268,0.173690932312 -0.718390804598,0.161685823755 -0.718390804598,-0.16245210728"
+          Face.L, Sticker.UL, "-0.554406130268,0.195146871009 -0.554406130268,0.543295019157 -0.718390804598,0.507279693487 -0.718390804598,0.183141762452"
+          Face.R, Sticker.UL, "0.554406130268,-0.195146871009 0.554406130268,-0.543295019157 0.718390804598,-0.507279693487 0.718390804598,-0.183141762452"
+          Face.R, Sticker.U,  "0.554406130268,0.174457215837 0.554406130268,-0.173690932312 0.718390804598,-0.161685823755 0.718390804598,0.16245210728"
+          Face.R, Sticker.UR, "0.554406130268,0.544061302682 0.554406130268,0.195913154534 0.718390804598,0.183908045977 0.718390804598,0.508045977011"
+          Face.F, Sticker.UL, "-0.544061302682,0.554406130268 -0.195913154534,0.554406130268 -0.183908045977,0.718390804598 -0.508045977011,0.718390804598"
+          Face.F, Sticker.U,  "-0.174457215837,0.554406130268 0.173690932312,0.554406130268 0.161685823755,0.718390804598 -0.16245210728,0.718390804598"
+          Face.F, Sticker.UR, "0.195146871009,0.554406130268 0.543295019157,0.554406130268 0.507279693487,0.718390804598 0.183141762452,0.718390804598" ]
+    sprintf "<svg class=\"cmll-diagram\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.9 -0.9 1.8 1.8\" role=\"img\" aria-label=\"CMLL case\"><rect fill=\"transparent\" x=\"-0.9\" y=\"-0.9\" width=\"1.8\" height=\"1.8\"/><polygon fill=\"#000\" points=\"-0.522222222222,-0.522222222222 0.522222222222,-0.522222222222 0.522222222222,0.522222222222 -0.522222222222,0.522222222222\"/><g style=\"stroke-width:0;stroke-linejoin:round\">%s</g><g style=\"stroke-width:.02;stroke-linejoin:round\">%s</g></svg>" (top |> List.map polygon |> String.concat "") (sides |> List.map polygon |> String.concat "")
+
 let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
     diagrams.WriteLine(sprintf "sub(\"%s\");" name)
     let sub =
@@ -70,19 +109,7 @@ let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
             let alg = Render.stepsToString (inverseSteps scramble)
             let rendered = Render.cubeToString cube
             diagrams.WriteLine(sprintf "diag(\"%s\");" alg)
-            let stickers face stickers =
-                stickers
-                |> List.map (fun sticker ->
-                    let color = Cube.look face sticker cube |> Render.colorToString
-                    sprintf "<i data-color=\"%s\"></i>" color)
-                |> String.concat ""
-            let diagram =
-                sprintf "<div class=\"cmll-diagram\"><div class=\"cmll-strip cmll-back\">%s</div><div class=\"cmll-strip cmll-left\">%s</div><div class=\"cmll-top\">%s</div><div class=\"cmll-strip cmll-right\">%s</div><div class=\"cmll-strip cmll-front\">%s</div></div>"
-                    (stickers Face.B [Sticker.DR; Sticker.D; Sticker.DL])
-                    (stickers Face.L [Sticker.UR; Sticker.U; Sticker.UL])
-                    (stickers Face.U [Sticker.UL; Sticker.U; Sticker.UR; Sticker.L; Sticker.C; Sticker.R; Sticker.DL; Sticker.D; Sticker.DR])
-                    (stickers Face.R [Sticker.UL; Sticker.U; Sticker.UR])
-                    (stickers Face.F [Sticker.UL; Sticker.U; Sticker.UR])
+            let diagram = cmllDiagram cube
             sprintf "<article class=\"cmll-case\">%s<code>%s</code><details><summary>Sticker state</summary><code>%s</code></details></article>" diagram alg rendered)
         |> List.ofSeq
     printfn "%s (%i)" name (List.length sub)
@@ -93,7 +120,7 @@ let subset name file (index : StreamWriter) (diagrams: StreamWriter) selector =
           yield! sub
           "</div>"
           ""
-          "<style>.cmll-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin:24px 0}.cmll-case{min-width:0;padding:14px;border:1px solid #bbb;border-radius:8px}.cmll-diagram{position:relative;width:180px;height:180px;margin:0 auto}.cmll-top,.cmll-strip{position:absolute;display:grid;gap:2px}.cmll-top{left:45px;top:45px;width:90px;height:90px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}.cmll-back,.cmll-front{left:45px;width:90px;height:28px;grid-template-columns:repeat(3,1fr)}.cmll-back{top:14px}.cmll-front{top:138px}.cmll-left,.cmll-right{top:45px;width:28px;height:90px;grid-template-rows:repeat(3,1fr)}.cmll-left{left:14px}.cmll-right{left:138px}.cmll-diagram i{display:block;border:1px solid #222;border-radius:2px}.cmll-diagram i[data-color=\"W\"]{background:#fff}.cmll-diagram i[data-color=\"Y\"]{background:#ffd500}.cmll-diagram i[data-color=\"R\"]{background:#d92727}.cmll-diagram i[data-color=\"O\"]{background:#ff7a00}.cmll-diagram i[data-color=\"B\"]{background:#2358c9}.cmll-diagram i[data-color=\"G\"]{background:#1f9d55}.cmll-case>code{display:block;overflow-wrap:anywhere;margin-top:10px}.cmll-case details{margin-top:10px;color:#666;font-size:.8em}.cmll-case details code{overflow-wrap:anywhere}</style>" ]
+          "<style>.cmll-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin:24px 0}.cmll-case{min-width:0;padding:14px;border:1px solid #bbb;border-radius:8px}.cmll-diagram{display:block;width:180px;height:180px;margin:0 auto}.cmll-case>code{display:block;overflow-wrap:anywhere;margin-top:10px}.cmll-case details{margin-top:10px;color:#666;font-size:.8em}.cmll-case details code{overflow-wrap:anywhere}</style>" ]
     File.WriteAllLines(Path.Combine(__SOURCE_DIRECTORY__, sprintf "%s.md" file), page)
     index.WriteLine(sprintf "- [%s](%s.md)" name file)
 

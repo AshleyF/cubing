@@ -24,7 +24,7 @@ const inverse = algorithm => algorithm.trim().split(/\s+/).reverse().map(move =>
 ).join(' ');
 const eolrPrefix = "U M U' M' U";
 const oldLr = "M U2 M' U2 M2 U";
-const directLr = "M' U2 M U'";
+const directLr = "M' U2' M U'";
 const l4e = "M U2 M2 U2 M'";
 const entry = run(inverse(`${eolrPrefix} ${oldLr} ${l4e}`), target);
 const afterEolr = run(eolrPrefix, entry);
