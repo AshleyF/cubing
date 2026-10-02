@@ -7,6 +7,10 @@
 coordinate slots stores an exact distance byte and a six-bit mask containing
 every move (`M M' M2 U U' U2`) that decreases that distance.
 
+See [Mining human-readable rules from the exact LSE policy](Tools/LseHumanRules.md)
+for the plan to extract compact, partially covering rules that remain provably
+optimal everywhere they apply.
+
 Regenerate and validate it from `solver333/`:
 
 ```sh
