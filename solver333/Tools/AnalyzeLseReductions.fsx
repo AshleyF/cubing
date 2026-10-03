@@ -3,6 +3,7 @@
 open System
 open System.IO
 open System.Collections.Generic
+open System.Text.Json
 open Lse
 
 // This experiment models the language used by EOLR guides: a rule chooses
@@ -18,6 +19,7 @@ type State =
       Distance: int }
 
 let pieceNames = [| "UL"; "UR"; "UF"; "UB"; "DF"; "DB" |]
+let moveNames = [| "M"; "M'"; "M2'"; "U"; "U'"; "U2'" |]
 let eoNames = [| "0/0"; "3/1"; "4/0"; "2o/2"; "2a/2"; "1/1"; "2o/0"; "2a/0"; "0/2"; "4/2" |]
 let roleNames = [| "oriented U-side"; "flipped U-side"; "oriented U-M"; "flipped U-M"; "oriented D"; "flipped D" |]
 let relationNames = [| "split"; "both D"; "adjacent U"; "opposite U" |]
@@ -226,6 +228,64 @@ let coveredStates =
     groups
     |> Array.sumBy (fun (source, members) -> if coveredSources.Contains source then members.Length else 0)
 
+let concreteSequence reduction state =
+    let rec walk depth index moves =
+        if depth = reduction.Skeleton.Axes.Length then
+            if targetKey (stateAt index) = reduction.Target then Some(List.rev moves, index) else None
+        else
+            choices reduction.Skeleton.Axes[depth]
+            |> Array.tryPick (fun move ->
+                let next = nextIndex move index
+                if policy.Distances[next] <> unreachable && policy.Distances[next] = policy.Distances[index] - 1uy then
+                    walk (depth + 1) next (move :: moves)
+                else None)
+    walk 0 state.Index []
+
+type DiagramState =
+    { pieces: int array
+      flips: int array
+      center: int
+      auf: int
+      distance: int }
+
+type DiagramExample =
+    { schema: string
+      action: string
+      source: string
+      target: string
+      representedStates: int
+      before: DiagramState
+      after: DiagramState }
+
+let diagramState state =
+    { pieces = state.Pieces
+      flips = state.Flips
+      center = state.Center
+      auf = state.Auf
+      distance = state.Distance }
+
+let exampleReductions =
+    skeletons
+    |> Array.choose (fun skeleton -> ranked |> Array.tryFind (fun reduction -> reduction.Skeleton.Name = skeleton.Name))
+    |> Array.truncate 8
+
+let examples =
+    exampleReductions
+    |> Array.map (fun reduction ->
+        let members = groups |> Array.find (fst >> (=) reduction.Source) |> snd
+        let state, moves, after =
+            members
+            |> Array.pick (fun state ->
+                concreteSequence reduction state
+                |> Option.map (fun (moves, after) -> state, moves, stateAt after))
+        { schema = reduction.Skeleton.Name
+          action = moves |> List.map (fun move -> moveNames[move]) |> String.concat " "
+          source = describeSource reduction.Source
+          target = describeTarget reduction.Target
+          representedStates = reduction.Members
+          before = diagramState state
+          after = diagramState after })
+
 let report = ResizeArray<string>()
 report.Add "# Exact parameterized LSE reductions"
 report.Add ""
@@ -255,6 +315,10 @@ report.Add "A row is a genuine recursive rule candidate: recognize the source fa
 
 let reportPath = Path.Combine(__SOURCE_DIRECTORY__, "LseReductionResults.md")
 File.WriteAllLines(reportPath, report)
+let examplesPath = Path.GetFullPath(Path.Combine(__SOURCE_DIRECTORY__, "..", "..", "site", "lab", "lse-rule-examples.json"))
+let jsonOptions = JsonSerializerOptions(WriteIndented = true)
+File.WriteAllText(examplesPath, JsonSerializer.Serialize(examples, jsonOptions) + Environment.NewLine)
 printfn "Analyzed %i states in %i normalized families." states.Length groups.Length
 printfn "Found %i universal exact reductions." ranked.Length
 printfn "Wrote %s" reportPath
+printfn "Wrote %s" examplesPath

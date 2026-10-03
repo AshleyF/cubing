@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f0e9">
+  <title>RouxLab · LSE rule examples</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="lse-rules.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-mark">R</span><span>ROUXLAB</span></a>
+    <nav><a href="./#cube-workbench">SOLVE</a><a href="./#patterns">PATTERNS</a><a href="report.html">REPORT</a><a href="brute-force.html">BRUTE FORCE</a><a href="lse-rules.html" aria-current="page">LSE RULES</a></nav>
+  </header>
+
+  <main class="rule-page">
+    <header class="rule-head">
+      <p class="eyebrow">EXACT POLICY → HUMAN RULES</p>
+      <h1>What does a parameterized LSE rule look like?</h1>
+      <p>A rule does not memorize one algorithm for one sticker pattern. It recognizes a relationship, chooses the needed U and M powers, and transforms the cube into another recognizable family. Every move shown here lies on an exact shortest LSE solution.</p>
+      <p><a href="lse-shells.html">See all 184,320 exact LSE states →</a></p>
+    </header>
+
+    <section class="reading-key">
+      <div>
+        <h2>How to read the diagrams</h2>
+        <p>The perspective view shows U and F together. UL and UR appear as colored strips on the sides; DF continues beneath the front face. DB is the small folded marker behind the cube because neither of its stickers is normally visible. The two LR pieces are outlined heavily wherever they appear.</p>
+      </div>
+      <div>
+        <h2>How to read a rule</h2>
+        <p><b>U–M–U</b> means “choose a U power, an M power, and another U power that create the named target.” The concrete moves beneath the arrow are one worked example, not the entire rule.</p>
+      </div>
+    </section>
+
+    <div id="rule-examples" class="rule-examples" aria-live="polite"><p>Loading examples…</p></div>
+
+    <section class="caveat">
+      <p class="eyebrow">WHAT WE HAVE LEARNED</p>
+      <h2>EO and LR alone are not enough for optimal full LSE.</h2>
+      <p>Two cubes can have the same EOLR picture but need different optimal reductions because their remaining four edges differ. These first rules therefore include a small amount of L4E information: cycle shape, solved M-edge count, and center/corner alignment. The next step is to replace those mathematical labels with visual ideas such as bars, arrows, and relative edge order.</p>
+    </section>
+  </main>
+  <script src="lse-rules.js?v=4"></script>
+</body>
+</html>
