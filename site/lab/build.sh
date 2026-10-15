@@ -21,6 +21,7 @@ node "$solver_dir/Tools/CheckBrowserModules.mjs"
 node "$solver_dir/Tools/TestCancellations.mjs"
 node "$solver_dir/Tools/TestL4E.mjs"
 node "$solver_dir/Tools/TestEolrRegression.mjs"
+node "$solver_dir/Tools/TestLseE2Dots.mjs"
 node "$solver_dir/Tools/TestOptimalLse.mjs"
 node "$solver_dir/Tools/CheckLrCoverage.mjs"
 

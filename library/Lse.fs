@@ -287,6 +287,29 @@ let indexCubeRelative goal cube = cube |> recolorToSolvedFrame goal |> indexCube
 let distanceCubeRelative policy goal cube = indexCubeRelative goal cube |> distance policy |> Option.get
 let solveCubeRelative policy goal cube = indexCubeRelative goal cube |> solveIndex policy
 
+// E2 leaves the compact M/U LSE coordinate because it temporarily moves the
+// four equatorial block edges.  Keep the exact 184,320-state M/U policy small,
+// but admit the two high-value dot-case excursions (and their M-direction
+// inverses) after validating them against the complete cube.  This is exact
+// for the M/U table plus these four macros; it is not a proof of optimality in
+// the unrestricted M/U/E2 move graph.
+let private e2DotAlgorithms =
+    [ [ Move.E2; Move.M'; Move.E2; Move.M' ]
+      [ Move.E2; Move.M'; Move.E2; Move.M ]
+      [ Move.E2; Move.M; Move.E2; Move.M ]
+      [ Move.E2; Move.M; Move.E2; Move.M' ] ]
+
+let solveCubeRelativeBestKnown policy goal cube =
+    let table = solveCubeRelative policy goal cube
+    e2DotAlgorithms
+    |> List.filter (fun algorithm -> algorithm.Length < table.Length && Cube.executeMoves algorithm cube = goal)
+    |> List.sortBy List.length
+    |> List.tryHead
+    |> Option.defaultValue table
+
+let distanceCubeRelativeBestKnown policy goal cube =
+    solveCubeRelativeBestKnown policy goal cube |> List.length
+
 let mutable private installedPolicy: Policy option = None
 
 let installPolicy distances optimalMoves reachable maximum =

@@ -6,7 +6,7 @@ import { head, minBy, cons, map3, item, tryFindIndex, tryFind, map2, tail, split
 import { Edge, executeMoves, Sticker, Face, look, Rotate, Step, Move, solved as solved_8, inverseSteps, executeSteps, findCorner, findEdge, Piece, Color, findCenter } from "./library/Cube.js";
 import { List_distinct, List_distinctBy } from "./fable_modules/fable-library-js.4.16.0/Seq2.js";
 import { read } from "./PatternData.js";
-import { solveCubeRelative, distanceCubeRelative, requirePolicy, indexEdgeCenterCube } from "./library/Lse.js?v=20260924-1";
+import { solveCubeRelativeBestKnown, distanceCubeRelativeBestKnown, requirePolicy, indexEdgeCenterCube } from "./library/Lse.js?v=20260924-1";
 import { empty as empty_1, singleton as singleton_1, map as map_1, collect as collect_1, delay, filter, toList } from "./fable_modules/fable-library-js.4.16.0/Seq.js";
 import { split, join, isNullOrWhiteSpace } from "./fable_modules/fable-library-js.4.16.0/String.js";
 import { rangeDouble } from "./fable_modules/fable-library-js.4.16.0/Range.js";
@@ -664,7 +664,7 @@ export function generateFrom(scrambled) {
             const candidate_4 = matchValue_7[1];
             const result = executeSteps(candidate_4, cube_36);
             if (caseCP(result)) {
-                const lseDistance = distanceCubeRelative(policy, goal_3, result) | 0;
+                const lseDistance = distanceCubeRelativeBestKnown(policy, goal_3, result) | 0;
                 return singleton_1([matchValue_7[0], candidate_4, result, length(candidate_4) + lseDistance]);
             }
             else {
@@ -697,7 +697,7 @@ export function generateFrom(scrambled) {
         const goal_4 = executeSteps([new Step(0, [new Rotate(2, [])]), new Step(0, [new Rotate(3, [])])], solved_8);
         const policy_1 = requirePolicy();
         solvedCenterO = map((cube_38) => {
-            const algorithm_10 = solveCubeRelative(policy_1, goal_4, cube_38);
+            const algorithm_10 = solveCubeRelativeBestKnown(policy_1, goal_4, cube_38);
             const steps_15 = map((Item) => (new Step(1, [Item])), algorithm_10);
             solutionTrace(append(solutionTrace(), singleton(["OptimalLSE", steps_15])));
             return executeMoves(algorithm_10, cube_38);

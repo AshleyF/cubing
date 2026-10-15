@@ -790,7 +790,7 @@ let generateFrom scrambled =
                            |> List.distinctBy snd) do
                             let result = Cube.executeSteps candidate cube
                             if caseCP result then
-                                let lseDistance = Lse.distanceCubeRelative policy goal result
+                                let lseDistance = Lse.distanceCubeRelativeBestKnown policy goal result
                                 yield influenced, candidate, result, candidate.Length + lseDistance ]
                 match candidates |> List.sortBy (fun (influenced, steps, _, total) -> total, steps.Length, influenced) |> List.tryHead with
                 | Some (influenced, steps, result, _) ->
@@ -815,7 +815,7 @@ let generateFrom scrambled =
             let goal = Cube.solved |> Cube.executeSteps [Rotate X2; Rotate Y]
             let policy = Lse.requirePolicy ()
             solvedCP |> List.map (fun cube ->
-                let algorithm = Lse.solveCubeRelative policy goal cube
+                let algorithm = Lse.solveCubeRelativeBestKnown policy goal cube
                 let steps = algorithm |> List.map Move
                 Solver.solutionTrace <- Solver.solutionTrace @ ["OptimalLSE", steps]
                 Cube.executeMoves algorithm cube)

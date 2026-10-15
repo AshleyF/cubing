@@ -1,12 +1,12 @@
-import { centerToFaceSticker, cornerToFaceStickers, edgeToFaceStickers, look, solved, executeMove, Center, Corner, Edge, Move } from "./Cube.js";
+import { executeMoves, centerToFaceSticker, cornerToFaceStickers, edgeToFaceStickers, look, solved, executeMove, Center, Corner, Edge, Move } from "./Cube.js";
 import { Record } from "../fable_modules/fable-library-js.4.16.0/Types.js";
 import { record_type, int32_type, array_type, uint8_type } from "../fable_modules/fable-library-js.4.16.0/Reflection.js";
 import { copy, fill, mapIndexed, choose, tryFindIndex, setItem, item, map as map_1, initialize } from "../fable_modules/fable-library-js.4.16.0/Array.js";
-import { ofSeq, find, ofArray, item as item_1, sort, map } from "../fable_modules/fable-library-js.4.16.0/List.js";
-import { compare, equals } from "../fable_modules/fable-library-js.4.16.0/Util.js";
+import { filter, length, sortBy, tryHead, ofSeq, find, ofArray, item as item_1, sort, map } from "../fable_modules/fable-library-js.4.16.0/List.js";
+import { comparePrimitives, compare, equals } from "../fable_modules/fable-library-js.4.16.0/Util.js";
 import { toList } from "../fable_modules/fable-library-js.4.16.0/Seq.js";
 import { rangeDouble } from "../fable_modules/fable-library-js.4.16.0/Range.js";
-import { value as value_1, defaultArgWith } from "../fable_modules/fable-library-js.4.16.0/Option.js";
+import { defaultArg, value as value_1, defaultArgWith } from "../fable_modules/fable-library-js.4.16.0/Option.js";
 import { max } from "../fable_modules/fable-library-js.4.16.0/Double.js";
 import { find as find_1, map as map_2, ofArray as ofArray_1 } from "../fable_modules/fable-library-js.4.16.0/Map.js";
 
@@ -428,6 +428,26 @@ export function distanceCubeRelative(policy, goal, cube) {
 
 export function solveCubeRelative(policy, goal, cube) {
     return solveIndex(policy, indexCubeRelative(goal, cube));
+}
+
+const e2DotAlgorithms = ofArray([ofArray([new Move(44, []), new Move(37, []), new Move(44, []), new Move(37, [])]), ofArray([new Move(44, []), new Move(37, []), new Move(44, []), new Move(36, [])]), ofArray([new Move(44, []), new Move(36, []), new Move(44, []), new Move(36, [])]), ofArray([new Move(44, []), new Move(36, []), new Move(44, []), new Move(37, [])])]);
+
+export function solveCubeRelativeBestKnown(policy, goal, cube) {
+    const table = solveCubeRelative(policy, goal, cube);
+    return defaultArg(tryHead(sortBy(length, filter((algorithm) => {
+        if (length(algorithm) < length(table)) {
+            return executeMoves(algorithm, cube).Equals(goal);
+        }
+        else {
+            return false;
+        }
+    }, e2DotAlgorithms), {
+        Compare: comparePrimitives,
+    })), table);
+}
+
+export function distanceCubeRelativeBestKnown(policy, goal, cube) {
+    return length(solveCubeRelativeBestKnown(policy, goal, cube));
 }
 
 let installedPolicy = void 0;

@@ -7,6 +7,13 @@
 coordinate slots stores an exact distance byte and a six-bit mask containing
 every move (`M M' M2 U U' U2`) that decreases that distance.
 
+The web solver also checks the four inverse forms of the two four-move E2 dot
+cases (`E2 M' E2 M'` and `E2 M' E2 M`) and uses one whenever it beats the
+M/U policy. `E2` temporarily moves the equatorial block edges, so it cannot be
+added as a seventh transition to this compact coordinate without expanding
+the represented state. The resulting finish is exact for M/U plus these known
+macros, not for the full M/U/E2 move graph.
+
 See [Mining human-readable rules from the exact LSE policy](Tools/LseHumanRules.md)
 for the plan to extract compact, partially covering rules that remain provably
 optimal everywhere they apply.
